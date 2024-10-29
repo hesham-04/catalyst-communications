@@ -6,18 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/templates/admins/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
