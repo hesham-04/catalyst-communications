@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>Studio | {% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- ================== BEGIN core-css ================== -->
+    <link href="{% static 'assets/css/vendor.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet">
+    <!-- ================== END core-css ================== -->
+
+</head>
+<body>
+<!-- BEGIN #app -->
+<div id="app" class="app">
+    <!-- BEGIN #header -->
+    <div id="header" class="app-header">
+        <!-- BEGIN mobile-toggler -->
+        <div class="mobile-toggler">
+            <button type="button" class="menu-toggler" data-toggle="sidebar-mobile">
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+        <!-- END mobile-toggler -->
+
+        <!-- BEGIN brand -->
+        <div class="brand">
+            <div class="desktop-toggler">
+                <button type="button" class="menu-toggler" data-toggle="sidebar-minify">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+
+            <a href="index.html" class="brand-logo">
+                <img src="{% static 'assets/img/logo.png' %}" class="invert-dark" alt="" height="20">
+            </a>
+        </div>
+        <!-- END brand -->
+
+        <!-- BEGIN menu -->
+        <div class="menu">
+            <form class="menu-search" method="POST" name="header_search_form">
+                <div class="menu-search-icon"><i class="fa fa-search"></i></div>
+                <div class="menu-search-input">
+                    <input type="text" class="form-control" placeholder="Search menu...">
+                </div>
+            </form>
+            <div class="menu-item dropdown">
+                <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
+                    <div class="menu-icon"><i class="fa fa-bell nav-icon"></i></div>
+                    <div class="menu-label">0</div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-notification">
+                    <h6 class="dropdown-header text-body-emphasis mb-1">Notifications</h6>
+                    <div class="dropdown-notification-item">
+                        No record found
+                    </div>
+                    <div class="p-2 text-center mb-n1">
+                        <a href="#" class="text-body-emphasis text-opacity-50 text-decoration-none">See all</a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item dropdown">
+                <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
+                    <div class="menu-img online">
+                        <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-gray-800 text-gray-300 rounded-circle overflow-hidden">
+                            <i class="fa fa-user fa-2x mb-n3"></i>
+                        </div>
+                    </div>
+                    <div class="menu-text">username@account.com</div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end me-lg-3">
+                    <a class="dropdown-item d-flex align-items-center" href="profile.html">Edit Profile <i
+                            class="fa fa-user-circle fa-fw ms-auto text-body text-opacity-50"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="email_inbox.html">Inbox <i
+                            class="fa fa-envelope fa-fw ms-auto text-body text-opacity-50"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="calendar.html">Calendar <i
+                            class="fa fa-calendar-alt fa-fw ms-auto text-body text-opacity-50"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="settings.html">Setting <i
+                            class="fa fa-wrench fa-fw ms-auto text-body text-opacity-50"></i></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item d-flex align-items-center" href="page_login.html">Log Out <i
+                            class="fa fa-toggle-off fa-fw ms-auto text-body text-opacity-50"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- END menu -->
+    </div>
+    <!-- END #header -->
+
+    <!-- BEGIN #sidebar -->
+    <div id="sidebar" class="app-sidebar">
+        <!-- BEGIN scrollbar -->
+        <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+            <!-- BEGIN menu -->
+            <div class="menu">
+                <div class="menu-header">Navigation</div>
+
+                <div class="menu-item ">
+                    <a href="{% url 'dashboard:home' %}" class="menu-link">
+                        <span class="menu-icon"><i class="fa-solid fa-house"></i></span>
+                        <span class="menu-text">Home</span>
+                    </a>
+                </div>
+                <div class="menu-item has-sub">
+                    <a href="javascript:;" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="menu-text d-flex align-items-center">Customers</div>
+                        <span class="menu-caret"><b class="caret"></b></span>
+                    </a>
+                    <div class="menu-submenu" style="display: none; box-sizing: border-box;">
+                        <div class="menu-item">
+                            <a href="{% url 'customer:home' %}" class="menu-link">
+                                <div class="menu-icon">
+                                    <i class="fa-solid fa-bars"></i>
+                                </div>
+                                <div class="menu-text">All Customers</div>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="{% url 'customer:create' %}" class="menu-link">
+                                <div class="menu-icon">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                                <div class="menu-text">Create Customer</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-header">Granules</div>
+
+                <div class="menu-item has-sub">
+                    <a href="javascript:;" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fa fa-file-invoice"></i>
+                        </div>
+                        <div class="menu-text d-flex align-items-center">Invoicing</div>
+                        <span class="menu-caret"><b class="caret"></b></span>
+                    </a>
+                    <div class="menu-submenu" style="display: none; box-sizing: border-box;">
+                        <div class="menu-item">
+                            <a href="{% url 'invoice:home' %}" class="menu-link">
+                                <div class="menu-icon">
+                                    <i class="fa-solid fa-bars"></i>
+                                </div>
+                                <div class="menu-text">All Invoices</div>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="{% url 'invoice:home' %}" class="menu-link">
+                                <div class="menu-icon">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                                <div class="menu-text">Create Invoice</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 px-4 mt-auto hide-on-minified">
+                    <a href="https://seantheme.com/studio/documentation/index.html"
+                       class="btn btn-secondary d-block w-100 fw-600 rounded-pill">
+                        <i class="fa fa-code-branch me-1 ms-n1 opacity-5"></i> Documentation
+                    </a>
+                </div>
+            </div>
+            <!-- END menu -->
+        </div>
+        <!-- END scrollbar -->
+
+        <!-- BEGIN mobile-sidebar-backdrop -->
+        <button class="app-sidebar-mobile-backdrop" data-dismiss="sidebar-mobile"></button>
+        <!-- END mobile-sidebar-backdrop -->
+    </div>
+    <!-- END #sidebar -->
+
+    <!-- BEGIN #content -->
+    <div id="content" class="app-content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <!-- END #content -->
+
+	<!--THEME SLIDER HERE -->
+
+    <!-- BEGIN btn-scroll-top -->
+    <a href="#" data-click="scroll-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+    <!-- END btn-scroll-top -->
+</div>
+<!-- END #app -->
+
+<!-- ================== BEGIN core-js ================== -->
+<script src="{% static 'assets/js/vendor.min.js' %}"></script>
+<script src="{% static 'assets/js/app.min.js' %}"></script>
+<!-- ================== END core-js ================== -->
+
+
+</body>
+</html>
