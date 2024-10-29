@@ -1,0 +1,63 @@
+&lt;!-- required js --&gt;
+&lt;script src="/assets/plugins/apexcharts/dist/apexcharts.min.js"/&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;div id="apexColumnChart"&gt;&lt;/div&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  var apexColumnChartOptions = {
+    chart: {
+      height: 350,
+      type: 'bar'
+    },
+    title: {
+      text: 'Profit & Margin Chart',
+      align: 'center'
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        endingShape: 'rounded'  
+      },
+    },
+    dataLabels: { enabled: false },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    },
+    colors: [app.color.theme, app.color.indigo, app.color.inverse],
+    series: [
+      { name: 'Net Profit', data: [44, 55, 57, 56, 61, 58, 63, 60, 66] }, 
+      { name: 'Revenue', data: [76, 85, 101, 98, 87, 105, 91, 114, 94] }, 
+      { name: 'Free Cash Flow', data: [35, 41, 36, 26, 45, 48, 52, 53, 41] }
+    ],
+    xaxis: { categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'] },
+    yaxis: {
+      title: {
+        text: '$ (thousands)',
+        style: {
+          color: 'rgba('+ app.color.bodyColorRgb + ', .5)',
+          fontSize: '12px',
+          fontFamily: app.font.bodyFontFamily,
+          fontWeight: app.font.bodyFontWeight
+        }
+      }
+    },
+    fill: { opacity: 1 },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return "$ " + val + " thousands"
+        }
+      }
+    }
+  };
+  var apexColumnChart = new ApexCharts(
+    document.querySelector('#apexColumnChart'),
+    apexColumnChartOptions
+  );
+  apexColumnChart.render();
+&lt;/script&gt;

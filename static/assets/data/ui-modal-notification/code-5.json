@@ -1,0 +1,8 @@
+&lt;div class="toasts-container"&gt;
+  &lt;div class="toast fade hide" data-autohide="false" id="toast-1"&gt;
+    ...
+  &lt;/div&gt;
+  &lt;div class="toast fade hide" data-autohide="false" id="toast-1"&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;

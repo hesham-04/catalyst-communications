@@ -1,0 +1,11 @@
+&lt;!-- required js / css --&gt;
+&lt;link href="/assets/plugins/bootstrap-slider/dist/css/bootstrap-slider.min.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/bootstrap-slider/dist/bootstrap-slider.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- default --&gt;
+&lt;input type="text" id="slider" class="form-control" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $('#slider').bootstrapSlider();
+&lt;/script&gt;

@@ -1,0 +1,25 @@
+&lt;!-- required js / css --&gt;
+&lt;link href="/assets/plugins/tag-it/css/jquery.tagit.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/jquery-migrate/dist/jquery-migrate.min.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/tag-it/js/tag-it.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- default --&gt;
+&lt;ul id="jquery-tagit" class="tagit form-control"&gt;
+  &lt;li&gt;fancy&lt;/li&gt;
+  &lt;li&gt;new&lt;/li&gt;
+  &lt;li&gt;tag&lt;/li&gt;
+  &lt;li&gt;demo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script&gt;
+  $(document).ready(function() {
+    $('#jquery-tagit').tagit({
+      fieldName: 'tags',
+      availableTags: ['c++', 'java', 'php', 'javascript', 'ruby', 'python', 'c'],
+      autocomplete: {
+        delay: 0, 
+        minLength: 2
+      }
+    });
+  });
+&lt;/script&gt;

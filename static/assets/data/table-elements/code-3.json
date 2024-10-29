@@ -1,0 +1,4 @@
+&lt;!-- table-striped --&gt;
+&lt;table class="table table-striped"&gt;
+  ...
+&lt;/table&gt;

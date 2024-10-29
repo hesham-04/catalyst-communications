@@ -1,0 +1,29 @@
+&lt;!-- required js --&gt;
+&lt;script src="/assets/plugins/chart.js/dist/chart.umd.js"/&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;canvas id="lineChart"&gt;&lt;/canvas&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  var ctx = document.getElementById('lineChart');
+  var lineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        color: app.color.theme,
+        borderColor: app.color.theme,
+        borderWidth: 1.5,
+        pointBackgroundColor: app.color.theme,
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverBackgroundColor: app.color.theme,
+        pointHoverBorderColor: app.color.theme,
+        pointHoverRadius: 7,
+        label: 'Total Sales',
+        data: [12, 19, 4, 5, 2, 3]
+      }]
+    }
+  });
+&lt;/script&gt;

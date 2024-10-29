@@ -1,0 +1,13 @@
+&lt;!-- form select --&gt;
+&lt;select class="form-select"&gt;
+  &lt;option selected&gt;Open this select menu&lt;/option&gt;
+  &lt;option value="1"&gt;One&lt;/option&gt;
+  &lt;option value="2"&gt;Two&lt;/option&gt;
+  &lt;option value="3"&gt;Three&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- form-select-lg --&gt;
+&lt;select class="form-select form-select-lg"&gt;...&lt;/select&gt;
+
+&lt;!-- form-select-sm --&gt;
+&lt;select class="form-select form-select-sm"&gt;...&lt;/select&gt;

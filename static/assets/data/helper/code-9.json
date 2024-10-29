@@ -1,0 +1,4 @@
+&lt;!-- example --&gt;
+&lt;div class="ratio ratio-16x9"&gt;
+  &lt;iframe class="embed-responsive-item" src="https://www.youtube.com/embed/3Kf-FlECN7M?rel=0" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;

@@ -1,0 +1,7 @@
+&lt;div class="list-group"&gt;
+  &lt;a href="#" class="list-group-item list-group-item-action active"&gt;Cras justo odio&lt;/a&gt;
+  &lt;a href="#" class="list-group-item list-group-item-action"&gt;Dapibus ac facilisis in&lt;/a&gt;
+  &lt;a href="#" class="list-group-item list-group-item-action"&gt;Morbi leo risus&lt;/a&gt;
+  &lt;a href="#" class="list-group-item list-group-item-action"&gt;Porta ac consectetur ac&lt;/a&gt;
+  &lt;a href="#" class="list-group-item list-group-item-action disabled"&gt;Vestibulum at eros&lt;/a&gt;
+&lt;/div&gt;

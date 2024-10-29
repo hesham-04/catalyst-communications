@@ -1,0 +1,4 @@
+&lt;!-- table-borderless --&gt;
+&lt;table class="table table-borderless"&gt;
+  ...
+&lt;/table&gt;

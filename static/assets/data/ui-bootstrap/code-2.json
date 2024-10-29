@@ -1,0 +1,8 @@
+&lt;span class="badge bg-primary"&gt;Primary&lt;/span&gt;
+&lt;span class="badge bg-secondary"&gt;Secondary&lt;/span&gt;
+&lt;span class="badge bg-success"&gt;Success&lt;/span&gt;
+&lt;span class="badge bg-danger"&gt;Danger&lt;/span&gt;
+&lt;span class="badge bg-warning"&gt;Warning&lt;/span&gt;
+&lt;span class="badge bg-info"&gt;Info&lt;/span&gt;
+&lt;span class="badge bg-light"&gt;Light&lt;/span&gt;
+&lt;span class="badge bg-dark"&gt;Dark&lt;/span&gt;

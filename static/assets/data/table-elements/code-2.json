@@ -1,0 +1,9 @@
+&lt;!-- thead-light --&gt;
+&lt;table class="table"&gt;
+  &lt;thead class="table-light"&gt;...&lt;/thead&gt;
+&lt;/table&gt;
+
+&lt;!-- thead-dark --&gt;
+&lt;table class="table"&gt;
+  &lt;thead class="table-dark"&gt;...&lt;/thead&gt;
+&lt;/table&gt;

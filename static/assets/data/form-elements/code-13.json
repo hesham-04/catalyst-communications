@@ -1,0 +1,5 @@
+&lt;div class="input-group flex-nowrap"&gt;
+  &lt;span class="input-group-text" id="addon-wrapping"&gt;@&lt;/span&gt;
+  &lt;input type="text" class="form-control" placeholder="Username"&gt;
+  &lt;span class="input-group-text"&gt;.com&lt;/span&gt;
+&lt;/div&gt;

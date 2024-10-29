@@ -1,0 +1,5 @@
+&lt;!-- border-radius example --&gt;
+&lt;img src="" alt="" class="rounded"&gt;
+
+&lt;!-- border-radius sizes example --&gt;
+&lt;img src="" alt="" class="rounded-sm"&gt;

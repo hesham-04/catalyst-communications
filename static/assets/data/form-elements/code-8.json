@@ -1,0 +1,4 @@
+&lt;div class="form-check form-switch"&gt;
+  &lt;input type="checkbox" class="form-check-input" id="customSwitch1"&gt;
+  &lt;label class="form-check-label" for="customSwitch1"&gt;Toggle this switch element&lt;/label&gt;
+&lt;/div&gt;

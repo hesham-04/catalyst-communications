@@ -1,0 +1,33 @@
+&lt;!-- required css /js --&gt;
+&lt;link href="/assets/plugins/blueimp-file-upload/css/jquery.fileupload.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/vendor/jquery.ui.widget.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-tmpl/js/tmpl.min.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-load-image/js/load-image.all.min.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-canvas-to-blob/js/canvas-to-blob.min.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-gallery/js/jquery.blueimp-gallery.min.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.iframe-transport.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-process.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-image.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-audio.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-video.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-ui.js"&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;input id="fileupload" type="file" name="files[]" multiple>
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $('#fileupload').fileupload({
+    url: '--- your url here ---',
+    dataType: 'json',
+    sequentialUploads: true,
+    done: function(e, data) {
+      //console.log(data.result);
+    }
+  });
+  $('#fileupload').on('fileuploadadd', function (e, data) {
+    data.submit();
+  });
+&lt;/script&gt;

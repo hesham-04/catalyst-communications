@@ -1,0 +1,21 @@
+&lt;!-- text input --&gt;
+&lt;div class="form-group mb-3"&gt;
+  &lt;label class="form-label" for="exampleFormControlInput1"&gt;Email address&lt;/label&gt;
+  &lt;input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"&gt;
+&lt;/div&gt;
+
+&lt;!-- select --&gt;
+&lt;select class="form-control"&gt;
+  ...
+&lt;/select&gt;
+
+&lt;!-- multiple select --&gt;
+&lt;select multiple class="form-control"&gt;
+  ...
+&lt;/select&gt;
+
+&lt;!-- textarea --&gt;
+&lt;textarea class="form-control" rows="3"&gt;&lt;/textarea&gt;
+
+&lt;!-- file input --&gt;
+&lt;input type="file" class="form-control" id="exampleFormControlFile1"&gt;

@@ -1,0 +1,10 @@
+&lt;!-- radio --&gt;
+&lt;div class="form-check"&gt;
+  &lt;input class="form-check-input" type="radio" value="" id="defaultRadio1" disabled&gt;
+  &lt;label class="form-check-label" for="defaultRadio1"&gt;Default checkbox&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- inline radio --&gt;
+&lt;div class="form-check form-check-inline"&gt;
+  ...
+&lt;/div&gt;

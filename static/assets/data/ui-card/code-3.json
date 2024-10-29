@@ -1,0 +1,14 @@
+&lt;!-- using grid --&gt;
+&lt;div class="row"&gt;
+  &lt;div class="col-sm-8"&gt;
+    &lt;div class="card"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- using utilities --&gt;
+&lt;div class="card w-25"&gt;...&lt;/div&gt;
+&lt;div class="card w-50"&gt;...&lt;/div&gt;
+&lt;div class="card w-75"&gt;...&lt;/div&gt;
+
+&lt;!-- using custom css --&gt;
+&lt;div class="card" style="width: 18rem;"&gt;...&lt;/div&gt;

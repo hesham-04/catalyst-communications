@@ -1,0 +1,16 @@
+&lt;!-- required js / css --&gt;
+&lt;link href="/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;div class="input-group bootstrap-timepicker timepicker"&gt;
+  &lt;input id="timepicker" type="text" class="form-control"&gt;
+  &lt;span class="input-group-addon input-group-text"&gt;
+    &lt;i class="fa fa-clock"&gt;&lt;/i&gt;
+  &lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $('#timepicker').timepicker();
+&lt;/script&gt;

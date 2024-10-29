@@ -1,0 +1,20 @@
+&lt;!-- required css & js --&gt;
+&lt;link href="/assets/plugins/jquery-typeahead/dist/jquery.typeahead.min.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/jquery-typeahead/dist/jquery.typeahead.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;input type="text" value="" placeholder="Type 'af'" class="form-control" id="typeahead"&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $.typeahead({
+    input: '#typeahead',
+      order: "desc",
+        source: {
+          data: [
+            "Afghanistan", "Albania",
+              ...
+            ]
+        }
+  });
+&lt;/script&gt;

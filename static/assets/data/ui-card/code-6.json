@@ -1,0 +1,16 @@
+&lt;div class="card"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;div class="row gx-0 align-items-center"&gt;
+      &lt;div class="col-md-4"&gt;
+        &lt;img src="https://via.placeholder.com/480x360/c9d2e3/212837" alt="" class="card-img rounded-0" /&gt;
+      &lt;/div&gt;
+      &lt;div class="col-md-8"&gt;
+        &lt;div class="card-body"&gt;
+          &lt;h5 class="card-title"&gt;Card title&lt;/h5&gt;
+          &lt;p class="card-text"&gt;This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.&lt;/p&gt;
+          &lt;p class="card-text"&gt;&lt;small class="text-muted"&gt;Last updated 3 mins ago&lt;/small&gt;&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;

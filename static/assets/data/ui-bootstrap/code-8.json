@@ -1,0 +1,17 @@
+&lt;!-- default nav --&gt;
+&lt;nav class="nav"&gt;
+  &lt;a class="nav-link active" href="#"&gt;Active&lt;/a&gt;
+  &lt;a class="nav-link" href="#"&gt;Link&lt;/a&gt;
+  &lt;a class="nav-link" href="#"&gt;Link&lt;/a&gt;
+  &lt;a class="nav-link disabled" href="#"&gt;Disabled&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;!-- underline nav --&gt;
+&lt;nav class="nav nav-underline"&gt;
+  ...
+&lt;/nav&gt;
+
+&lt;!-- vertical nav --&gt;
+&lt;nav class="nav flex-column"&gt;
+  ...
+&lt;/nav&gt;

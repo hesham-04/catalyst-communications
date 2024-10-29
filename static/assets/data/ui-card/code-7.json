@@ -1,0 +1,17 @@
+&lt;!-- background & border --&gt;
+&lt;div class="card bg-theme border-theme bg-opacity-25 mb-3"&gt;
+  &lt;div class="card-header border-theme fw-bold small text-body"&gt;...&lt;/div&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h5 class="card-title text-body"&gt;...&lt;/h5&gt;
+    &lt;p class="card-text text-body text-opacity-75"&gt;...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- border & color --&gt;
+&lt;div class="card border-theme mb-3"&gt;
+  &lt;div class="card-header border-theme fw-bold small text-theme"&gt;...&lt;/div&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h5 class="card-title text-theme"&gt;...&lt;/h5&gt;
+    &lt;p class="card-text text-theme text-opacity-75"&gt;...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;

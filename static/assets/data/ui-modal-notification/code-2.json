@@ -1,0 +1,32 @@
+&lt;!-- modal-xl --&gt;
+&lt;button type="button" class="btn btn-outline-theme me-2" data-bs-toggle="modal" data-bs-target="#modalXl"&gt;Extra large modal&lt;/button&gt;
+
+&lt;div class="modal fade" id="modalXl"&gt;
+  &lt;div class="modal-dialog modal-xl"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- modal-lg --&gt;
+&lt;button type="button" class="btn btn-outline-theme me-2" data-bs-toggle="modal" data-bs-target="#modalLg"&gt;Large modal&lt;/button&gt;
+
+&lt;div class="modal fade" id="modalLg"&gt;
+  &lt;div class="modal-dialog modal-lg"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- modal-sm --&gt;
+&lt;button type="button" class="btn btn-outline-theme me-2" data-bs-toggle="modal" data-bs-target="#modalSm"&gt;Small modal&lt;/button&gt;
+
+&lt;div class="modal fade" id="modalSm"&gt;
+  &lt;div class="modal-dialog modal-sm"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;

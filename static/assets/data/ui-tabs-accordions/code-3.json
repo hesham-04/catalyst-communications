@@ -1,0 +1,23 @@
+&lt;!-- tab default with card --&gt;
+&lt;div class="card"&gt;
+  &lt;ul class="nav nav-tabs pt-3 ps-4 pe-4"&gt;
+    &lt;li class="nav-item me-1"&gt;&lt;a href="#homeWithCard" class="nav-link active" data-bs-toggle="tab"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="nav-item me-1"&gt;&lt;a href="#profileWithCard" class="nav-link" data-bs-toggle="tab"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class="tab-content p-4"&gt;
+    &lt;div class="tab-pane fade show active" id="homeWithCard"&gt;...&lt;/div&gt;
+    &lt;div class="tab-pane fade" id="profileWithCard"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- tab v2 with card --&gt;
+&lt;div class="card"&gt;
+  &lt;ul class="nav nav-tabs nav-tabs-v2 ps-4 pe-4"&gt;
+    &lt;li class="nav-item me-3"&gt;&lt;a href="#homev2WithCard" class="nav-link active" data-bs-toggle="tab"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="nav-item me-3"&gt;&lt;a href="#profilev2WithCard" class="nav-link" data-bs-toggle="tab"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div class="tab-content p-4"&gt;
+    &lt;div class="tab-pane fade show active" id="homev2WithCard"&gt;...&lt;/div&gt;
+    &lt;div class="tab-pane fade" id="profilev2WithCard"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;

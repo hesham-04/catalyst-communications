@@ -1,0 +1,9 @@
+&lt;div class="row row-cols-1 row-cols-md-2 g-3"&gt;
+  &lt;div class="col"&gt;
+    &lt;div class="card h-100"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="col"&gt;
+    &lt;div class="card h-100"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+  ...
+&lt;/div&gt;

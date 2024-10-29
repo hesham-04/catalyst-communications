@@ -1,0 +1,13 @@
+&lt;!-- required css / js --&gt;
+&lt;link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/summernote/dist/summernote-lite.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;textarea name="text" class="summernote" id="contents" title="Contents"&gt;...&lt;/textarea&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $('.summernote').summernote({
+    height: 300
+  });
+&lt;/script&gt;

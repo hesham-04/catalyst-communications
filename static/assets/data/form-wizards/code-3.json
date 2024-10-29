@@ -1,0 +1,36 @@
+&lt;div class="nav-wizards-container"&gt;
+  &lt;nav class="nav nav-wizards-3 mb-2"&gt;
+    &lt;!-- completed --&gt;
+    &lt;div class="nav-item col"&gt;
+      &lt;a class="nav-link completed" href="#"&gt;
+        &lt;div class="nav-dot"&gt;&lt;/div&gt;
+        &lt;div class="nav-no"&gt;Step 1&lt;/div&gt;
+        &lt;div class="nav-text"&gt;Completed step&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+  
+    &lt;!-- active --&gt;
+    &lt;div class="nav-item col"&gt;
+      &lt;a class="nav-link active" href="#"&gt;
+        &lt;div class="nav-dot"&gt;&lt;/div&gt;
+        &lt;div class="nav-no"&gt;Step 3&lt;/div&gt;
+        &lt;div class="nav-text"&gt;Active step&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+  
+    &lt;!-- disabled --&gt;
+    &lt;div class="nav-item col"&gt;
+      &lt;a class="nav-link disabled" href="#"&gt;
+        &lt;div class="nav-dot"&gt;&lt;/div&gt;
+        &lt;div class="nav-no"&gt;Step 5&lt;/div&gt;
+        &lt;div class="nav-text"&gt;Last step&lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+  &lt;div class="card-body"&gt;
+    wizard content here
+  &lt;/div&gt;
+&lt;/div&gt;

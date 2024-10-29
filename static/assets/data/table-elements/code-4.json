@@ -1,0 +1,4 @@
+&lt;!-- table-bordered --&gt;
+&lt;table class="table table-bordered"&gt;
+  ...
+&lt;/table&gt;

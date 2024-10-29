@@ -1,0 +1,9 @@
+&lt;div class="d-flex align-items-start mt-3"&gt;
+  &lt;a href="#"&gt;
+    &lt;img src="https://via.placeholder.com/128x128/c9d2e3/212837" alt="" width="64" class="rounded"&gt;
+  &lt;/a&gt;
+  &lt;div class="ms-3"&gt;
+    &lt;h5 class="mt-0 mb-1"&gt;Media heading&lt;/h5&gt;
+    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+  &lt;/div&gt;
+&lt;/div&gt;

@@ -1,0 +1,19 @@
+&lt;form class="was-validated"&gt;
+  &lt;!-- valid input --&gt;
+  &lt;input type="text" class="form-control is-valid" value="" required&gt;
+  &lt;div class="valid-feedback"&gt;Looks good!&lt;/div&gt;
+
+  &lt;!-- invalid input --&gt;
+  &lt;input type="text" class="form-control is-invalid" value="" required&gt;
+  &lt;div class="invalid-feedback"&gt;Field is required&lt;/div&gt;
+
+  &lt;!-- valid tooltip --&gt;
+  &lt;div class="position-relative"&gt;
+    &lt;div class="valid-tooltip"&gt;Looks good!&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;!-- invalid tooltip --&gt;
+  &lt;div class="position-relative"&gt;
+    &lt;div class="invalid-tooltip"&gt;Field is required&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/form&gt;

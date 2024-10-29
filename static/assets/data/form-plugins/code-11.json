@@ -1,0 +1,13 @@
+&lt;!-- required js / css --&gt;
+&lt;link href="/assets/plugins/spectrum-colorpicker2/dist/spectrum.min.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/spectrum-colorpicker2/dist/spectrum.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- default --&gt;
+&lt;input type="text" value="#007aff" class="form-control" id="colorpicker"&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $('#colorpicker').spectrum({
+    "showInput": true
+  });
+&lt;/script&gt;

@@ -1,0 +1,24 @@
+&lt;!-- required js / css --&gt;
+&lt;link href="/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet"&gt;
+&lt;script src="/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"&gt;&lt;/script&gt;
+
+&lt;!-- html --&gt;
+&lt;div class="input-group" id="daterange"&gt;
+  &lt;input type="text" name="daterange" class="form-control" value="" placeholder="click to select the date range"&gt;
+  &lt;span class="input-group-text"&gt;&lt;i class="fa fa-calendar"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+  $('#daterange').daterangepicker({
+    opens: 'right',
+    format: 'MM/DD/YYYY',
+    separator: ' to ',
+    startDate: moment().subtract('days', 29),
+    endDate: moment(),
+    minDate: '01/01/2012',
+    maxDate: '12/31/2018',
+  }, function (start, end) {
+    $('#daterange input').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+  });
+&lt;/script&gt;

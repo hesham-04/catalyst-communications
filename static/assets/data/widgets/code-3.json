@@ -1,0 +1,32 @@
+&lt;div class="card"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;div class="mb-2 fw-semibold d-flex align-items-center"&gt;
+      &lt;div class="flex-fill"&gt;Total Orders&lt;/div&gt;
+      &lt;div&gt;
+        &lt;a href="#" data-bs-toggle="dropdown" class="text-body"&gt;&lt;i class="bi bi-three-dots-vertical"&gt;&lt;/i&gt;&lt;/a&gt;
+        &lt;div class="dropdown-menu dropdown-menu-end" data-bs-theme="light"&gt;
+          &lt;a href="#" class="dropdown-item"&gt;View full report&lt;/a&gt;
+          &lt;a href="#" class="dropdown-item"&gt;Reload&lt;/a&gt;
+          &lt;a href="#" class="dropdown-item"&gt;Export Data&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="row mb-1"&gt;
+      &lt;div class="col-lg-12 position-relative"&gt;
+        &lt;h1 class="mb-0 d-flex align-items-center text-theme"&gt;
+          302
+          &lt;span class="text-body fs-10px badge bg-body rounded-pill pe-2 ps-1 py-6px d-flex align-items-center ms-3"&gt;
+            &lt;i class="fa fa-exclamation-circle fa-fw fa-lg me-1 text-theme"&gt;&lt;/i&gt; 
+            3 pending orders
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;div class="fs-13px mt-1"&gt;&lt;span class="badge bg-theme bg-opacity-15 text-theme py-5px me-1"&gt;+12%&lt;/span&gt; compare to last week&lt;/div&gt;
+        &lt;i class="fab fa-google-wallet display-3 lh-1 mt-n2 text-body text-opacity-20 me-3 position-absolute end-0 top-0"&gt;&lt;/i&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="mt-3 fs-11px"&gt;
+      &lt;div class="text-body text-opacity-50"&gt;last updated on&lt;/div&gt;
+      &lt;div class="fw-600 text-body text-opacity-50"&gt;Feb 3, 4:09:57 AM UTC&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
