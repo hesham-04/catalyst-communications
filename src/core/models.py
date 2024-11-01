@@ -22,3 +22,12 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.customer.display_name} - {self.address_type.capitalize()} - {self.city}, {self.state}"
+
+
+class Tax(models.Model):
+    name = models.CharField(max_length=50)
+    rate = models.DecimalField(max_digits=5, decimal_places=2)
+    is_compound = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

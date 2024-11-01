@@ -183,67 +183,67 @@
 
 <div class="row">
     <div class="card">
-            <div class="card-body">
-                <div class="mb-2 row">
-                    <div class="col-sm-2"><select class="form-select pageSize mb-2">
-                        <option value="10">Show 10</option>
-                        <option value="20">Show 20</option>
-                        <option value="30">Show 30</option>
-                        <option value="40">Show 40</option>
-                        <option value="50">Show 50</option>
-                    </select></div>
-                    <div class="col-sm-4"><input class="form-control search-box me-2 mb-2 d-inline-block"
-                                                 placeholder="Search..." value=""></div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">
-                            <a href="{% url 'customer:create' %}"
-                                    class="btn btn-secondary btn-rounded waves-effect waves-light addContact-modal mb-2 btn btn-secondary">
-                                <i class="mdi mdi-plus me-1"></i> New Customer
-                            </a>
-                        </div>
+        <div class="card-body">
+            <div class="mb-2 row">
+                <div class="col-sm-2"><select class="form-select pageSize mb-2">
+                    <option value="10">Show 10</option>
+                    <option value="20">Show 20</option>
+                    <option value="30">Show 30</option>
+                    <option value="40">Show 40</option>
+                    <option value="50">Show 50</option>
+                </select></div>
+                <div class="col-sm-4"><input class="form-control search-box me-2 mb-2 d-inline-block"
+                                             placeholder="Search..." value=""></div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        <a href="{% url 'customer:create' %}"
+                           class="btn btn-secondary btn-rounded waves-effect waves-light addContact-modal mb-2 btn btn-secondary">
+                            <i class="mdi mdi-plus me-1"></i> New Customer
+                        </a>
                     </div>
                 </div>
+            </div>
 
-                <div class="table-responsive">
-                    <table class="align-middle table-nowrap table-hover dt-responsive nowrap w-100 dataTable no-footer dtr-inline table table-hover">
-    <thead class="table-light">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Recieveables</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for customer in customers %}
-            <tr>
-                <td>
-                    <div class="avatar-xs">
-                        <span class="avatar-title rounded-circle">{{ customer.id }}</span>
-                    </div>
-                </td>
-                <td>
-                    <h5 class="font-size-14 mb-1">
-                        <a class="text-dark" href="/contacts-list">{{ customer.first_name }} {{ customer.last_name }}</a>
-                    </h5>
-                    <p class="text-muted mb-0">{{ customer.customer_type }}</p>
-                </td>
-                <td>{{ customer.company_name }}</td>
-                <td>{{ customer.email }}</td>
-                <td>{{ customer.phone }}</td>
-                <td>{{ customer.currency }}</td>
+            <div class="table-responsive rounded">
+                <table class="align-middle table-nowrap table-hover dt-responsive nowrap w-100 dataTable no-footer dtr-inline table table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Recieveables</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>
+                            <div class="avatar-xs">
+                                <span class="avatar-title rounded-circle">{{ customer.id }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <h5 class="font-size-14 mb-1">
+                                <a class="text-dark" href="{% url 'customer:detail' customer.id %}">{{ customer.first_name }} {{ customer.last_name }}</a>
+                            </h5>
+                            <p class="text-muted mb-0">{{ customer.customer_type }}</p>
+                        </td>
+                        <td>{{ customer.company_name }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.currency }}</td>
 
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-                </div>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
             </div>
+
         </div>
+    </div>
+</div>
 
 {% endblock %}
-

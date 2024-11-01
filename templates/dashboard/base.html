@@ -3,7 +3,7 @@
 {% load static %}
 <head>
     <meta charset="utf-8">
-    <title>Studio | {% block title %}{% endblock %}</title>
+    <title>Catalyst | {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -14,7 +14,12 @@
     <!-- ================== END core-css ================== -->
 
 </head>
-<body>
+<style>
+        body {
+        zoom: 0.8;
+    }
+</style>
+<body class="theme-gray-400 " style="font-size: small;">
 <!-- BEGIN #app -->
 <div id="app" class="app">
     <!-- BEGIN #header -->

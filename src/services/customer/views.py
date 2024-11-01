@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, DetailView
 from .forms import CustomerForm
 from .models import Customer
 
@@ -19,3 +19,10 @@ class CustomerCreateView(CreateView):
     form_class = CustomerForm
     model = Customer
     success_url = reverse_lazy('customer:home')
+
+
+class CustomerDetailView(DetailView):
+    model = Customer
+    template_name = 'customer/customer_detail.html'
+
+

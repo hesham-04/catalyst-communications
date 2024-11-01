@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # STARTERS
+    'crispy_forms',
+    'crispy_bootstrap4',
+
     # YOUR APPS
     'src.web.accounts',
     'src.web.dashboard',
@@ -58,6 +62,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'root.urls'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {

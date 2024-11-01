@@ -1,0 +1,7 @@
+Django
+pip
+asgiref
+sqlparse
+setuptools
+django-crispy-forms
+crispy-bootstrap4

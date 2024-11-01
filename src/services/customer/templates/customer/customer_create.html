@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
 
@@ -17,144 +18,16 @@
 </h1>
 {% endif %}
 
-
 <div class="row">
     <div class="col-md-6">
-        <form method="post">
-            {% csrf_token %}
-            <!-- Customer Type -->
-            <div class="form-group mb-3">
-                <label for="id_customer_type" class="form-label">Customer type:</label>
-                <select name="customer_type" required="" id="id_customer_type" class="form-select">
-                    <option value="" selected="">---------</option>
-                    <option value="business">Business</option>
-                    <option value="individual">Individual</option>
-                </select>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <!-- Company Name -->
-                    <div class="form-group mb-3">
-                        <label for="id_company_name" class="form-label">Company name:</label>
-                        <input type="text" name="company_name" maxlength="100" id="id_company_name" class="form-control"
-                               placeholder="Enter Company Name">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <!-- Display Name -->
-                    <div class="form-group mb-3">
-                        <label for="id_display_name" class="form-label">Display name:</label>
-                        <input type="text" name="display_name" maxlength="100" required="" id="id_display_name"
-                               class="form-control" placeholder="Enter Display Name">
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <h4>Primary Contact</h4>
-                        <!-- Salutation -->
-                        <div class="col-md-4">
-                            <div class="form-group mb-2">
-                                <select name="salutation" required="" id="id_salutation" class="form-select">
-                                    <option value="" selected="">---------</option>
-                                    <option value="Mr.">Mr.</option>
-                                    <option value="Ms.">Ms.</option>
-                                    <option value="Mrs.">Mrs.</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- First Name -->
-                        <div class="col-md-4">
-                            <div class="form-group mb-2">
-                                <input type="text" name="first_name" maxlength="50" required="" id="id_first_name"
-                                       class="form-control" placeholder="Enter First Name">
-                            </div>
-                        </div>
-                        <!-- Last Name -->
-                        <div class="col-md-4">
-                            <div class="form-group mb-2">
-                                <input type="text" name="last_name" maxlength="50" required="" id="id_last_name"
-                                       class="form-control" placeholder="Enter Last Name">
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- Email -->
-            <div class="form-group mb-3">
-                <label for="id_email" class="form-label">Email:</label>
-                <input type="email" name="email" maxlength="254" required="" id="id_email" class="form-control"
-                       placeholder="Enter Email Address">
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <!-- Phone -->
-                        <div class="col-md-4">
-                            <div class="form-group mb-2">
-                                <label for="id_phone" class="form-label">Phone:</label>
-                                <input type="text" name="phone" maxlength="15" id="id_phone" class="form-control"
-                                       placeholder="Enter Phone Number">
-                            </div>
-                        </div>
-                        <!-- Work Phone -->
-                        <div class="col-md-4">
-                            <div class="form-group mb-2">
-                                <label for="id_work_phone" class="form-label">Work phone:</label>
-                                <input type="text" name="work_phone" maxlength="15" id="id_work_phone"
-                                       class="form-control"
-                                       placeholder="Enter Work Phone Number">
-                            </div>
-                        </div>
-                        <!-- Mobile -->
-                        <div class="col-md-4">
-                            <div class="form-group mb-2">
-                                <label for="id_mobile" class="form-label">Mobile:</label>
-                                <input type="text" name="mobile" maxlength="15" id="id_mobile" class="form-control"
-                                       placeholder="Enter Mobile Number">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Other Details -->
-            <div class="form-group mb-3">
-                <label for="id_other_details" class="form-label">Other details:</label>
-                <textarea name="other_details" cols="40" rows="3" id="id_other_details" class="form-control"
-                          placeholder="Enter Other Details"></textarea>
-            </div>
-
-            <!-- Currency -->
-            <div class="form-group mb-3">
-                <label for="id_currency" class="form-label">Currency:</label>
-                <select name="currency" required="" id="id_currency" class="form-select">
-                    <option value="" selected="">---------</option>
-                    <option value="USD">US Dollar</option>
-                    <option value="EUR">Euro</option>
-                    <option value="PKR">Pakistani Rupee</option>
-                </select>
-            </div>
-
-            <a class="btn btn-secondary" href="{% url 'customer:home' %}">
-                <i class="fa fa-arrow-left"></i>&nbsp;Back
-            </a>
-            <button type="submit" class="btn btn-primary">Submit</button>
-
+        <form method="post" enctype="multipart/form-data">
+            {% crispy form %}
         </form>
     </div>
     <div class="col-md-6">
-        <img style="margin-top: 50px" src="{% static 'img/customer.png' %}" alt="Customer"
-             class="img-fluid d-block mx-auto">
-    </div>
+    <img style="margin-top: 50px" src="{% static 'img/customer.png' %}" alt="Customer"
+         class="img-fluid d-block mx-auto">
 </div>
+</div>
+
 {% endblock %}
