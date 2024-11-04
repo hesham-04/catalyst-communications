@@ -1,0 +1,33 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+{% if object %}
+<h1 class="page-header">
+    Update Customer
+    <br>
+    <small>Update the details for...</small>
+</h1>
+{% else %}
+<h1 class="page-header">
+    Create Customer
+    <br>
+    <small>Create a new customer i.e. a business or a individual...</small>
+</h1>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data">
+            {% crispy form %}
+        </form>
+    </div>
+    <div class="col-md-6">
+    <img style="margin-top: 50px" src="{% static 'img/customer.png' %}" alt="Customer"
+         class="img-fluid d-block mx-auto">
+</div>
+</div>
+
+{% endblock %}

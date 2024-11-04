@@ -6,7 +6,7 @@ from root.settings import MEDIA_ROOT, STATIC_ROOT
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('src.web.urls')),
+    path('', include('src.urls')),
 ]
 
 """ STATIC AND MEDIA FILES ----------------------------------------------------------------------------------------- """

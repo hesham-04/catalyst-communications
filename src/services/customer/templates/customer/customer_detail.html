@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customer Detail{% endblock %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header fw-bold small d-flex">
+                    <i class="fa-solid fa-envelope mt-1 me-2"></i>
+                    <span class="flex-grow-1">{{ object.email }}</span>
+                    <a href="#" data-toggle="card-expand" class="text-body text-decoration-none"><i
+                            class="fa-solid fa-folder"></i> {{ object.customer_type }}</a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-md-1">
+                            <div>
+                                <img class="  border-secondary border-2 rounded-2  profile-header-img"
+                                     style="max-width: 50px" src="{% static 'img/company.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-md-11">
+                            <h5 class="card-title">{{ object.company_name }}</h5>
+                            <h6 class="card-subtitle mb-3 text-body text-opacity-50">{{ object.salutation }}
+                                {{ object.first_name }} {{ object.last_name }}</h6>
+                        </div>
+                    </div>
+                    <div class="mb-1 ms-3">
+                        <i class="fa-solid fa-envelope"></i> {{ object.email }}
+                        <i class="fa-solid fa-phone ms-2"></i> {{ object.phone }}
+                    </div>
+                    <div class="mb-1 ms-3">
+                        <i class="fa-solid fa-location-dot"></i> {% if object.address %} {{ object.address }} {% else %}
+                        No Address added {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-lg-4">
+        <!-- background & border -->
+        <div class="card bg-theme border-theme bg-opacity-25 mb-3">
+            <div class=" d-flex card-header border-theme fw-bold  text-body justify-content-between">
+                <div >
+                    <i class="fa-solid fa-building me-2"></i> Address
+                </div>
+                <div>
+                    <a class="text-success" href="#">
+                        Add <i class="fa-solid fa-plus text-success"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-body">...</h5>
+                <p class="card-text text-body text-opacity-75">...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

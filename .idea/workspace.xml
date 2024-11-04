@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/admins/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web/admins/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/dashboard/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,31 +33,37 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2nkTOHXbsQoXsVz7eiv9660FqeD" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "hesham",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/github/catalyst-communications/static",
-    "settings.editor.selected.configurable": "reference.idesettings.emmet"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;hesham&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gwtwm/Downloads/company-website&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\github\catalyst-communications\static" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\github\catalyst-communications\templates\dashboard" />
     </key>
   </component>
   <component name="SharedIndexes">
