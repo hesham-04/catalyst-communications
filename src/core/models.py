@@ -2,14 +2,8 @@ from django.db import models
 from src.services.customer.models import Customer
 
 
-class Address(models.Model):
-    ADDRESS_TYPE_CHOICES = [
-        ('billing', 'Billing Address'),
-        ('shipping', 'Shipping Address'),
-    ]
-
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='address')
-    address_type = models.CharField(max_length=10, choices=ADDRESS_TYPE_CHOICES)
+class BillingAddress(models.Model):
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='billing_address')
     attention = models.CharField(max_length=100, blank=True)
     country_region = models.CharField(max_length=100)
     street_1 = models.CharField(max_length=100)
@@ -21,7 +15,24 @@ class Address(models.Model):
     fax = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
-        return f"{self.customer.display_name} - {self.address_type.capitalize()} - {self.city}, {self.state}"
+        return f"{self.customer.display_name} - Billing - {self.city}, {self.state}"
+
+
+class ShippingAddress(models.Model):
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='shipping_address')
+    attention = models.CharField(max_length=100, blank=True)
+    country_region = models.CharField(max_length=100)
+    street_1 = models.CharField(max_length=100)
+    street_2 = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    zip_code = models.CharField(max_length=10)
+    phone = models.CharField(max_length=15, blank=True)
+    fax = models.CharField(max_length=15, blank=True)
+
+    def __str__(self):
+        return f"{self.customer.display_name} - Shipping - {self.city}, {self.state}"
+
 
 
 class Tax(models.Model):
@@ -31,3 +42,70 @@ class Tax(models.Model):
 
     def __str__(self):
         return self.name
+
+class CashInHand(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def adjust_balance(self, amount, transaction_type):
+        """
+            Adjusts the account balance based on the transaction type. THIS CREDIT DOES NOT REFER TO AMOUNT BEING CREDITED
+            INTO ACCOUNT BALANCE, RATHER AMOUNT BEING CREDITED TO A PROJECT BUDGET
+            :param amount:
+            :param transaction_type:
+            :return:
+        """
+        if transaction_type == 'CREDIT':
+            if self.balance < amount:
+                raise ValueError("Insufficient cash in hand")
+            else:
+                self.balance -= amount
+        elif transaction_type == 'DEBIT':
+            self.balance += amount
+        self.save()
+
+    def __str__(self):
+        return f"Cash in Hand Balance: {self.balance}"
+
+
+
+
+class AccountBalance(models.Model):
+    account_name = models.CharField(max_length=255, unique=True)
+    balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def adjust_balance(self, amount, transaction_type):
+        """
+        Adjusts the account balance based on the transaction type. THIS CREDIT DOES NOT REFER TO AMOUNT BEING CREDITED
+        INTO ACCOUNT BALANCE, RATHER AMOUNT BEING CREDITED TO A PROJECT BUDGET
+        :param amount:
+        :param transaction_type:
+        :return:
+        """
+        if transaction_type == 'CREDIT':
+            if self.balance < amount:
+                raise ValueError("Insufficient funds in account")
+            else:
+                self.balance -= amount
+        elif transaction_type == 'DEBIT':
+            self.balance += amount
+        self.save()
+
+    def __str__(self):
+        return f"{self.account_name} - Balance: {self.balance}"
+
+class Transaction(models.Model):
+    class TransactionType(models.TextChoices):
+        DEBIT = 'DEBIT', 'Debit'
+        CREDIT = 'CREDIT', 'Credit'
+
+    project = models.ForeignKey('project.Project', on_delete=models.CASCADE, related_name='transactions')
+    source = models.CharField(max_length=6, choices=[('BANK', 'Bank'), ('CASH', 'Cash in Hand'), ('ACC', 'Account'), ('CLIENT', 'Client Provided')])
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    transaction_type = models.CharField(max_length=6, choices=TransactionType.choices)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project} - {self.transaction_type} {self.amount} from {self.source}"

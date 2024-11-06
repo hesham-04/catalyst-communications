@@ -1,0 +1,193 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="page-wrapper">
+
+    <!-- Page Content-->
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                        <h4 class="page-title">New Transaction</h4>
+                        <div class="">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a href="#">Approx</a>
+                                </li><!--end nav-item-->
+                                <li class="breadcrumb-item active">New Transaction</li>
+                            </ol>
+                        </div>
+                    </div><!--end page-title-box-->
+                </div><!--end col-->
+            </div><!--end row-->
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-globe-img">
+                        <div class="card-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-16 fw-semibold">Current Budget</span>
+                                    <form class="">
+                                        <div>
+                                            <div class="dynamic-select example-select" id="dynamic-select" style="">
+                                                <input type="hidden" name="example-select" value="1">
+                                                <div class="dynamic-select-header" style="">
+
+                                                    <img src="{% static 'website/images/logos/m-card.png' %}" alt="xx25"
+                                                         class="" style="">
+                                                    <span class="dynamic-select-option-text">xx25</span>
+
+                                                </div>
+                                                <div class="dynamic-select-options" style="">
+                                                    <div class="dynamic-select-option dynamic-select-selected"
+                                                         data-value="1" style="width:100%;">
+
+                                                        <img src="{% static 'website/images/logos/m-card.png' %}"
+                                                             alt="xx25" class="" style="">
+                                                        <span class="dynamic-select-option-text">xx25</span>
+
+                                                    </div>
+
+                                                    <div class="dynamic-select-option" data-value="2"
+                                                         style="width:100%;">
+
+                                                        <img src="{% static 'website/images/logos/ame-bank.png' %}"
+                                                             alt="xx56" class="" style="">
+                                                        <span class="dynamic-select-option-text">xx56</span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <h4 class="my-2 fs-24 fw-semibold">{{ project.project_budget }} <small class="font-14">BTC</small></h4>
+                                <p class="mb-3 text-muted fw-semibold">
+                                    <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
+                                    Outstanding balance boost
+                                </p>
+                                <button type="submit" class="btn btn-soft-primary">Past Transactions</button>
+                                <button type="button" class="btn btn-soft-danger">Details</button>
+                            </div>
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="card-title">Our Assets</h4>
+                                </div><!--end col-->
+                            </div>  <!--end row-->
+                        </div><!--end card-header-->
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <tbody>
+                                    <tr class="">
+                                        <td class="px-0">
+                                            <div class="d-flex align-items-center">
+                                                <span class="thumb-md justify-content-center d-flex align-items-center bg-success-subtle text-success rounded-circle me-2">SF</span>
+                                                <div class="flex-grow-1 text-truncate">
+                                                    <h6 class="m-0 text-truncate">Cash in hand</h6>
+                                                    <p class="font-12 mb-0 text-muted">20 August 2024</p>
+                                                </div><!--end media body-->
+                                            </div><!--end media-->
+                                        </td>
+                                        <td class="px-0 text-end"><span
+                                                class="text-primary ps-2 align-self-center text-end">${{ cash_balance }}</span>
+                                        </td>
+                                    </tr><!--end tr-->
+                                    <tr class="">
+                                        <td class="px-0">
+                                            <div class="d-flex align-items-center">
+                                                <span class="thumb-md justify-content-center d-flex align-items-center bg-warning-subtle text-warning rounded-circle me-2">UI</span>
+                                                <div class="flex-grow-1 text-truncate">
+                                                    <h6 class="m-0 text-truncate">Account Balance</h6>
+                                                    <p class="font-12 mb-0 text-muted">15 August 2024</p>
+                                                </div><!--end media body-->
+                                            </div><!--end media-->
+                                        </td>
+                                        <td class="px-0 text-end"><span
+                                                class="text-primary ps-2 align-self-center text-end"> ${{ account_balance }}</span>
+                                        </td>
+                                    </tr><!--end tr-->
+
+                                    </tbody>
+                                </table> <!--end table-->
+                            </div><!--end /div-->
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                </div><!--end col-->
+
+                <div class="col-md-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post" class="form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Budget</button>
+            </form>
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                </div> <!--end col-->
+            </div><!--end row-->
+
+        </div><!-- container -->
+
+        <!--Start Rightbar-->
+        <!--Start Rightbar/offcanvas-->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="Appearance" aria-labelledby="AppearanceLabel">
+            <div class="offcanvas-header border-bottom justify-content-between">
+                <h5 class="m-0 font-14" id="AppearanceLabel">Appearance</h5>
+                <button type="button" class="btn-close text-reset p-0 m-0 align-self-center" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <h6>Account Settings</h6>
+                <div class="p-2 text-start mt-3">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="settings-switch1">
+                        <label class="form-check-label" for="settings-switch1">Auto updates</label>
+                    </div><!--end form-switch-->
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="settings-switch2" checked="">
+                        <label class="form-check-label" for="settings-switch2">Location Permission</label>
+                    </div><!--end form-switch-->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="settings-switch3">
+                        <label class="form-check-label" for="settings-switch3">Show offline Contacts</label>
+                    </div><!--end form-switch-->
+                </div><!--end /div-->
+                <h6>General Settings</h6>
+                <div class="p-2 text-start mt-3">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="settings-switch4">
+                        <label class="form-check-label" for="settings-switch4">Show me Online</label>
+                    </div><!--end form-switch-->
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="settings-switch5" checked="">
+                        <label class="form-check-label" for="settings-switch5">Status visible to all</label>
+                    </div><!--end form-switch-->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="settings-switch6">
+                        <label class="form-check-label" for="settings-switch6">Notifications Popup</label>
+                    </div><!--end form-switch-->
+                </div><!--end /div-->
+            </div><!--end offcanvas-body-->
+        </div>
+        <!--end Rightbar/offcanvas-->
+        <!--end Rightbar-->
+        <!--Start Footer-->
+
+
+
+        <!--end footer-->
+    </div>
+    <!-- end page content -->
+</div>
+{% endblock %}
+

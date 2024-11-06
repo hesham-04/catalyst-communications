@@ -1,214 +1,457 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" data-startbar="dark" data-bs-theme="light">
 {% load static %}
-<head>
-    <meta charset="utf-8">
-    <title>Catalyst | {% block title %}{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <!-- ================== BEGIN core-css ================== -->
-    <link href="{% static 'assets/css/vendor.min.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet">
-    <!-- ================== END core-css ================== -->
+
+<!-- Mirrored from mannatthemes.com/approx/default/{% url 'dashboard:index'  %} by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 05 Nov 2024 13:26:43 GMT -->
+<head>
+
+
+    <meta charset="utf-8" />
+            <title>Dashboard | Approx - Admin & Dashboard Template</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+            <meta content="" name="author" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+            <!-- App favicon -->
+            <link rel="shortcut icon" href="website/images/favicon.ico">
+
+
+
+     <!-- App css -->
+     <link href="{% static 'website/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+     <link href="{% static 'website/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+     <link href="{% static 'website/css/app.min.css' %}" rel="stylesheet" type="text/css" />
 
 </head>
 <style>
         body {
-        zoom: 0.8;
+        zoom: 0.9;
     }
 </style>
-<body class="theme-gray-400 " style="font-size: small;">
-<!-- BEGIN #app -->
-<div id="app" class="app">
-    <!-- BEGIN #header -->
-    <div id="header" class="app-header">
-        <!-- BEGIN mobile-toggler -->
-        <div class="mobile-toggler">
-            <button type="button" class="menu-toggler" data-toggle="sidebar-mobile">
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
+<body>
+
+    <!-- Top Bar Start -->
+    <div class="topbar d-print-none">
+        <div class="container-fluid">
+            <nav class="topbar-custom d-flex justify-content-between" id="topbar-custom">
+
+
+                <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
+                    <li>
+                        <button class="nav-link mobile-menu-btn nav-icon" id="togglemenu">
+                            <i class="iconoir-menu"></i>
+                        </button>
+                    </li>
+                    <li class="hide-phone app-search">
+                        <form role="search" action="#" method="get">
+                            <input type="search" name="search" class="form-control top-search mb-0" placeholder="Search here...">
+                            <button type="submit"><i class="iconoir-search"></i></button>
+                        </form>
+                    </li>
+                </ul>
+                <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
+
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
+                        <img src="{% static 'website/images/flags/us_flag.jpg' %}" alt="" class="thumb-sm rounded-circle">
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#"><img src="{% static 'website/images/flags/us_flag.jpg' %}" alt="" height="15" class="me-2">English</a>
+                            <a class="dropdown-item" href="#"><img src="{% static 'website/images/flags/spain_flag.jpg' %}" alt="" height="15" class="me-2">Spanish</a>
+                            <a class="dropdown-item" href="#"><img src="{% static 'website/images/flags/germany_flag.jpg' %}" alt="" height="15" class="me-2">German</a>
+                            <a class="dropdown-item" href="#"><img src="{% static 'website/images/flags/french_flag.jpg' %}" alt="" height="15" class="me-2">French</a>
+                        </div>
+                    </li><!--end topbar-language-->
+
+                    <li class="topbar-item">
+                        <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode">
+                            <i class="iconoir-half-moon dark-mode"></i>
+                            <i class="iconoir-sun-light light-mode"></i>
+                        </a>
+                    </li>
+
+                    <li class="dropdown topbar-item">
+                        <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
+                            aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
+                            <i class="iconoir-bell"></i>
+                            <span class="alert-badge"></span>
+                        </a>
+                        <div class="dropdown-menu stop dropdown-menu-end dropdown-lg py-0">
+
+                            <h5 class="dropdown-item-text m-0 py-3 d-flex justify-content-between align-items-center">
+                                Notifications <a href="#" class="badge text-body-tertiary badge-pill">
+                                    <i class="iconoir-plus-circle fs-4"></i>
+                                </a>
+                            </h5>
+                            <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-1" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mx-0 active" data-bs-toggle="tab" href="#All" role="tab" aria-selected="true">
+                                        All <span class="badge bg-primary-subtle text-primary badge-pill ms-1">24</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mx-0" data-bs-toggle="tab" href="#Projects" role="tab" aria-selected="false" tabindex="-1">
+                                        Projects
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mx-0" data-bs-toggle="tab" href="#Teams" role="tab" aria-selected="false" tabindex="-1">
+                                        Team
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="ms-0" style="max-height:230px;" data-simplebar>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="All" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-wolf fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing and industry.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">10 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-apple-swift fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Meeting with designers</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">40 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-birthday-cake fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">UX 3 Task complete.</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">1 hr ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-drone fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 hrs ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-user fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Payment Successfull</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                    </div>
+                                    <div class="tab-pane fade" id="Projects" role="tabpanel" aria-labelledby="projects-tab" tabindex="0">
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">40 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-birthday-cake fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">UX 3 Task complete.</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">1 hr ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-drone fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 hrs ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-user fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Payment Successfull</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                    </div>
+                                    <div class="tab-pane fade" id="Teams" role="tabpanel" aria-labelledby="teams-tab" tabindex="0">
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">1 hr ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-drone fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 hrs ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-user fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Payment Successfull</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- All-->
+                            <a href="pages-notifications.html" class="dropdown-item text-center text-dark fs-13 py-2">
+                                View All <i class="fi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </li>
+
+                    <li class="dropdown topbar-item">
+                        <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
+                            aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
+                            <img src="{% static 'website/images/users/avatar-1.jpg' %}" alt="" class="thumb-md rounded-circle">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end py-0">
+                            <div class="d-flex align-items-center dropdown-item py-2 bg-secondary-subtle">
+                                <div class="flex-shrink-0">
+                                    <img src="{% static 'website/images/users/avatar-1.jpg' %}" alt="" class="thumb-md rounded-circle">
+                                </div>
+                                <div class="flex-grow-1 ms-2 text-truncate align-self-center">
+                                    <h6 class="my-0 fw-medium text-dark fs-13">William Martin</h6>
+                                    <small class="text-muted mb-0">Front End Developer</small>
+                                </div><!--end media-body-->
+                            </div>
+                            <div class="dropdown-divider mt-0"></div>
+                            <small class="text-muted px-2 pb-1 d-block">Account</small>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="las la-user fs-18 me-1 align-text-bottom"></i> Profile</a>
+                            <a class="dropdown-item" href="pages-faq.html"><i class="las la-wallet fs-18 me-1 align-text-bottom"></i> Earning</a>
+                            <small class="text-muted px-2 py-1 d-block">Settings</small>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="las la-cog fs-18 me-1 align-text-bottom"></i>Account Settings</a>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="las la-lock fs-18 me-1 align-text-bottom"></i> Security</a>
+                            <a class="dropdown-item" href="pages-faq.html"><i class="las la-question-circle fs-18 me-1 align-text-bottom"></i> Help Center</a>
+                            <div class="dropdown-divider mb-0"></div>
+                            <a class="dropdown-item text-danger" href="auth-login.html"><i class="las la-power-off fs-18 me-1 align-text-bottom"></i> Logout</a>
+                        </div>
+                    </li>
+                </ul><!--end topbar-nav-->
+            </nav>
+            <!-- end navbar-->
         </div>
-        <!-- END mobile-toggler -->
-
-        <!-- BEGIN brand -->
+    </div>
+    <!-- Top Bar End -->
+    <!-- leftbar-tab-menu -->
+    <div class="startbar d-print-none">
+        <!--start brand-->
         <div class="brand">
-            <div class="desktop-toggler">
-                <button type="button" class="menu-toggler" data-toggle="sidebar-minify">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
-            </div>
-
-            <a href="index.html" class="brand-logo">
-                <img src="{% static 'assets/img/logo.png' %}" class="invert-dark" alt="" height="20">
+            <a href="{% url 'dashboard:index'  %}" class="logo">
+                <span>
+                    <img src="{% static 'website/images/logo-sm.png' %}" alt="logo-small" class="logo-sm">
+                </span>
+                <span class="">
+                    <img src="{% static 'website/images/logo-light.png' %}" alt="logo-large" class="logo-lg logo-light">
+                    <img src="{% static 'website/images/logo-dark.png' %}" alt="logo-large" class="logo-lg logo-dark">
+                </span>
             </a>
         </div>
-        <!-- END brand -->
+        <!--end brand-->
+        <!--start startbar-menu-->
+        <div class="startbar-menu" >
+            <div class="startbar-collapse" id="startbarCollapse" data-simplebar>
+                <div class="d-flex align-items-start flex-column w-100">
+                    <!-- Navigation -->
+                    <ul class="navbar-nav mb-auto w-100">
+                        <li class="menu-label mt-2">
+                            <span>Main</span>
+                        </li>
 
-        <!-- BEGIN menu -->
-        <div class="menu">
-            <form class="menu-search" method="POST" name="header_search_form">
-                <div class="menu-search-icon"><i class="fa fa-search"></i></div>
-                <div class="menu-search-input">
-                    <input type="text" class="form-control" placeholder="Search menu...">
-                </div>
-            </form>
-            <div class="menu-item dropdown">
-                <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
-                    <div class="menu-icon"><i class="fa fa-bell nav-icon"></i></div>
-                    <div class="menu-label">0</div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-notification">
-                    <h6 class="dropdown-header text-body-emphasis mb-1">Notifications</h6>
-                    <div class="dropdown-notification-item">
-                        No record found
-                    </div>
-                    <div class="p-2 text-center mb-n1">
-                        <a href="#" class="text-body-emphasis text-opacity-50 text-decoration-none">See all</a>
-                    </div>
-                </div>
-            </div>
-            <div class="menu-item dropdown">
-                <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
-                    <div class="menu-img online">
-                        <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-gray-800 text-gray-300 rounded-circle overflow-hidden">
-                            <i class="fa fa-user fa-2x mb-n3"></i>
-                        </div>
-                    </div>
-                    <div class="menu-text">username@account.com</div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end me-lg-3">
-                    <a class="dropdown-item d-flex align-items-center" href="profile.html">Edit Profile <i
-                            class="fa fa-user-circle fa-fw ms-auto text-body text-opacity-50"></i></a>
-                    <a class="dropdown-item d-flex align-items-center" href="email_inbox.html">Inbox <i
-                            class="fa fa-envelope fa-fw ms-auto text-body text-opacity-50"></i></a>
-                    <a class="dropdown-item d-flex align-items-center" href="calendar.html">Calendar <i
-                            class="fa fa-calendar-alt fa-fw ms-auto text-body text-opacity-50"></i></a>
-                    <a class="dropdown-item d-flex align-items-center" href="settings.html">Setting <i
-                            class="fa fa-wrench fa-fw ms-auto text-body text-opacity-50"></i></a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item d-flex align-items-center" href="page_login.html">Log Out <i
-                            class="fa fa-toggle-off fa-fw ms-auto text-body text-opacity-50"></i></a>
-                </div>
-            </div>
-        </div>
-        <!-- END menu -->
-    </div>
-    <!-- END #header -->
-
-    <!-- BEGIN #sidebar -->
-    <div id="sidebar" class="app-sidebar">
-        <!-- BEGIN scrollbar -->
-        <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
-            <!-- BEGIN menu -->
-            <div class="menu">
-                <div class="menu-header">Navigation</div>
-
-                <div class="menu-item ">
-                    <a href="{% url 'dashboard:home' %}" class="menu-link">
-                        <span class="menu-icon"><i class="fa-solid fa-house"></i></span>
-                        <span class="menu-text">Home</span>
-                    </a>
-                </div>
-                <div class="menu-item has-sub">
-                    <a href="javascript:;" class="menu-link">
-                        <div class="menu-icon">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div class="menu-text d-flex align-items-center">Customers</div>
-                        <span class="menu-caret"><b class="caret"></b></span>
-                    </a>
-                    <div class="menu-submenu" style="display: none; box-sizing: border-box;">
-                        <div class="menu-item">
-                            <a href="{% url 'customer:home' %}" class="menu-link">
-                                <div class="menu-icon">
-                                    <i class="fa-solid fa-bars"></i>
-                                </div>
-                                <div class="menu-text">All Customers</div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard:index'  %}">
+                                <i class="iconoir-report-columns menu-icon"></i>
+                                <span>Dashboard</span>
+                                <span class="badge text-bg-info ms-auto">New</span>
                             </a>
-                        </div>
-                        <div class="menu-item">
-                            <a href="{% url 'customer:create' %}" class="menu-link">
-                                <div class="menu-icon">
-                                    <i class="fa-solid fa-plus"></i>
-                                </div>
-                                <div class="menu-text">Create Customer</div>
+                        </li><!--end nav-item-->
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'customer:index'  %}">
+                                <i class="iconoir-group menu-icon"></i>
+                                <span>Customers</span>
                             </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'project:index'  %}">
+                                <i class="iconoir-task-list menu-icon"></i>
+                                <span>Projects</span>
+                            </a>
+                        </li>
+
+
+
+
+
+
+                        <li class="menu-label mt-2">
+                            <small class="label-border">
+                                <div class="border_left hidden-xs"></div>
+                                <div class="border_right"></div>
+                            </small>
+                            <span>Components</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sidebarElements" data-bs-toggle="collapse" role="button"
+                                aria-expanded="false" aria-controls="sidebarElements">
+                                <i class="iconoir-compact-disc menu-icon"></i>
+                                <span>UI Elements</span>
+                            </a>
+                            <div class="collapse " id="sidebarElements">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-alerts.html">Alerts</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-avatar.html">Avatar</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-buttons.html">Buttons</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-badges.html">Badges</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-cards.html">Cards</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-carousels.html">Carousels</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-dropdowns.html">Dropdowns</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-grids.html">Grids</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-images.html">Images</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-list.html">List</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-modals.html">Modals</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-navs.html">Navs</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-navbar.html">Navbar</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-paginations.html">Paginations</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-popover-tooltips.html">Popover & Tooltips</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-progress.html">Progress</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-spinners.html">Spinners</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-tabs-accordions.html">Tabs & Accordions</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-typography.html">Typography</a>
+                                    </li><!--end nav-item-->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="ui-videos.html">Videos</a>
+                                    </li><!--end nav-item-->
+                                </ul><!--end nav-->
+                            </div><!--end startbarElements-->
+                        </li><!--end nav-item-->
+                    </ul><!--end navbar-nav--->
+                    <div class="update-msg text-center">
+                        <div class="d-flex justify-content-center align-items-center thumb-lg update-icon-box  rounded-circle mx-auto">
+                            <!-- <i class="iconoir-peace-hand h3 align-self-center mb-0 text-primary"></i> -->
+                             <img src="{% static 'website/images/extra/gold.png' %}" alt="" class="" height="45">
                         </div>
+                        <h5 class="mt-3">Today's <span class="text-white">$2450.00</span></h5>
+                        <p class="mb-3 text-muted">Today's best Investment for you.</p>
+                        <a href="javascript: void(0);" class="btn text-primary shadow-sm rounded-pill px-3">Invest Now</a>
                     </div>
                 </div>
+            </div><!--end startbar-collapse-->
+        </div><!--end startbar-menu-->
+    </div><!--end startbar-->
+    <div class="startbar-overlay d-print-none"></div>
+    <!-- end leftbar-tab-menu-->
 
-                <div class="menu-header">Granules</div>
+   {% block content %}
 
-                <div class="menu-item has-sub">
-                    <a href="javascript:;" class="menu-link">
-                        <div class="menu-icon">
-                            <i class="fa fa-file-invoice"></i>
-                        </div>
-                        <div class="menu-text d-flex align-items-center">Invoicing</div>
-                        <span class="menu-caret"><b class="caret"></b></span>
-                    </a>
-                    <div class="menu-submenu" style="display: none; box-sizing: border-box;">
-                        <div class="menu-item">
-                            <a href="{% url 'invoice:home' %}" class="menu-link">
-                                <div class="menu-icon">
-                                    <i class="fa-solid fa-bars"></i>
-                                </div>
-                                <div class="menu-text">All Invoices</div>
-                            </a>
-                        </div>
-                        <div class="menu-item">
-                            <a href="{% url 'invoice:home' %}" class="menu-link">
-                                <div class="menu-icon">
-                                    <i class="fa-solid fa-plus"></i>
-                                </div>
-                                <div class="menu-text">Create Invoice</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+   {% endblock %}
+    <!-- end page-wrapper -->
 
-                <div class="p-3 px-4 mt-auto hide-on-minified">
-                    <a href="https://seantheme.com/studio/documentation/index.html"
-                       class="btn btn-secondary d-block w-100 fw-600 rounded-pill">
-                        <i class="fa fa-code-branch me-1 ms-n1 opacity-5"></i> Documentation
-                    </a>
-                </div>
-            </div>
-            <!-- END menu -->
-        </div>
-        <!-- END scrollbar -->
+    <!-- Javascript  -->
+    <!-- vendor js -->
 
-        <!-- BEGIN mobile-sidebar-backdrop -->
-        <button class="app-sidebar-mobile-backdrop" data-dismiss="sidebar-mobile"></button>
-        <!-- END mobile-sidebar-backdrop -->
-    </div>
-    <!-- END #sidebar -->
+    <script src="{% static 'website/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'website/libs/simplebar/simplebar.min.js' %}"></script>
 
-    <!-- BEGIN #content -->
-    <div id="content" class="app-content">
-        {% block content %}
-
-        {% endblock %}
-    </div>
-    <!-- END #content -->
-
-	<!--THEME SLIDER HERE -->
-
-    <!-- BEGIN btn-scroll-top -->
-    <a href="#" data-click="scroll-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
-    <!-- END btn-scroll-top -->
-</div>
-<!-- END #app -->
-
-<!-- ================== BEGIN core-js ================== -->
-<script src="{% static 'assets/js/vendor.min.js' %}"></script>
-<script src="{% static 'assets/js/app.min.js' %}"></script>
-<!-- ================== END core-js ================== -->
-
-
+    <script src="{% static 'website/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static '../../../apexcharts.com/samples/website/stock-prices.js' %}"></script>
+    <script src="{% static 'website/js/pages/index.init.js' %}"></script>
+    <script src="{% static 'website/js/DynamicSelect.js' %}"></script>
+    <script src="{% static 'website/js/app.js' %}"></script>
 </body>
+<!--end body-->
+
+
+<!-- Mirrored from mannatthemes.com/approx/default/{% url 'dashboard:index'  %} by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 05 Nov 2024 13:27:23 GMT -->
 </html>

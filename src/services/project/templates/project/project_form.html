@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Project{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+            {% if object %}
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Edit Project</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'project:index' %}">Projects</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+            {% else %}
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Add Project</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'project:index' %}">Projects</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Add</li>
+                    </ol>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" enctype="multipart/form-data">
+                        {% crispy form %}
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <img style="margin-top: 50px" src="{% static 'img/customer.png' %}" alt="Project"
+                         class="img-fluid d-block mx-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}

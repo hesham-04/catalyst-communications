@@ -6,15 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/customer/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/customer/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/prev_customer_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/customer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/web/dashboard/templates/dashboard/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/web/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web/dashboard/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/web/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web/dashboard/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/dashboard/base.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +32,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -54,8 +62,8 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;hesham&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gwtwm/Downloads/company-website&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;
+    &quot;last_opened_file_path&quot;: &quot;D:/github/DEVELOPMENT/carello&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -63,6 +71,9 @@
       <recent name="D:\github\catalyst-communications\static" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\github\catalyst-communications\src\services" />
+      <recent name="D:\github\catalyst-communications\src\services\customer\templates\customer" />
+      <recent name="D:\github\catalyst-communications\src\web\dashboard\templates\dashboard" />
       <recent name="D:\github\catalyst-communications\templates\dashboard" />
     </key>
   </component>

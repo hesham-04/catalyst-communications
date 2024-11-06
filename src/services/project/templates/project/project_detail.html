@@ -1,0 +1,167 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customer Detail{% endblock %}
+{% load static %}
+{% load project_tags %}
+
+
+{% block content %}
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title"> Project Detail</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="card-title">{{ project.project_name }}</h4>
+                                </div><!--end col-->
+                                <div class="col-auto">
+                                    <a href="#" class="float-end text-muted d-inline-flex text-decoration-underline"><i
+                                            class="iconoir-edit-pencil fs-18 me-1"></i>Edit</a>
+                                </div><!--end col-->
+                            </div>  <!--end row-->
+                        </div><!--end card-header-->
+                        <div class="card-body pt-0">
+                            <p class="text-muted fw-medium mb-3">{{ project.description }}</p>
+                            <div class="mb-3">
+                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Javascript</span>
+                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Python</span>
+                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Angular</span>
+                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Reactjs</span>
+                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Flutter</span>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class=""><i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
+                                    <b> Client Name </b> :<a href="{% url 'customer:detail' project.customer.id %}"> {{ project.customer.display_name }}</a>
+                                </li>
+                                <li class="mt-2"><i class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
+                                    <b> Project status </b> : <span class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
+                    {{ project.get_project_status_display }}
+                </span>
+                                </li>
+                                <li class="mt-2"><i
+                                        class="las la-university me-2 text-secondary fs-22 align-middle"></i> <b>
+                                    Payment Status </b> : <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Paid</span>
+                                </li>
+                                <li class="mt-2"><i class="las la-language me-2 text-secondary fs-22 align-middle"></i>
+                                    <b> Address </b> : {{ project.customer.shipping_address.city }}
+                                </li>
+                                <li class="mt-2"><i class="las la-phone me-2 text-secondary fs-22 align-middle"></i> <b>
+                                    Phone </b> : {{  project.customer.phone }}
+                                </li>
+                                <li class="mt-2"><i class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                    <b> Email </b> : {{ project.customer.email }}
+                                </li>
+                            </ul>
+                        </div><!--end card-body-->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="card bg-globe-img">
+                        <div class="card-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-16 fw-semibold">Current Budget</span>
+                                    <form class="">
+                                        <div>
+                                            <div class="dynamic-select example-select" id="dynamic-select" style="">
+                                                <input type="hidden" name="example-select" value="1">
+                                                <div class="dynamic-select-header" style="">
+
+                                                    <img src="{% static 'website/images/logos/m-card.png' %}" alt="xx25"
+                                                         class=""
+                                                         style="">
+                                                    <span class="dynamic-select-option-text">xx25</span>
+
+                                                </div>
+                                                <div class="dynamic-select-options" style="">
+                                                    <div class="dynamic-select-option dynamic-select-selected"
+                                                         data-value="1" style="width:100%;">
+
+                                                        <img src="{% static 'website/images/logos/m-card.png' %}"
+                                                             alt="xx25" class=""
+                                                             style="">
+                                                        <span class="dynamic-select-option-text">xx25</span>
+
+                                                    </div>
+
+                                                    <div class="dynamic-select-option" data-value="2"
+                                                         style="width:100%;">
+
+                                                        <img src="{% static 'website/images/logos/ame-bank.png' %}"
+                                                             alt="xx56" class=""
+                                                             style="">
+                                                        <span class="dynamic-select-option-text">xx56</span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <h4 class="my-2 fs-24 fw-semibold">{{ project.project_budget }} <small class="font-14">PKR</small></h4>
+                                <p class="mb-3 text-muted fw-semibold">
+                                    <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
+                                    Outstanding balance boost
+                                </p>
+                                <a href="{% url 'project:add_budget' pk=project.id %}" class="btn btn-soft-success">Assign Budget</a>
+                                <a href="#" class="btn btn-soft-danger">Add Expense</a>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <div class="p-2 border-dashed border-theme-color rounded">
+                                        <h5 class="mt-1 mb-0 fw-medium">{{ project.project_cash }} PKR</h5>
+                                        <small class="text-muted">Project Cash In Hand</small>
+                                    </div>
+                                </div><!--end col-->
+                                <div class="col-4">
+                                    <div class="p-2 border-dashed border-theme-color rounded">
+                                        <h5 class="mt-1 mb-0 fw-medium">{{ project.project_account_balance }} PKR</h5>
+                                        <small class="text-muted">Account Balance</small>
+                                    </div>
+                                </div><!--end col-->
+                                <div class="col-4">
+                                    <div class="p-2 border-dashed border-theme-color rounded">
+                                        <h5 class="mt-1 mb-0 fw-medium">{{ project.project_client_fund }} PKR</h5>
+                                        <small class="text-muted">Client Funds</small>
+                                    </div>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end card-body-->
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="#" class="btn btn-sm btn-warning disabled ">Create Invoice</a>
+                            <a href="{% url 'invoice:index' %}" class="btn btn-sm btn-danger ">Create Quote</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -86,7 +86,7 @@ class CustomerForm(forms.ModelForm):
                 css_class='row'
             ),
             Row(
-                Column('payment_due_period', css_class='form-group col-md-6 mb-3'),
+                Column('payment_due_period', css_class='form-group col-md-12 mb-3'),
                 css_class='row'
             ),
             FormActions(

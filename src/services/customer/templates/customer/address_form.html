@@ -1,0 +1,69 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            {% if object %}
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Edit Address</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Address</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+            {% else %}
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Add Address</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Address</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Add</li>
+                    </ol>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row justify-content-center">
+            <div class="col-md-6  card p-4">
+                {% if object %}
+        <div class="row justify-content-center text-center">
+            <h1 class="page-header">
+                Update Address <small class="text-body"><a class="text-primary" href="{% url 'customer:detail' object.customer.id %}">{{ object.customer }}</a></small>
+                <br>
+            </h1>
+        </div>
+        {% else %}
+        <div class="row justify-content-center text-center">
+            <h1 class="page-header">
+                Add Address <small class="text-body"><a class="text-primary" href="{% url 'customer:detail' customer.id %}">{{ customer }}</a></small>
+                <br>
+                <small>Create a new address for a business or a individual...</small>
+            </h1>
+        </div>
+        {% endif %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
