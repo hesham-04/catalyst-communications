@@ -50,3 +50,17 @@ class QuotationItem(models.Model):
         return f"{self.item_name} - {self.quotation.quotation_number}"
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
