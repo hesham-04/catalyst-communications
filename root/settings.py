@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'src.web.dashboard',
     'src.services.invoice',
     'src.services.customer',
+    'src.services.project',
     'src.core',
 ]
 

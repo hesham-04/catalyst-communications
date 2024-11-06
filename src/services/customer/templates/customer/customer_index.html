@@ -4,244 +4,87 @@
 {% block content %}
 
 
-<h1 class="page-header">
-    Customers
-    <br>
-    <small>Customers that are registered with our database...</small>
-</h1>
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
 
-<div class="row">
-    <!-- BEGIN col-6 -->
-    <div class="col-xl-6">
-        <!-- BEGIN row -->
-        <div class="row">
-            <!-- BEGIN col-6 -->
-            <div class="col-sm-6 mb-3 d-flex flex-column">
-                <!-- BEGIN card -->
-                <div class="card mb-3 flex-1">
-                    <!-- BEGIN card-body -->
-                    <div class="card-body">
-                        <div class="d-flex mb-3">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Total Customers</h5>
-                                <div>Store user account registration</div>
-                            </div>
-                            <a href="javascript:;" class="text-secondary"><i class="fa fa-redo"></i></a>
-                        </div>
 
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h3 class="mb-1">184,593</h3>
-                                <div class="text-success fw-600 fs-13px">
-                                    <i class="fa fa-caret-up"></i> +3.59%
-                                </div>
-                            </div>
-                            <div class="w-50px h-50px bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="fa fa-user fa-lg text-primary"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END card-body -->
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Customers</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
+                        </li><!--end nav-item-->
+                    </ol>
                 </div>
-                <!-- END card -->
+            </div>
 
-                <!-- BEGIN card -->
+
+            <div class="row">
                 <div class="card">
-                    <!-- BEGIN card-body -->
                     <div class="card-body">
-                        <div class="d-flex mb-3">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Finances</h5>
-                                <div>Total income and expenses</div>
-                            </div>
-                            <a href="javascript:;" class="text-secondary"><i class="fa fa-redo"></i></a>
-                        </div>
-
-                        <!-- BEGIN row -->
-                        <div class="row">
-                            <!-- BEGIN col-6 -->
-                            <div class="col-6 text-center">
-                                <div class="w-50px h-50px bg-danger bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center mb-2 ms-auto me-auto">
-                                    <i class="fa-solid fa-money-bill-1 fa-lg text-danger"></i>
+                        <div class="mb-2 row">
+                            <div class="col-sm-2"><select class="form-select pageSize mb-2">
+                                <option value="10">Show 10</option>
+                                <option value="20">Show 20</option>
+                                <option value="30">Show 30</option>
+                                <option value="40">Show 40</option>
+                                <option value="50">Show 50</option>
+                            </select></div>
+                            <div class="col-sm-4"><input class="form-control search-box me-2 mb-2 d-inline-block"
+                                                         placeholder="Search..." value=""></div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-end">
+                                    <a href="{% url 'customer:create' %}"
+                                       class="btn btn-primary btn-rounded waves-effect waves-light addContact-modal mb-2 btn btn-primary">
+                                        <i class="mdi mdi-plus me-1"></i> New Customer
+                                    </a>
                                 </div>
-                                <div class="fw-600 text-body">306.5k</div>
-                                <div class="fs-13px">Payables</div>
-                            </div>
-                            <!-- END col-6 -->
-
-                            <!-- BEGIN col-6 -->
-                            <div class="col-6 text-center">
-                                <div class="w-50px h-50px bg-success bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center mb-2 ms-auto me-auto">
-                                    <i class="fa-solid fa-wallet fa-lg text-success"></i>
-                                </div>
-                                <div class="fw-600 text-body">27.5k</div>
-                                <div class="fs-13px">Receivables</div>
-                            </div>
-                            <!-- END col-6 -->
-                        </div>
-                        <!-- END row -->
-                    </div>
-                    <!-- END card-body -->
-                </div>
-                <!-- END card -->
-            </div>
-            <!-- END col-6 -->
-
-            <!-- BEGIN col-6 -->
-            <div class="col-sm-6 mb-3">
-                <!-- BEGIN card -->
-                <div class="card h-100">
-                    <!-- BEGIN card-body -->
-                    <div class="card-body">
-                        <div class="d-flex mb-3">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Total Receivables</h5>
-                                <div class="fs-13px">Money that is to be paid within this month</div>
-                            </div>
-                            <a href="javascript:;" class="text-secondary"><i class="fa fa-redo"></i></a>
-                        </div>
-
-                        <div class="mb-4">
-                            <h3 class="mb-1">320,958</h3>
-                            <div class="text-success fs-13px fw-600">
-                                <i class="fa fa-caret-up"></i> +20.9%
                             </div>
                         </div>
 
-                        <div class="progress mb-4" style="height: 10px;">
-                            <div class="progress-bar bg-primary" style="width: 42.66%"></div>
-                            <div class="progress-bar bg-teal" style="width: 36.80%"></div>
-                            <div class="progress-bar bg-yellow" style="width: 15.34%"></div>
-                            <div class="progress-bar bg-pink" style="width: 9.20%"></div>
-                            <div class="progress-bar bg-gray-200" style="width: 5.00%"></div>
+                        <div class="table-responsive rounded">
+                            <table class="align-middle table-nowrap table-hover dt-responsive nowrap w-100 dataTable no-footer dtr-inline table table-hover">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Recieveables</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for customer in customers %}
+                                <tr>
+                                    <td>
+                                        <div class="avatar-xs">
+                                            <span class="avatar-title rounded-circle">{{ customer.id }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h5 class="font-size-14 mb-1">
+                                            <a class="text-dark" href="{% url 'customer:detail' customer.id %}">
+                                                {{ customer.first_name }} {{ customer.last_name }}</a>
+                                        </h5>
+                                        <p class="text-muted mb-0">{{ customer.customer_type }}</p>
+                                    </td>
+                                    <td>{{ customer.company_name }}</td>
+                                    <td>{{ customer.email }}</td>
+                                    <td>{{ customer.phone }}</td>
+                                    <td>{{ customer.currency }}</td>
+
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
                         </div>
 
-                        <div class="fs-13px">
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    <i class="fa fa-circle fs-9px fa-fw text-primary me-2"></i> Direct visit
-                                </div>
-                                <div class="fw-600 text-body">42.66%</div>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    <i class="fa fa-circle fs-9px fa-fw text-teal me-2"></i> Organic Search
-                                </div>
-                                <div class="fw-600 text-body">36.80%</div>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    <i class="fa fa-circle fs-9px fa-fw text-warning me-2"></i> Referral Website
-                                </div>
-                                <div class="fw-600 text-body">15.34%</div>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    <i class="fa fa-circle fs-9px fa-fw text-danger me-2"></i> Social Networks
-                                </div>
-                                <div class="fw-600 text-body">9.20%</div>
-                            </div>
-                            <div class="d-flex align-items-center mb-15px">
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    <i class="fa fa-circle fs-9px fa-fw text-gray-200 me-2"></i> Others
-                                </div>
-                                <div class="fw-600 text-body">5.00%</div>
-                            </div>
-                            <div class="fs-12px text-end">
-                                <span class="fs-10px">powered by </span>
-                                <span class="d-inline-flex fw-600">
-												<span class="text-primary">E</span>
-												<span class="text-danger">x</span>
-												<span class="text-warning">a</span>
-												<span class="text-primary">r</span>
-												<span class="text-green">t</span>
-												<span class="text-danger">h</span>
-											</span>
-                                <span class="fs-10px">Analytics API</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END card-body -->
-                </div>
-                <!-- END card -->
-            </div>
-            <!-- END col-6 -->
-        </div>
-        <!-- END row -->
-    </div>
-    <!-- END col-6 -->
-
-    <!-- BEGIN col-6 -->
-    <div class="col-xl-6 mb-3">
-        <!-- BEGIN card -->
-
-        <!-- END card -->
-    </div>
-    <!-- END col-6 -->
-</div>
-
-
-<div class="row">
-    <div class="card">
-        <div class="card-body">
-            <div class="mb-2 row">
-                <div class="col-sm-2"><select class="form-select pageSize mb-2">
-                    <option value="10">Show 10</option>
-                    <option value="20">Show 20</option>
-                    <option value="30">Show 30</option>
-                    <option value="40">Show 40</option>
-                    <option value="50">Show 50</option>
-                </select></div>
-                <div class="col-sm-4"><input class="form-control search-box me-2 mb-2 d-inline-block"
-                                             placeholder="Search..." value=""></div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        <a href="{% url 'customer:create' %}"
-                           class="btn btn-secondary btn-rounded waves-effect waves-light addContact-modal mb-2 btn btn-secondary">
-                            <i class="mdi mdi-plus me-1"></i> New Customer
-                        </a>
                     </div>
                 </div>
             </div>
-
-            <div class="table-responsive rounded">
-                <table class="align-middle table-nowrap table-hover dt-responsive nowrap w-100 dataTable no-footer dtr-inline table table-hover">
-                    <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Company</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Recieveables</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for customer in customers %}
-                    <tr>
-                        <td>
-                            <div class="avatar-xs">
-                                <span class="avatar-title rounded-circle">{{ customer.id }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <h5 class="font-size-14 mb-1">
-                                <a class="text-dark" href="{% url 'customer:detail' customer.id %}">{{ customer.first_name }} {{ customer.last_name }}</a>
-                            </h5>
-                            <p class="text-muted mb-0">{{ customer.customer_type }}</p>
-                        </td>
-                        <td>{{ customer.company_name }}</td>
-                        <td>{{ customer.email }}</td>
-                        <td>{{ customer.phone }}</td>
-                        <td>{{ customer.currency }}</td>
-
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-
-            </div>
-
         </div>
     </div>
 </div>

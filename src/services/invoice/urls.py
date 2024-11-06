@@ -7,5 +7,5 @@ from .views import (
 app_name = 'invoice'
 
 urlpatterns = [
-    path('', InvoiceView.as_view(), name='home'),
+    path('', InvoiceView.as_view(), name='index'),
 ]
