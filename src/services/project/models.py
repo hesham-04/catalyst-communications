@@ -1,12 +1,12 @@
 from django.db import models
+from django.utils import timezone
 
 from src.core.models import Transaction, CashInHand, AccountBalance
 
 
-from django.db import models
-
 class Project(models.Model):
     class ProjectStatus(models.TextChoices):
+        DRAFT = 'DF', 'Draft'
         QUOTATION = 'QT', 'Quotation'
         AWAITING = 'AW', 'Awaiting Approval'
         CANCELLED = 'CL', 'Cancelled'
@@ -24,16 +24,23 @@ class Project(models.Model):
     customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE, related_name='projects')
 
     # Specific budget fields for different sources
-    project_budget = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Total project budget")
-    project_cash = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Cash in hand assigned to the project")
-    project_account_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Account funds assigned to the project")
-    project_client_fund = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Client funds assigned to the project")
+    project_budget = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                         help_text="Total project budget")
+    project_cash = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                       help_text="Cash in hand assigned to the project")
+    project_account_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                  help_text="Account funds assigned to the project")
+    project_client_fund = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                              help_text="Client funds assigned to the project")
 
-    client_funds_received = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Total funds provided by the client")
+    client_funds_received = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                help_text="Total funds provided by the client")
+    project_loan_recieved = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                help_text="Total loan amount received by the project")
     project_status = models.CharField(
         max_length=2,
         choices=ProjectStatus.choices,
-        default=ProjectStatus.QUOTATION,
+        default=ProjectStatus.DRAFT,
         help_text="Current status of the project"
     )
 
@@ -89,11 +96,17 @@ class Project(models.Model):
             else:
                 self.project_client_fund -= amount
 
-        # Update total project budget based on the transaction type
-        if transaction_type == 'CREDIT':
-            self.project_budget += amount
-        elif transaction_type == 'DEBIT':
-            self.project_budget -= amount
+        elif source == 'LOAN':
+            print("source loan ----------")
+            if transaction_type == 'CREDIT':
+                print('source loan credit ----------')
+                print("amount", amount)
+                print("self.project_budget before", self.project_budget)
+                self.project_budget += amount
+                print("self.project_budget after", self.project_budget)
+                self.project_loan_recieved += amount
+            else:
+                self.project_budget -= amount
 
         self.save()
 

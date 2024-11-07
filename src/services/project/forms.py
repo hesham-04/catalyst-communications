@@ -44,7 +44,6 @@ class ProjectForm(forms.ModelForm):
             )
         )
 
-from django import forms
 
 class AddBudgetForm(forms.Form):
     SOURCE_CHOICES = [
@@ -65,5 +64,6 @@ class AddBudgetForm(forms.Form):
     # Add any widget attributes for styling
     amount.widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter amount'})
     source.widget.attrs.update({'class': 'form-control'})
+
 
 

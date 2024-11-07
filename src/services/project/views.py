@@ -26,6 +26,7 @@ class ProjecCreateView(CreateView):
         return reverse_lazy('project:detail', kwargs={'pk': self.object.pk})
 
 
+
 class ProjectDetailView(TemplateView):
     template_name = 'project/project_detail.html'
 
@@ -65,3 +66,5 @@ def add_budget(request, pk):
         'client_funds': client_funds,
     }
     return render(request, 'project/add_budget.html', context)
+
+
