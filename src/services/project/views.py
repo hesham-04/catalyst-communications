@@ -1,10 +1,12 @@
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import TemplateView, CreateView, RedirectView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Project, CashInHand, AccountBalance
 from .forms import AddBudgetForm
 from .forms import ProjectForm
+from src.services.expense.views import Expense
+from ..invoice.models import Invoice
 
 
 class ProjectView(TemplateView):
@@ -33,6 +35,8 @@ class ProjectDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['project'] = Project.objects.get(pk=kwargs['pk'])
+        context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
+        context['receivables'] = Invoice.calculate_total_receivables(project_id=kwargs['pk'])
         return context
 
 
@@ -68,3 +72,10 @@ def add_budget(request, pk):
     return render(request, 'project/add_budget.html', context)
 
 
+class StartProjectView(RedirectView):
+    """A view that changes the project status to in progress and redirects to the project detail page"""
+    def get_redirect_url(self, *args, **kwargs):
+        project = get_object_or_404(Project, pk=kwargs['pk'])
+        project.project_status = Project.ProjectStatus.IN_PROGRESS
+        project.save()
+        return reverse('project:detail', kwargs={'pk': project.pk})

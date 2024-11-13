@@ -1,20 +1,18 @@
 from django.db import models
 from django.utils import timezone
-
-from src.core.models import Transaction, CashInHand, AccountBalance
+from src.services.assets.models import CashInHand, AccountBalance
+from src.core.models import Transaction
 
 
 class Project(models.Model):
     class ProjectStatus(models.TextChoices):
         DRAFT = 'DF', 'Draft'
-        QUOTATION = 'QT', 'Quotation'
-        AWAITING = 'AW', 'Awaiting Approval'
+        AWAITING = 'AW', 'Awaiting Quote Approval'
         CANCELLED = 'CL', 'Cancelled'
         IN_PROGRESS = 'IP', 'In Progress'
         FINISHED = 'FN', 'Finished'
 
     class BudgetSource(models.TextChoices):
-        BANK = 'BANK', 'Bank'
         CASH = 'CASH', 'Cash in Hand'
         ACCOUNT = 'ACC', 'Account'
         CLIENT_FUNDS = 'CLIENT', 'Client Provided'
@@ -37,6 +35,10 @@ class Project(models.Model):
                                                 help_text="Total funds provided by the client")
     project_loan_recieved = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
                                                 help_text="Total loan amount received by the project")
+
+    total_budget_assigned = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                help_text="Total cumulative budget assigned to the project")
+
     project_status = models.CharField(
         max_length=2,
         choices=ProjectStatus.choices,
@@ -72,12 +74,14 @@ class Project(models.Model):
             transaction_type=transaction_type
         )
 
-        # Adjust specific fields based on the source
         if source == 'CASH':
             cash = CashInHand.objects.first()
             cash.adjust_balance(amount, transaction_type)
             if transaction_type == 'CREDIT':
                 self.project_cash += amount
+                self.project_budget += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_cash -= amount
 
@@ -86,6 +90,9 @@ class Project(models.Model):
             account.adjust_balance(amount, transaction_type)
             if transaction_type == 'CREDIT':
                 self.project_account_balance += amount
+                self.project_budget += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_account_balance -= amount
 
@@ -93,20 +100,21 @@ class Project(models.Model):
             if transaction_type == 'CREDIT':
                 self.client_funds_received += amount
                 self.project_client_fund += amount
+                self.project_budget += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_client_fund -= amount
 
         elif source == 'LOAN':
-            print("source loan ----------")
             if transaction_type == 'CREDIT':
-                print('source loan credit ----------')
-                print("amount", amount)
-                print("self.project_budget before", self.project_budget)
                 self.project_budget += amount
-                print("self.project_budget after", self.project_budget)
                 self.project_loan_recieved += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_budget -= amount
 
         self.save()
+
 

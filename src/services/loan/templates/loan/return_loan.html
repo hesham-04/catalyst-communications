@@ -63,7 +63,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12 ">Initial Loan:</p>
-                                        <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white btn btn-soft-primary">
+                                        <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white btn btn-soft-danger">
                                             {{ loan.loan_amount }} PKR</h5>
                                     </div>
 
@@ -94,8 +94,8 @@
                                 <!--end col-->
                                 <div class="col-6 align-self-center text-end">
                                     <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12"><i
-                                            class="fas fa-money-check fs-12 me-2 text-white"></i>Lender BIC: {{
-                                        loan.lender.bic }}</p>
+                                            class="fas fa-money-check fs-12 me-2 text-white"></i>Lender BIC:
+                                        {{ loan.lender.bic }}</p>
                                     <h5 class="mt-1 mb-0 fw-medium fs-14 text-white">IBAN: {{ loan.lender.iban }}</h5>
                                 </div><!--end col-->
                             </div><!--end row-->

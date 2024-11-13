@@ -8,7 +8,6 @@ from .forms import LoanReturnForm
 from .models import Loan, LoanReturn
 
 
-# Create your views here.
 class LendLoanView(CreateView):
     form_class = LoanForm
     template_name = 'loan/lend_loan.html'
@@ -20,7 +19,8 @@ class LendLoanView(CreateView):
         loan = form.save(commit=False)
         loan.project = self.get_object()
         loan.save()
-        self.get_object().adjust_budget(loan.loan_amount, 'LOAN', 'CREDIT')  # Add loan amount to project budget
+        self.get_object().adjust_budget(loan.loan_amount, 'LOAN', 'CREDIT')
+        self.get_object().total_budget_assigned += loan.loan_amount
         messages.success(self.request, "Loan successfully assigned to project.")
         return redirect('project:detail', pk=self.kwargs['pk'])
 
@@ -39,11 +39,10 @@ class ReturnLoanView(CreateView):
 
     def form_valid(self, form):
         loan = self.get_object()
-        loan_return = form.save(commit=False) # loan_return is the model_form of ReturnLoan Model
+        loan_return = form.save(commit=False)
         loan_return.loan = loan
         loan_return.save()
 
-        # Update the loan's remaining balance
         loan.update_remaining_amount(loan_return.return_amount)
         messages.success(self.request, "Loan return successfully recorded.")
         return redirect('project:detail', pk=loan.project.id)

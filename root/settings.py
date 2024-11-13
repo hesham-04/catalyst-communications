@@ -51,7 +51,10 @@ INSTALLED_APPS = [
     'src.services.project',
     'src.services.quotation',
     'src.services.loan',
+    'src.services.expense',
+    'src.services.assets',
     'src.core',
+
 ]
 
 MIDDLEWARE = [

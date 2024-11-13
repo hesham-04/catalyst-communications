@@ -1,8 +1,9 @@
 from django.urls import path
-from . views import QuotaionView
+from . views import CreateQuotationView, PrintQuotationView
 
 app_name = 'quotation'
 
 urlpatterns = [
-    path('', QuotaionView.as_view(), name='index'),
+    path('project/<int:pk>/create-quotation/', CreateQuotationView.as_view(), name='create_quotation'),
+    path('print/<int:pk>/', PrintQuotationView.as_view(), name='print'),
 ]

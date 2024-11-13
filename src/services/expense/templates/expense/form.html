@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="page-wrapper w-50">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <h2 class="text-center mt-3">Create a New Expense</h2>
+                <div class="card p-4">
+                    <form method="post" >
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <!-- Project Selection Dropdown -->
+                    <div class="form-group">
+                        <label for="{{ form.project.id_for_label }}">Project</label>
+                        {{ form.project }}
+                        {{ form.project.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}">Description</label>
+                        {{ form.description }}
+                        {{ form.description.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.amount.id_for_label }}">Amount</label>
+                        {{ form.amount }}
+                        {{ form.amount.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.budget_source.id_for_label }}">Budget Source</label>
+                        {{ form.budget_source }}
+                        {{ form.budget_source.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.category.id_for_label }}">Category</label>
+                        {{ form.category }}
+                        {{ form.category.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.vendor.id_for_label }}">Vendor</label>
+                        {{ form.vendor }}
+                        {{ form.vendor.errors }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Add Expense</button>
+                </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{%  endblock %}

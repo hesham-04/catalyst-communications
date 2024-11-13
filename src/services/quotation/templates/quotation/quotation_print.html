@@ -1,0 +1,243 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customer Detail{% endblock %}
+{% load static %}
+{% load project_tags %}
+{% load custom_filters %}
+
+
+{% block content %}
+
+
+<style>
+    @media print {
+        /* Existing styles */
+        body, .page-wrapper, .page-content, .container-fluid {
+            margin: 0;
+            padding: 0;
+        }
+
+        .card, .table-responsive, .table, .row {
+            page-break-inside: avoid;
+        }
+
+        .d-print-none {
+            display: none !important;
+        }
+
+        .card-body, .breadcrumb, .page-title-box {
+            padding: 5px;
+        }
+
+        .fs-12, .fs-13, .fs-14 {
+            font-size: 11px;
+        }
+
+        @page {
+            margin: 1cm;
+        }
+
+        .card-body .row-cols-3 {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-body .col-md-3 {
+            margin-right: 20px;
+        }
+
+
+    }
+</style>
+
+<div class="page-wrapper">
+    <!-- Page Content-->
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                        <h4 class="page-title">Quotation</h4>
+                        <div class="">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a href="#">CATALYST</a>
+                                </li><!--end nav-item-->
+                                <li class="breadcrumb-item"><a href="#">{{ quotation.project }}</a>
+                                </li><!--end nav-item-->
+                                <li class="breadcrumb-item active">Quotation</li>
+                            </ol>
+                        </div>
+                    </div><!--end page-title-box-->
+                </div><!--end col-->
+            </div><!--end row-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body bg-black rounded-top">
+                            <div class="row">
+                                <div class="col-4 align-self-center">
+                                    <img src="{% static 'img/logo.png' %}" alt="logo-small" class="logo-sm me-1"
+                                         height="70">
+                                </div><!--end col-->
+                                <div class="col-8 text-end align-self-center">
+                                    <h5 class="mb-1 fw-semibold text-white"><span class="text-muted">Quotation:</span>
+                                        {{ quotation.quotation_number }}</h5>
+                                    <h5 class="mb-0 fw-semibold text-white"><span class="text-muted">Issue Date:</span>
+                                        {{ quotation.date|date:"d-m-Y" }}</h5>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end card-body-->
+                        <div class="card-body">
+                            <div class="row row-cols-3 d-flex justify-content-md-between ">
+                                <div class="col-md-3 d-print-flex align-self-center"
+                                ">
+                                <div class="">
+                                    <h5 class="my-1 fw-semibold fs-18">Catalyst Communications</h5>
+                                    <p class=" mb-0">Peshawar, Pakistan</p>
+                                    <p class=" mb-0">info@catalystcommunications.pk</p>
+                                    <p class="text-muted ">https://catalystcommunications.pk/</p>
+                                </div>
+                            </div><!--end col-->
+                            <div class="col-md-3 d-print-flex align-self-center">
+                                <div class="">
+                                    <span class="badge rounded text-dark bg-light">Quotation</span><br>
+                                    <address class="fs-13 ms-1">
+                                        <strong class="fs-14">Billed To :</strong><br>
+                                        {{ quotation.project.customer.get_full_name}} <br>
+                                        {{ quotation.project.customer.billing_address.city }}<br>
+                                        <strong title="Phone">Phone:</strong> {{ quotation.project.customer.phone }}
+                                    </address>
+                                </div>
+                            </div><!--end col-->
+                        </div><!--end row-->
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive project-Quotation">
+                                    <table class="table table-bordered mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 60%;">Project Breakdown</th>
+                                            <!-- Larger width for Project Breakdown -->
+                                            <th style="width: 15%;">Rate</th>
+                                            <th style="width: 10%;">Quantity</th>
+                                            <th style="width: 15%;">Subtotal</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in quotation.items.all %}
+                                        <tr>
+                                            <td>
+                                                <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
+                                                <p class="mb-0 text-muted">{{ item.description }}</p>
+                                            </td>
+                                            <td>{{ item.rate }} PKR</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>${{ item.rate|multiply:item.quantity }}</td>
+                                        </tr>
+                                        {% endfor %}
+
+                                        <tr>
+                                            <td colspan="1" class="border-0"></td>
+                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>Sub Total:</b></td>
+                                            <td class="border-0 fs-14 text-dark"><b>{{ quotation.total_amount }} PKR</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="1" class="border-0"></th>
+                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>
+                                            <td class="border-0 fs-14 text-dark"><b>
+                                                {{ quotation.total_in_words|capitalize_and_replace }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="1" class="border-0"></th>
+                                            <td colspan="2" class="border-0 fs-14"><b>Total</b></td>
+                                            <td class="border-0 fs-14"><b>{{ quotation.total_amount }}</b></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>  <!--end /div-->
+                            </div>  <!--end col-->
+                        </div><!--end row-->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                            </div> <!--end col-->
+                            <div class="col-lg-6 align-self-center">
+                                <div class="float-none float-md-end" style="width: 30%;">
+                                    <img src="{% static 'website/images/extra/signature.png' %}" alt=""
+                                         class="mt-2 mb-1" height="24">
+                                    <p class="border-top">Account Manager Signature</p>
+                                </div>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                        <hr>
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-12 col-xl-4 ms-auto align-self-center">
+                                <div class="text-center"><small class="fs-12">Thank you very much for doing business
+                                    with us.</small></div>
+                            </div><!--end col-->
+                            <div class="col-lg-12 col-xl-4">
+                                <div class="float-end d-print-none mt-2 mt-md-0">
+                                    <a href="javascript:window.print()" class="btn btn-info">Print</a>
+                                    <a href="{% url 'project:detail' pk=quotation.project.id %}" class="btn btn-danger">Cancel</a>
+                                </div>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div><!-- container -->
+
+    <!--Start Rightbar-->
+    <!--Start Rightbar/offcanvas-->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="Appearance" aria-labelledby="AppearanceLabel">
+        <div class="offcanvas-header border-bottom justify-content-between">
+            <h5 class="m-0 font-14" id="AppearanceLabel">Appearance</h5>
+            <button type="button" class="btn-close text-reset p-0 m-0 align-self-center" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <h6>Account Settings</h6>
+            <div class="p-2 text-start mt-3">
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch1">
+                    <label class="form-check-label" for="settings-switch1">Auto updates</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch2" checked>
+                    <label class="form-check-label" for="settings-switch2">Location Permission</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="settings-switch3">
+                    <label class="form-check-label" for="settings-switch3">Show offline Contacts</label>
+                </div><!--end form-switch-->
+            </div><!--end /div-->
+            <h6>General Settings</h6>
+            <div class="p-2 text-start mt-3">
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch4">
+                    <label class="form-check-label" for="settings-switch4">Show me Online</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch5" checked>
+                    <label class="form-check-label" for="settings-switch5">Status visible to all</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="settings-switch6">
+                    <label class="form-check-label" for="settings-switch6">Notifications Popup</label>
+                </div><!--end form-switch-->
+            </div><!--end /div-->
+        </div><!--end offcanvas-body-->
+    </div>
+    <!--end Rightbar/offcanvas-->
+    <!--end Rightbar-->
+    <!--Start Footer-->
+
+    <!--end footer-->
+</div>
+<!-- end page content -->
+</div>
+{% endblock %}
+
