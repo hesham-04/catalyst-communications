@@ -15,4 +15,3 @@ urlpatterns = [
     path('billing-address-update/<int:pk>/', BillingAddressUpdateView.as_view(), name='billing-update'),
 
 ]
-

@@ -1,20 +1,18 @@
 from django.db import models
+from django.utils import timezone
+from src.services.assets.models import CashInHand, AccountBalance
+from src.core.models import Transaction
 
-from src.core.models import Transaction, CashInHand, AccountBalance
-
-
-from django.db import models
 
 class Project(models.Model):
     class ProjectStatus(models.TextChoices):
-        QUOTATION = 'QT', 'Quotation'
-        AWAITING = 'AW', 'Awaiting Approval'
+        DRAFT = 'DF', 'Draft'
+        AWAITING = 'AW', 'Awaiting Quote Approval'
         CANCELLED = 'CL', 'Cancelled'
         IN_PROGRESS = 'IP', 'In Progress'
         FINISHED = 'FN', 'Finished'
 
     class BudgetSource(models.TextChoices):
-        BANK = 'BANK', 'Bank'
         CASH = 'CASH', 'Cash in Hand'
         ACCOUNT = 'ACC', 'Account'
         CLIENT_FUNDS = 'CLIENT', 'Client Provided'
@@ -24,16 +22,27 @@ class Project(models.Model):
     customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE, related_name='projects')
 
     # Specific budget fields for different sources
-    project_budget = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Total project budget")
-    project_cash = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Cash in hand assigned to the project")
-    project_account_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Account funds assigned to the project")
-    project_client_fund = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Client funds assigned to the project")
+    project_budget = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                         help_text="Total project budget")
+    project_cash = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                       help_text="Cash in hand assigned to the project")
+    project_account_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                  help_text="Account funds assigned to the project")
+    project_client_fund = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                              help_text="Client funds assigned to the project")
 
-    client_funds_received = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, help_text="Total funds provided by the client")
+    client_funds_received = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                help_text="Total funds provided by the client")
+    project_loan_recieved = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                help_text="Total loan amount received by the project")
+
+    total_budget_assigned = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
+                                                help_text="Total cumulative budget assigned to the project")
+
     project_status = models.CharField(
         max_length=2,
         choices=ProjectStatus.choices,
-        default=ProjectStatus.QUOTATION,
+        default=ProjectStatus.DRAFT,
         help_text="Current status of the project"
     )
 
@@ -65,12 +74,14 @@ class Project(models.Model):
             transaction_type=transaction_type
         )
 
-        # Adjust specific fields based on the source
         if source == 'CASH':
             cash = CashInHand.objects.first()
             cash.adjust_balance(amount, transaction_type)
             if transaction_type == 'CREDIT':
                 self.project_cash += amount
+                self.project_budget += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_cash -= amount
 
@@ -79,6 +90,9 @@ class Project(models.Model):
             account.adjust_balance(amount, transaction_type)
             if transaction_type == 'CREDIT':
                 self.project_account_balance += amount
+                self.project_budget += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_account_balance -= amount
 
@@ -86,14 +100,21 @@ class Project(models.Model):
             if transaction_type == 'CREDIT':
                 self.client_funds_received += amount
                 self.project_client_fund += amount
+                self.project_budget += amount
+                self.total_budget_assigned += amount
+
             else:
                 self.project_client_fund -= amount
 
-        # Update total project budget based on the transaction type
-        if transaction_type == 'CREDIT':
-            self.project_budget += amount
-        elif transaction_type == 'DEBIT':
-            self.project_budget -= amount
+        elif source == 'LOAN':
+            if transaction_type == 'CREDIT':
+                self.project_budget += amount
+                self.project_loan_recieved += amount
+                self.total_budget_assigned += amount
+
+            else:
+                self.project_budget -= amount
 
         self.save()
+
 

@@ -22,7 +22,6 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     company_name = models.CharField(max_length=100, blank=True)
-    display_name = models.CharField(max_length=100)
     customer_type = models.CharField(max_length=10, choices=CUSTOMER_TYPE_CHOICES, default='business')
     email = models.EmailField()
     phone = models.CharField(max_length=15, blank=True)
@@ -35,9 +34,11 @@ class Customer(models.Model):
     tax = models.OneToOneField('core.Tax', on_delete=models.SET_NULL, null=True, blank=True, related_name='customer')
 
 
-
+    def get_full_name(self):
+        return f"{self.salutation} {self.first_name} {self.last_name}"
     def __str__(self):
-        return self.display_name
+        return self.get_full_name()
+
 
 
 

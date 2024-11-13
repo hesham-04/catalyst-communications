@@ -1,0 +1,238 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title"> Add Expense</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow-lg">
+                        <div class="card-body">
+                            <form method="post" action=".">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <button type="submit" class="btn btn-primary mt-3">Add Expense</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow-lg">
+                        <div class="card-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-16 fw-semibold">Current Budget</span>
+                                    <form class="">
+                                        <div>
+                                            <div class="dynamic-select example-select" id="dynamic-select"
+                                                 style="">
+                                                <input type="hidden" name="example-select" value="1">
+                                                <div class="dynamic-select-header" style="">
+
+                                                    <img src="/static/website/images/logos/m-card.png"
+                                                         alt="xx25" class="" style="">
+                                                    <span class="dynamic-select-option-text">xx25</span>
+
+                                                </div>
+                                                <div class="dynamic-select-options" style="">
+                                                    <div class="dynamic-select-option dynamic-select-selected"
+                                                         data-value="1" style="width:100%;">
+
+                                                        <img src="/static/website/images/logos/m-card.png"
+                                                             alt="xx25" class="" style="">
+                                                        <span class="dynamic-select-option-text">xx25</span>
+
+                                                    </div>
+
+                                                    <div class="dynamic-select-option" data-value="2"
+                                                         style="width:100%;">
+
+                                                        <img src="/static/website/images/logos/ame-bank.png"
+                                                             alt="xx56" class="" style="">
+                                                        <span class="dynamic-select-option-text">xx56</span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <h4 class="my-2 fs-24 fw-semibold">{{ project.project_budget }} <small
+                                        class="font-14">PKR</small>
+                                </h4>
+                                <p class="mb-3 text-muted fw-semibold">
+                                    <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
+                                    Outstanding balance boost
+                                </p>
+                                <table class="table mb-0">
+                                    <tbody>
+                                    <tr class="">
+                                        <td class="px-0">
+                                            <div class="d-flex align-items-center">
+                                                <span class="thumb-md justify-content-center d-flex align-items-center bg-success-subtle text-success rounded-circle me-2">SF</span>
+                                                <div class="flex-grow-1 text-truncate">
+                                                    <h6 class="m-0 text-truncate">Cash in hand</h6>
+                                                    <p class="font-12 mb-0 text-muted">20 August 2024</p>
+                                                </div><!--end media body-->
+                                            </div><!--end media-->
+                                        </td>
+                                        <td class="px-0 text-end"><span
+                                                class="text-primary ps-2 align-self-center text-end">{{ project.project_cash }} PKR</span>
+                                        </td>
+                                    </tr><!--end tr-->
+                                    <tr class="">
+                                        <td class="px-0">
+                                            <div class="d-flex align-items-center">
+                                                <span class="thumb-md justify-content-center d-flex align-items-center bg-warning-subtle text-warning rounded-circle me-2">UI</span>
+                                                <div class="flex-grow-1 text-truncate">
+                                                    <h6 class="m-0 text-truncate">Account Balance</h6>
+                                                    <p class="font-12 mb-0 text-muted">15 August 2024</p>
+                                                </div><!--end media body-->
+                                            </div><!--end media-->
+                                        </td>
+                                        <td class="px-0 text-end"><span
+                                                class="text-primary ps-2 align-self-center text-end"> {{ project.project_account_balance }} PKR</span>
+                                        </td>
+                                    </tr><!--end tr-->
+                                    <tr class="">
+                                        <td class="px-0">
+                                            <div class="d-flex align-items-center">
+                                                <span class="thumb-md justify-content-center d-flex align-items-center bg-warning-subtle text-warning rounded-circle me-2">UI</span>
+                                                <div class="flex-grow-1 text-truncate">
+                                                    <h6 class="m-0 text-truncate">Loaned Amount</h6>
+                                                    <p class="font-12 mb-0 text-muted">15 August 2024</p>
+                                                </div><!--end media body-->
+                                            </div><!--end media-->
+                                        </td>
+                                        <td class="px-0 text-end"><span
+                                                class="text-primary ps-2 align-self-center text-end"> {{ project.loan.remaining_amount }} PKR</span>
+                                        </td>
+                                    </tr><!--end tr-->
+
+                                    </tbody>
+                                </table> <!--end table-->
+                                <div style="height:32px;" class="row"></div>
+                            </div>
+                        </div><!--end card-body-->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="card shadow-lg">
+                        <div class="card-body">
+                            <h4 class="card-title">Expense Summary</h4>
+                            <table class="table mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th class="border-top-0">Date</th>
+                                    <th class="border-top-0">Source</th>
+                                    <th class="border-top-0">Description</th>
+                                    <th class="border-top-0">Amount</th>
+                                    <th class="border-top-0">Status</th>
+                                    <th class="border-top-0">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for expense in expenses %}
+                                <tr>
+                                    <td>{{ expense.created_at|date:"d M Y" }}
+                                        <span>{{ expense.created_at|date:"h:i A" }}</span>
+                                    </td>
+                                    <td>{{ expense.get_budget_source_display }}</td>
+                                    <td>{{ expense.description|slice:40 }}</td>
+                                    <td>${{ expense.amount }}</td>
+                                    <td>
+                                        <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">Debit</span>
+                                    </td>
+                                    <td>
+                                        <a href="#"><i class="las la-download text-secondary fs-18"></i></a>
+                                        <a href="#"><i
+                                                class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No expenses recorded for this project.</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col">
+                                            <p class="text-dark mb-1 fw-semibold">Total Expenses</p>
+                                            <h3 class="my-2 fs-24 fw-bold text-danger">{{ total_expenses }} PKR</h3>
+                                            <p class="mb-0 text-truncate text-muted"><i
+                                                    class="ti ti-thumb-up text-success fs-18"></i>
+                                                <span class="text-dark fw-semibold">{{ expenses_today }}</span> Expenses
+                                                Today
+                                            </p>
+                                        </div>
+                                        <div class="col-auto align-self-center">
+                                            <div class="d-flex justify-content-center align-items-center thumb-xl bg-light rounded-circle mx-auto">
+                                                <i class="fas fa-coins fs-30 align-self-center text-muted"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!--end card-body-->
+                            </div><!--end card-->
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col">
+                                            <p class="text-dark mb-1 fw-semibold">Comments</p>
+                                            <h3 class="my-2 fs-24 fw-bold">15k</h3>
+                                            <p class="mb-0 text-truncate text-muted"><i
+                                                    class="ti ti-thumb-up text-success fs-18"></i>
+                                                <span class="text-dark fw-semibold">854</span> New Like this week
+                                            </p>
+                                        </div>
+                                        <div class="col-auto align-self-center">
+                                            <div class="d-flex justify-content-center align-items-center thumb-xl bg-light rounded-circle mx-auto">
+                                                <i class="iconoir-chat-lines fs-30 align-self-center text-muted"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!--end card-body-->
+                            </div><!--end card-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}

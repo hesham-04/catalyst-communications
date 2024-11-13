@@ -1,0 +1,155 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title"> Loan Detail</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Loan</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card border-2">
+                        <h4 class="text-center" style="margin-top: 18px">Return loan for <b>
+                            {{ project.project_name }}</b></h4>
+
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-warning mt-3 float-end">Return Amount
+                                </button>
+                            </form>
+
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 bg-black"
+                         style="background-image: url({% static 'website/images/extra/welcome.jpg' %});">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                    <p class="text-white text-uppercase mb-0 fw-semibold fs-14"><i
+                                            class="fas fa-coins fs-12 me-2 text-white"></i> Loan Management</p>
+                                </div>
+                                <!--end col-->
+                                <div class="col-3 align-self-center text-end">
+                                    <img src="{% static 'website/images/logos/m-card.png' %}" alt="" class=""
+                                         height="20">
+                                </div><!--end col-->
+                            </div><!--end row-->
+                            <div class="row mt-3 mb-1">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12">Remaining Loan
+                                            Amount:</p>
+                                        <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white btn btn-soft-success ">
+                                            {{ loan.remaining_amount }} PKR</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12 ">Initial Loan:</p>
+                                        <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white btn btn-soft-danger">
+                                            {{ loan.loan_amount }} PKR</h5>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-9">
+                                    <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12"
+                                       style="margin-top: 10px"><i class="fa fa-user fs-12 me-2 text-white"></i>Lender:
+                                        <span class="text-success">{{ loan.lender }}</span></p>
+                                    <p class="text-white-50  mb-0 fw-normal fs-12" style="margin-top: 10px"><i
+                                            class="fa fa-envelope fs-12 me-2 text-white"></i>Lender Email: <span
+                                            class="text-white">{{ loan.lender.email }}</span></p>
+                                </div>
+
+                                <!--end col-->
+                                <div class="col-3 align-self-center text-end">
+                                    <i class="iconoir-wifi fs-24 trans-90 text-white-50"></i>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end card-body-->
+                        <div class="card-body p-2 bg-soft-secondary rounded-bottom" style="max-height: 80px">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12"
+                                       style="color: red !important">DUE DATE: {{ loan.due_date|date:"d-m-Y"}}</p>
+                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-white">{{ loan.lender.name }}</h5>
+                                </div>
+                                <!--end col-->
+                                <div class="col-6 align-self-center text-end">
+                                    <p class="text-white-50 text-uppercase mb-0 fw-normal fs-12"><i
+                                            class="fas fa-money-check fs-12 me-2 text-white"></i>Lender BIC:
+                                        {{ loan.lender.bic }}</p>
+                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-white">IBAN: {{ loan.lender.iban }}</h5>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end card-body-->
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="row" style="margin-top: 20px">
+                        <h4 class="text-center">Previous Installments</b> </h4>
+                        <div class="card border-2">
+                            <div class="card-body">
+                                {% if return_logs %}
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Amount Returned</th>
+                                        <th>Remarks</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for log in return_logs %}
+                                    <tr>
+                                        <td>{{ log.return_date }}</td>
+                                        <td>{{ log.return_amount }}</td>
+                                        <td>{{ log.remarks|default:"N/A" }}</td>
+                                        <td>{{ log.created_at }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <p class="card-text text-danger text-center">No returns have been made on this loan
+                                    yet.</p>
+                                {% endif %}
+                            </div><!--end card-body-->
+                        </div>
+
+
+                        <!--end col-->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

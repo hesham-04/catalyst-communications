@@ -10,7 +10,7 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = [
-            'salutation', 'first_name', 'last_name', 'company_name', 'display_name',
+            'salutation', 'first_name', 'last_name', 'company_name',
             'customer_type', 'email', 'phone', 'work_phone', 'mobile', 'other_details',
             'currency', 'payment_due_period', 'company_id'
         ]
@@ -18,7 +18,6 @@ class CustomerForm(forms.ModelForm):
         labels = {
             'customer_type': 'Customer Type:',
             'company_name': 'Company Name:',
-            'display_name': 'Display Name:',
             'email': 'Email:',
             'phone': 'Phone:',
             'work_phone': 'Work Phone:',
@@ -31,7 +30,6 @@ class CustomerForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
             'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Name'}),
-            'display_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Display Name'}),
             'customer_type': forms.Select(attrs={'class': 'form-select'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
@@ -52,8 +50,7 @@ class CustomerForm(forms.ModelForm):
                 Column('customer_type', css_class='form-group mb-3'),
             ),
             Row(
-                Column('company_name', css_class='col-md-6 mb-3'),
-                Column('display_name', css_class='col-md-6 mb-3'),
+                Column('company_name', css_class='col-md-12 mb-3'),
                 css_class='row'
             ),
             Row(

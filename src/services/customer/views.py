@@ -20,7 +20,7 @@ class CustomerCreateView(CreateView):
     template_name = 'customer/customer_form.html'
     form_class = CustomerForm
     model = Customer
-    success_url = reverse_lazy('customer:home')
+    success_url = reverse_lazy('customer:index')
 
 
 class CustomerDetailView(DetailView):

@@ -1,0 +1,108 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Quotation{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Create Quotation</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Quotation</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <img src="{% static 'img/invoice.png' %}" alt="Invoice Preview" class="img-fluid">
+                    </div>
+                </div>
+                <!-- Quotation Form Section -->
+                <div class="col-md-12">
+                        <div class="card border shadow">
+                            <div class="card-body">
+                                <form method="POST">
+                                    <div class="row mt-3">
+                                        {% csrf_token %}
+                                        <div class="col-md-6">
+                                            {{ form|crispy }}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="">
+                                                <h5>Quotation Items</h5>
+                                                {{ formset.management_form }}
+                                                <div id="quotation-items">
+                                                    {% for form in formset %}
+                                                    <div class="card mt-3 border-2 shadow-sm quotation-item">
+                                                        <div class="card-body px-4 py-2">
+                                                            {{ form|crispy }}
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <a href="javascript:void(0)" id="add-item" class="btn btn-primary w-100">Add
+                                                        Item</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <button type="submit" class="btn btn-success mt-4">Create Quotation</button>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let formCount = {{ formset.total_form_count }};
+        const formsetPrefix = '{{ formset.prefix }}';
+        const managementFormTotalForms = document.querySelector(`#id_${formsetPrefix}-TOTAL_FORMS`);
+
+        // Add new item to formset
+        document.getElementById('add-item').addEventListener('click', function () {
+            const newItemHtml = `
+                <div class="card mt-3 border-2 shadow-sm quotation-item">
+                    <div class="card-body px-4 py-2">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-2">
+                                <label for="id_${formsetPrefix}-${formCount}-item_name">Item Name:</label>
+                                <input type="text" name="${formsetPrefix}-${formCount}-item_name" class="form-control" id="id_${formsetPrefix}-${formCount}-item_name">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="id_${formsetPrefix}-${formCount}-rate">Rate:</label>
+                                <input type="number" name="${formsetPrefix}-${formCount}-rate" class="form-control" id="id_${formsetPrefix}-${formCount}-rate">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="id_${formsetPrefix}-${formCount}-quantity">Quantity:</label>
+                                <input type="number" name="${formsetPrefix}-${formCount}-quantity" class="form-control" id="id_${formsetPrefix}-${formCount}-quantity">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <label for="id_${formsetPrefix}-${formCount}-description">Description:</label>
+                                <textarea name="${formsetPrefix}-${formCount}-description" class="form-control" id="id_${formsetPrefix}-${formCount}-description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('quotation-items').insertAdjacentHTML('beforeend', newItemHtml);
+
+            // Increment form count and update TOTAL_FORMS
+            formCount++;
+            managementFormTotalForms.value = formCount;
+        });
+    });
+</script>
+
+{% endblock %}
