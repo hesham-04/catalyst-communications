@@ -103,7 +103,7 @@
                                     <address class="fs-13 ms-1">
                                         <strong class="fs-14">Billed To :</strong><br>
                                         {{ invoice.project.customer.get_full_name}} <br>
-                                        {{ invoice.project.customer.billing_address }}<br>
+                                        {{ invoice.project.customer.billing_address.city }}<br>
                                         <strong title="Phone">Phone:</strong> {{ invoice.project.customer.phone }}
                                     </address>
                                 </div>
@@ -143,15 +143,21 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th colspan="1" class="border-0"></th>
-                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>
-                                            <td class="border-0 fs-14 text-dark"><b>
-                                                {{ invoice.total_in_words|capitalize_and_replace }}</b></td>
+                                            <td colspan="1" class="border-0"></td>
+                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>Sub Total:</b></td>
+                                            <td class="border-0 fs-14 text-dark"><b>{{ invoice.percent_tax }} %</b>
+                                            </td>
                                         </tr>
+<!--                                        <tr>-->
+<!--                                            <th colspan="1" class="border-0"></th>-->
+<!--                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>-->
+<!--                                            <td class="border-0 fs-14 text-dark"><b>-->
+<!--                                                {{ invoice.total_in_words|capitalize_and_replace }}</b></td>-->
+<!--                                        </tr>-->
                                         <tr>
                                             <th colspan="1" class="border-0"></th>
                                             <td colspan="2" class="border-0 fs-14"><b>Total</b></td>
-                                            <td class="border-0 fs-14"><b>{{ invoice.total_amount }}</b></td>
+                                            <td class="border-0 fs-14"><b>{{ invoice.total_amount|apply_tax:invoice.percent_tax }}</b></td>
                                         </tr>
                                         </tbody>
                                     </table>

@@ -143,15 +143,21 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th colspan="1" class="border-0"></th>
-                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>
-                                            <td class="border-0 fs-14 text-dark"><b>
-                                                {{ quotation.total_in_words|capitalize_and_replace }}</b></td>
+                                            <td colspan="1" class="border-0"></td>
+                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>Tax:</b></td>
+                                            <td class="border-0 fs-14 text-dark"><b>{{ quotation.percent_tax }} %</b>
+                                            </td>
                                         </tr>
+<!--                                        <tr>-->
+<!--                                            <th colspan="1" class="border-0"></th>-->
+<!--                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>-->
+<!--                                            <td class="border-0 fs-14 text-dark"><b>-->
+<!--                                                {{ quotation.total_in_words|capitalize_and_replace }}</b></td>-->
+<!--                                        </tr>-->
                                         <tr>
                                             <th colspan="1" class="border-0"></th>
                                             <td colspan="2" class="border-0 fs-14"><b>Total</b></td>
-                                            <td class="border-0 fs-14"><b>{{ quotation.total_amount }}</b></td>
+                                            <td class="border-0 fs-14"><b>{{ quotation.total_amount|apply_tax:quotation.percent_tax }}</b></td>
                                         </tr>
                                         </tbody>
                                     </table>
