@@ -1,0 +1,214 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title"> Vendor Detail</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Vendors</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                {# IMAGE DIV #}
+                                <div class="text-center">
+                                    <img style="max-height: 100px" class="rounded-circle"
+                                         src="{% static 'img/user-default.jpeg' %}"
+                                         height="150px" alt="no-user-image">
+                                </div>
+
+                                {# NAME AND OTHER #}
+                                <div class="text-center mt-2">
+                                    <h5 class="mb-0">
+                                        {{ object.name }}
+                                        {% if user.is_active %}
+                                            <i class="fa fa-check-circle text-success"></i>
+                                        {% endif %}
+                                    </h5>
+                                    <p class="fw-light text-muted mb-0">{{ object.created_at }}</p>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i class="fa fa-envelope me-1"></i>Email</p>
+                                        <p class="mb-0 text-center">{{ object.email }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i class="fa fa-phone me-1"></i>Phone</p>
+                                        <p class="mb-0 text-center">{{ object.phone }}</p>
+                                    </div>
+                                    <div class="col text-center">
+                                        <p class="mb-0 text-center h5"><i class="fa fa-credit-card me-1"></i>IBAN</p>
+                                        <p class="mb-0 text-center">{{ object.iban }}</p>
+                                    </div>
+                                    <div class="col text-center">
+                                        <p class="mb-0 text-center h5"><i class="fa-solid fa-money-bills me-1"></i>Due
+                                            Payments</p>
+                                        <p class="mb-0 text-center">{{ object.get_total_unpaid_expenses }} PKR</p>
+                                    </div>
+
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i class="fa-solid fa-location-dot me-1"></i>Address
+                                        </p>
+                                        <p class="mb-0 text-center">{{ object.address }}</p>
+                                    </div>
+
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i
+                                                class="fa-solid fa-tower-observation me-1"></i>VAT</p>
+                                        <p class="mb-0 text-center text-danger">
+                                            {{ object.vat_number }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# STATISTICS #}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">Expense Summary</h4>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <form method="get" class="row g-3 align-items-center mb-4">
+                                            <!-- Project Filter -->
+                                            <div class="col-md-3">
+                                                <select name="project" id="project" class="form-select">
+                                                    <option value="">All Projects</option>
+                                                    {% for project in projects %}
+                                                        <option value="{{ project.id }}"
+                                                                {% if project.id|stringformat:"s" == request.GET.project %}selected{% endif %}>
+                                                            {{ project.project_name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <!-- Category Filter -->
+                                            <div class="col-md-3">
+                                                <select name="category" id="category" class="form-select">
+                                                    <option value="">All Categories</option>
+                                                    {% for category in categories %}
+                                                        <option value="{{ category.id }}"
+                                                                {% if category.id|stringformat:"s" == request.GET.category %}selected{% endif %}>
+                                                            {{ category.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <!-- Status Filter -->
+                                            <div class="col-md-3">
+                                                <select name="status" id="status" class="form-select">
+                                                    <option value="">All Statuses</option>
+                                                    {% for status, label in statuses %}
+                                                        <option value="{{ status }}"
+                                                                {% if status == request.GET.status %}selected{% endif %}>
+                                                            {{ label }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <!-- Submit Button -->
+                                            <div class="col-md-3 d-flex align-items-end">
+                                                <button type="submit" class="btn btn-primary me-1"><i class="fa-solid fa-filter"></i> Filter</button>
+                                                <a href="{% url 'vendor:detail' object.id %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <table class="table mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="border-top-0">Date</th>
+                                        <th class="border-top-0">Project</th>
+                                        <th class="border-top-0">Source</th>
+                                        <th class="border-top-0">Description</th>
+                                        <th class="border-top-0">Vendor</th>
+                                        <th class="border-top-0">Category</th>
+                                        <th class="border-top-0">Amount</th>
+                                        <th class="border-top-0">Status</th>
+                                        <th class="border-top-0">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>{% for expense in expenses %}
+                                        <tr>
+                                            <td>{{ expense.created_at|date:"d M Y" }}</td>
+                                            <td>{{ expense.project.project_name }}</td>
+                                            <td>{{ expense.get_budget_source_display }}</td>
+                                            <td>{{ expense.description|slice:40 }}</td>
+                                            <td>{% if expense.vendor.name %}{{ expense.vendor.name }}{% else %} &nbsp;
+                                                &nbsp;  - {% endif %}</td>
+                                            <td>{% if expense.category.name %}{{ expense.category.name }}{% else %}
+                                                &nbsp; &nbsp; &nbsp;  - {% endif %}</td>
+                                            <td>{{ expense.amount }} PKR</td>
+                                            {% if expense.payment_status == 'UNPAID' %}
+                                                <td>
+                                                    <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2"> Unpaid </span>
+                                                </td>
+                                            {% else %}
+                                                <td>
+                                                    <span class="badge bg-danger-subtle text-success fs-11 fw-medium px-2"> PAID </span>
+                                                </td>
+                                            {% endif %}
+                                            <td>
+                                                <div class="btn btn-soft-success"><i class="fa fa-money-bill-wave"></i>
+                                                    Pay Now
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="12" class="text-center text-danger">No expenses recorded.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

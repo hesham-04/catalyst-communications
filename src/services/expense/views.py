@@ -4,14 +4,13 @@ from django.core.checks import messages
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView
 
 from src.services.project.models import Project
-from .forms import ExpenseForm, ExpenseFormCreate, VendorForm, ExpenseCategoryForm
-from .models import Expense, Vendor, ExpenseCategory
+from .forms import ExpenseForm, ExpenseFormCreate, ExpenseCategoryForm
+from .models import Expense, ExpenseCategory
 from ..project.bll import create_expense_calculations
-
 
 # List All Expense
 class ExpenseIndexView(TemplateView):
@@ -110,14 +109,7 @@ class ExpenseCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('expense:index', kwargs={'pk': self.object.project.pk})
 
-
-
-class VendorCreateView(CreateView):
-    model = Vendor
-    form_class = VendorForm
-    template_name = 'expense/vendor_form.html'  # Define your HTML template
-    success_url = reverse_lazy('expense:index')  # Redirect after creation
-
+""" Category Views ------------------------------------------------------------------ """
 class ExpenseCategoryCreateView(CreateView):
     model = ExpenseCategory
     form_class = ExpenseCategoryForm
