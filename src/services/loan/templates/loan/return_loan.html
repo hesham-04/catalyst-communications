@@ -27,7 +27,7 @@
                                 <div class="card-body">
                                     <div>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fs-16 fw-semibold">Loan Remaining - {{ loan.project.project_name }}</span>
+                                            <span class="fs-16 fw-semibold">{{ loan.project.project_name }}- Loan Remaining:</span>
                                             <form class="">
                                                 <div>
                                                     <div class="dynamic-select example-select" id="dynamic-select"
@@ -41,9 +41,9 @@
                                         <h4 class="my-2 fs-24 fw-semibold">{{ loan.remaining_amount }} <small
                                                 class="font-14">PKR</small>
                                         </h4>
-                                        <p class="mb-3 text-muted fw-semibold">
-                                            <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
-                                            Outstanding balance boost
+                                        <p class="mb-3 text-dark fw-semibold">
+                                            <span class="text-success"><i class="fas fa-calendar me-1"></i>Created on: {{ loan.date_issued }}: </span>
+                                            {{ loan.reason }}
                                         </p>
                                         <button type="submit" class="btn btn-soft-primary">Transfer</button>
                                         <button type="button" class="btn btn-soft-danger">Request</button>
@@ -97,6 +97,10 @@
                             </div><!--end card-->
                         </div>
                     </div>
+
+                    {% if loan.is_repaid %}
+                        {% include 'loan/include/loan_installments.html' %}
+                    {% else %}
                     <div class="col-md-6">
                         <div class="card border-2">
                             <h4 class="text-center" style="margin-top: 18px">Return loan for <b>
@@ -113,51 +117,17 @@
                             </div><!--end card-body-->
                         </div><!--end card-->
                     </div>
+                    {% endif %}
 
                 </div>
 
+                {% if loan.is_repaid %}
+
+                {% else %}
                 <div class="row">
-
-                    <div class="col-md-6">
-                        <div class="row" style="margin-top: 20px">
-                            <div class="card border-2">
-                                <div class="card-body">
-                                    <h4 class="text-center">Previous Installments</b> </h4>
-
-                                    {% if return_logs %}
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Amount Returned</th>
-                                                <th>Remarks</th>
-                                                <th>Created At</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for log in return_logs %}
-                                                <tr>
-                                                    <td>{{ log.return_date }}</td>
-                                                    <td>{{ log.return_amount }}</td>
-                                                    <td>{{ log.remarks|default:"N/A" }}</td>
-                                                    <td>{{ log.created_at }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    {% else %}
-                                        <p class="card-text text-danger text-center">No returns have been made on this
-                                            loan
-                                            yet.</p>
-                                    {% endif %}
-                                </div><!--end card-body-->
-                            </div>
-
-
-                            <!--end col-->
-                        </div>
-                    </div>
+                    {% include 'loan/include/loan_installments.html' %}
                 </div>
+                {% endif %}
 
 
             </div>

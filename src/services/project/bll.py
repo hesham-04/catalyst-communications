@@ -117,6 +117,23 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         reason=reason
     )
 
+@transaction.atomic
+def create_expense_calculations(project_id, amount, budget_source, reason=None):
+    project = Project.objects.select_for_update().get(pk=project_id)
 
+    if budget_source == 'CASH':
+        project.project_cash -= amount
 
+    elif budget_source == 'ACC':
+        project.project_account_balance -= amount
 
+    project.save()
+
+    Ledger.objects.create(
+        transaction_type="CREATE_EXPENSE",
+        project=project,
+        amount=amount,
+        source=f"{budget_source} form {project.project_name}",
+        destination=None,
+        reason=reason,
+    )

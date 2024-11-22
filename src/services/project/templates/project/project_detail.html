@@ -111,8 +111,8 @@
                                     </div><!--end col-->
                                     <div class="col-3">
                                         <div class="p-2 border-dashed border-warning rounded">
-                                            <h5 class="mt-1 mb-0 fw-medium">{{ project.project_client_fund }} PKR</h5>
-                                            <small class="text-dark">Payable</small>
+                                            <h5 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h5>
+                                            <small class="text-danger">Payables</small>
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -183,47 +183,8 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <h4 class="card-title"><a href="{% url 'expense:create' pk=project.id %}">Expense
-                                Summary</a></h4>
-                            <table class="table mb-0">
-                                <thead class="table-light">
-                                <tr>
-                                    <th class="border-top-0">Date</th>
-                                    <th class="border-top-0">Source</th>
-                                    <th class="border-top-0">Description</th>
-                                    <th class="border-top-0">Amount</th>
-                                    <th class="border-top-0">Status</th>
-                                    <th class="border-top-0">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for expense in project.expenses.all|slice:":5" %}
-                                <tr>
-                                    <td>{{ expense.created_at|date:"d M Y" }} <span>{{ expense.created_at|date:"h:i A" }}</span>
-                                    </td>
-                                    <td>{{ expense.get_budget_source_display }}</td>
-                                    <td>{{ expense.description|slice:40 }}</td>
-                                    <td>${{ expense.amount }}</td>
-                                    <td>
-                                        <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">Debit</span>
-                                    </td>
-                                    <td>
-                                        <a href="#"><i class="las la-download text-secondary fs-18"></i></a>
-                                        <a href="#"><i
-                                                class="las la-trash-alt text-secondary fs-18"></i></a>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="6" class="text-center">No expenses recorded for this project.</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-
-                        </div>
+                    <div class="col-md-12">
+                        {% include 'project/include/expense_table.html' %}
                     </div>
                 </div>
 

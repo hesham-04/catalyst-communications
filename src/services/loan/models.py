@@ -27,6 +27,7 @@ class Loan(models.Model):
     date_issued = models.DateField(default=timezone.now, help_text="Date when the loan was issued")
     due_date = models.DateField(help_text="Due date for loan repayment")
     is_repaid = models.BooleanField(default=False, help_text="Indicates if the loan has been fully repaid")
+    reason = models.CharField(max_length=544, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Initialize remaining_amount to loan_amount if it's a new loan

@@ -37,6 +37,7 @@ class ProjectDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
+        context['payable'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
         context['receivables'] = Invoice.calculate_total_receivables(project_id=kwargs['pk'])
         return context
 

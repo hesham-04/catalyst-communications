@@ -1,0 +1,39 @@
+{% load static %}
+
+<div class="col-md-6">
+    <div class="row">
+        <div class="card border-2">
+            <div class="card-body">
+                <h4 class="text-center">Previous Installments</b> </h4>
+
+                {% if return_logs %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount Returned</th>
+                            <th>Remarks</th>
+                            <th>Created At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for log in return_logs %}
+                            <tr>
+                                <td>{{ log.return_date|date:"d M Y" }}</td>
+                                <td>{{ log.return_amount }}</td>
+                                <td>{{ log.remarks|default:"N/A" }}</td>
+                                <td>{{ log.created_at }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="card-text text-danger text-center">No returns have been made on this
+                        loan
+                        yet.</p>
+                {% endif %}
+            </div><!--end card-body-->
+        </div>
+        <!--end col-->
+    </div>
+</div>

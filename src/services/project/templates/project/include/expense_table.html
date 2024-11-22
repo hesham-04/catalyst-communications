@@ -1,0 +1,51 @@
+{% load static %}
+<div class="card shadow-lg">
+                            <div class="card-body">
+                                <h4 class="card-title">Expense Summary</h4>
+                                <table class="table mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="border-top-0">Date</th>
+                                        <th class="border-top-0">Source</th>
+                                        <th class="border-top-0">Description</th>
+                                        <th class="border-top-0">Vendor</th>
+                                        <th class="border-top-0">Category</th>
+                                        <th class="border-top-0">Amount</th>
+                                        <th class="border-top-0">Status</th>
+                                        <th class="border-top-0">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>{% for expense in project.expenses.all %}
+                                        <tr>
+                                            <td>{{ expense.created_at|date:"d M Y" }}</td>
+                                            <td>{{ expense.get_budget_source_display }}</td>
+                                            <td>{{ expense.description|slice:40 }}</td>
+                                            <td>{% if expense.vendor.name %}{{ expense.vendor.name }}{% else %} &nbsp; &nbsp;  - {% endif %}</td>
+                                            <td>{% if expense.category.name %}{{ expense.category.name }}{% else %}&nbsp; &nbsp; &nbsp;  - {% endif %}</td>
+                                            <td>${{ expense.amount }}</td>
+                                            {% if expense.payment_status == 'UNPAID' %}
+                                            <td>
+                                                <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2"> Unpaid </span>
+                                            </td>
+                                            {% else %}
+                                                <td>
+                                                <span class="badge bg-danger-subtle text-success fs-11 fw-medium px-2"> PAID </span>
+                                            </td>
+                                            {% endif %}
+                                            <td>
+                                                <a href="#"><i class="las la-download text-secondary fs-18"></i></a>
+                                                <a href="#"><i
+                                                        class="las la-trash-alt text-secondary fs-18"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="6" class="text-center">No expenses recorded for this project.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
