@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'src.services.loan',
     'src.services.expense',
     'src.services.assets',
+    'src.services.transaction',
     'src.core',
 
 ]

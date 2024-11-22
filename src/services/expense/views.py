@@ -10,8 +10,10 @@ from django.views.generic.edit import CreateView
 from src.services.project.models import Project
 from .forms import ExpenseForm, ExpenseFormCreate, VendorForm, ExpenseCategoryForm
 from .models import Expense, Vendor, ExpenseCategory
+from ..project.bll import create_expense_calculations
 
 
+# List All Expense
 class ExpenseIndexView(TemplateView):
     template_name = 'expense/expense_index.html'
 
@@ -20,7 +22,7 @@ class ExpenseIndexView(TemplateView):
         context['expenses'] = Expense.objects.all().order_by('-created_at')
         return context
 
-
+# Project Detail
 class CreateExpenseView(CreateView):
     model = Expense
     form_class = ExpenseForm
@@ -28,51 +30,34 @@ class CreateExpenseView(CreateView):
 
     def form_valid(self, form):
         project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        form.instance.project = project
+        form.instance.project = project # Associate the project with the expense.
+        amount = form.cleaned_data['amount']
+        budget_source = form.cleaned_data['budget_source']
+        description = form.cleaned_data['description']
+        vendor = form.cleaned_data['vendor']
 
-        with transaction.atomic():
-            budget_source = form.cleaned_data['budget_source']
-            amount = form.cleaned_data['amount']
+        # Validate the amounts
+        # Check for the source and deduct from project source.
+        # Log this in the Ledger
+
+        # Doing the Validation checks here, can not pass the form instance to the BLL.
+        if amount <= 0:
+            form.add_error('amount', 'Amount must be greater than zero.')
+            return self.form_invalid(form)
+
+        if budget_source == 'CASH':
+            if amount > project.project_cash:
+                form.add_error('amount', 'Amount exceeds project cash budget.')
+                return self.form_invalid(form)
+
+        if budget_source == 'ACC':
+            if amount > project.project_account_balance:
+                form.add_error('amount', 'Amount exceeds project account balance.')
+                return self.form_invalid(form)
 
 
-            if budget_source == 'CASH':
-                if project.project_cash >= amount:
-                    project.project_cash -= amount
-                    project.project_budget -= amount
-
-                else:
-                    form.add_error('amount', 'Insufficient cash in hand.')
-                    return self.form_invalid(form)
-
-            elif budget_source == 'ACC':
-                if project.project_account_balance >= amount:
-                    project.project_account_balance -= amount
-                    project.project_budget -= amount
-
-                else:
-                    form.add_error('amount', 'Insufficient funds in the Account.')
-                    return self.form_invalid(form)
-
-            elif budget_source == 'CLIENT':
-                if project.project_client_fund >= amount:
-                    project.project_client_fund -= amount
-                    project.project_budget -= amount
-
-                else:
-                    form.add_error('amount', 'Insufficient client-provided funds.')
-                    return self.form_invalid(form)
-            elif budget_source == 'LOAN':
-                if project.loan.remaining_amount >= amount:
-                    project.loan.remaining_amount -= amount
-                    project.project_budget -= amount
-
-                else:
-                    form.add_error('amount', 'Insufficient loan funds.')
-                    return self.form_invalid(form)
-
-            expense = form.save()
-            project.save()
-
+        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source, reason=description)
+        expense = form.save()
         return redirect(reverse('project:detail', kwargs={'pk': project.pk}))
 
     def get_context_data(self, **kwargs):
@@ -96,7 +81,7 @@ class CreateExpenseView(CreateView):
         total = sum(expense.amount for expense in expenses_today)
         return total
 
-
+# Independent Expense Creation
 class ExpenseCreateView(CreateView):
     model = Expense
     form_class = ExpenseFormCreate

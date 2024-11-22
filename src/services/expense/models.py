@@ -40,16 +40,19 @@ class Expense(models.Model):
     class BudgetSource(models.TextChoices):
         CASH = 'CASH', 'Cash in Hand'
         ACCOUNT = 'ACC', 'Account'
-        CLIENT_FUNDS = 'CLIENT', 'Client Provided'
-        LOAN = 'LOAN', 'Project Loan'
+
+    class PaymentStatus(models.TextChoices):
+        PAID = 'PAID', 'Paid'
+        UNPAID = 'UNPAID', 'Unpaid'
 
     project = models.ForeignKey('project.Project', on_delete=models.CASCADE, related_name='expenses')
     description = models.CharField(max_length=255, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    budget_source = models.CharField(max_length=6, choices=BudgetSource.choices)
+    budget_source = models.CharField(max_length=6, choices=BudgetSource.choices, null=True, blank=True)
     category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True, blank=True,  related_name='expenses')
     vendor = models.ForeignKey('Vendor', on_delete=models.SET_NULL, null=True, related_name='expenses')  # Link to Vendor model
     created_at = models.DateTimeField(auto_now_add=True)
+    payment_status = models.CharField(max_length=6, choices=PaymentStatus.choices, default=PaymentStatus.UNPAID)
 
     def __str__(self):
         return f"{self.project.project_name} - {self.amount} from {self.budget_source} ({self.category})"
@@ -59,7 +62,5 @@ class Expense(models.Model):
         total_expenses = cls.objects.filter(project_id=project_id).aggregate(total=Sum('amount'))
         return round(total_expenses['total'] or 0, 2)
 
-
-
-
-
+    class Meta:
+        ordering = ['-created_at']

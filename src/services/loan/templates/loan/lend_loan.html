@@ -24,14 +24,14 @@
             </div><!--end row-->
 
             <div class="row justify-content-center">
-                <h4 class="text-center">Lend loan for <b>{{ project.project_name }}</b> </h4>
+                <h4 class="text-center">Lend loan for Project: <b>{{ project.project_name }}</b> </h4>
                 <div class="col-md-12 col-lg-6">
-                    <div class="card border-2 border-warning">
+                    <div class="card border-2 shadow-lg">
                         <div class="card-body">
                             <form method="post" class="form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Add Budget</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
                         </div><!--end card-body-->
                     </div><!--end card-->

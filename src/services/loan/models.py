@@ -13,18 +13,21 @@ class Lender(models.Model):
     bic = models.CharField(max_length=11, help_text="BIC of the lender", blank=True, null=True)
     account_number = models.CharField(max_length=20, help_text="Account number of the lender", blank=True, null=True)
     iban = models.CharField(max_length=34, help_text="IBAN of the lender", blank=True, null=True)
+
     def __str__(self):
         return self.name
 
 
 class Loan(models.Model):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name="loan")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="loans")
     lender = models.ForeignKey(Lender, on_delete=models.CASCADE, related_name="loans")
     loan_amount = models.DecimalField(max_digits=12, decimal_places=2, help_text="Total loan amount")
-    remaining_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0, help_text="Remaining loan balance")
+    remaining_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0,
+                                           help_text="Remaining loan balance")
     date_issued = models.DateField(default=timezone.now, help_text="Date when the loan was issued")
     due_date = models.DateField(help_text="Due date for loan repayment")
     is_repaid = models.BooleanField(default=False, help_text="Indicates if the loan has been fully repaid")
+    reason = models.CharField(max_length=544, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Initialize remaining_amount to loan_amount if it's a new loan
@@ -35,6 +38,10 @@ class Loan(models.Model):
     def __str__(self):
         return f"Loan for {self.project.project_name} from {self.lender.name}"
 
+
+    def get_total_paid(self):
+        return self.loan_amount - self.remaining_amount
+
     def update_remaining_amount(self, return_amount):
         """Handles repayments and updates remaining balance."""
         self.remaining_amount -= return_amount
@@ -43,8 +50,6 @@ class Loan(models.Model):
             self.is_repaid = True
         self.save()
 
-from django.db import models
-from django.utils import timezone
 
 class LoanReturn(models.Model):
     loan = models.ForeignKey(
