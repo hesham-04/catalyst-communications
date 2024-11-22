@@ -5,13 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/catalyst-communications.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/catalyst-communications.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_print.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_print.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/expense/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/expense/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/expense/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/templates/loan/lend_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/templates/loan/lend_loan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/templates/loan/return_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/templates/loan/return_loan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/add_budget.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/add_budget.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/quotation/templates/quotation/quotation_print.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/quotation/templates/quotation/quotation_print.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/quotation/templatetags/custom_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/quotation/templatetags/custom_filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web/dashboard/templates/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/web/dashboard/templates/dashboard/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/web/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web/dashboard/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,17 +62,24 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hesham&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/github/DEVELOPMENT/exarth-og&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "hesham",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/github/DEVELOPMENT/exarth-og",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\github\catalyst-communications\static\img" />
@@ -71,7 +96,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-babbdf50b680-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.15989.155" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
+        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
       </set>
     </attachedChunks>
   </component>
@@ -83,7 +109,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1729516040971</updated>
+      <workItem from="1732195844841" duration="1843000" />
+      <workItem from="1732197777386" duration="10399000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

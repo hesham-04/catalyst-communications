@@ -11,7 +11,7 @@ from src.services.project.models import Project
 from .forms import ExpenseForm, ExpenseFormCreate, VendorForm, ExpenseCategoryForm
 from .models import Expense, Vendor, ExpenseCategory
 
-
+# List All Expense
 class ExpenseIndexView(TemplateView):
     template_name = 'expense/expense_index.html'
 
@@ -20,7 +20,7 @@ class ExpenseIndexView(TemplateView):
         context['expenses'] = Expense.objects.all().order_by('-created_at')
         return context
 
-
+# Project Detail
 class CreateExpenseView(CreateView):
     model = Expense
     form_class = ExpenseForm
@@ -96,7 +96,7 @@ class CreateExpenseView(CreateView):
         total = sum(expense.amount for expense in expenses_today)
         return total
 
-
+# Independent Expense Creation
 class ExpenseCreateView(CreateView):
     model = Expense
     form_class = ExpenseFormCreate

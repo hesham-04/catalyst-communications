@@ -1,7 +1,8 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Div, Submit, HTML
+from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
+
 from .models import Project
 
 
@@ -49,21 +50,19 @@ class AddBudgetForm(forms.Form):
     SOURCE_CHOICES = [
         ('CASH', 'Cash in Hand'),
         ('ACC', 'Account'),
-        ('CLIENT', 'Client Funds'),
+    ]
+    DESTINATION_CHOICES = [
+        ('CASH', 'Project Cash'),
+        ('ACC', 'Project Account'),
     ]
 
     amount = forms.DecimalField(max_digits=12, decimal_places=2, label="Amount")
-    source = forms.ChoiceField(choices=SOURCE_CHOICES, label="Budget Source")
-    transaction_type = forms.ChoiceField(
-        choices=[('CREDIT', 'Credit')],
-        initial='CREDIT',
-        widget=forms.HiddenInput(),
-        label="Transaction Type"
-    )
+    source = forms.ChoiceField(choices=SOURCE_CHOICES, label="Budget Source (Wallet)")
+    destination = forms.ChoiceField(choices=DESTINATION_CHOICES, label="Budget Destination (Project)")
+    reason = forms.CharField(label="Reason for Transaction", required=True, max_length=255)
 
-    # Add any widget attributes for styling
+    # Widgets
     amount.widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter amount'})
     source.widget.attrs.update({'class': 'form-control'})
-
-
-
+    destination.widget.attrs.update({'class': 'form-control'})
+    reason.widget.attrs.update({'class': 'form-control'})

@@ -1,0 +1,74 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title"> Loan Management: {{ project.project_name }}</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Loan</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="card-title">Project Loans
+                                        <a href="{% url 'loan:lend_loan' project.pk %}"><div class="btn btn-success float-end"><i class="fas fa-plus"></i> Create Loan</div></a>
+                                    </h4></div><!--end col-->
+                            </div>  <!--end row-->
+                        </div><!--end card-header-->
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-0 table-centered">
+                                    <thead>
+                                    <tr>
+                                        <th>Lender</th>
+                                        <th>Total Amount</th>
+                                        <th>Remaining</th>
+                                        <th>Due Date</th>
+                                        <th class="text-center">Returned</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for object in object_list %}
+                                    <tr>
+                                        <td><a href="{% url 'loan:return_loan' object.pk %}">{{ object.lender.name }}</a></td>
+                                        <td>{{ object.loan_amount }}</td>
+                                        <td>{{ object.remaining_amount }}</td>
+                                        <td>{{ object.due_date }}</td>
+                                        <td class="text-center {% if object.is_repaid %} text-success {% else %} text-danger {% endif %} "><span><i class="fa-solid {% if object.is_repaid %}fa-circle-check {% else %}fa-circle-xmark{% endif %}"></i></span></td>
+                                        <td class="text-center text-success"><i class="fa-solid fa-pen-to-square"></i></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table><!--end /table-->
+                            </div><!--end /tableresponsive-->
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -46,7 +46,7 @@ class Expense(models.Model):
     project = models.ForeignKey('project.Project', on_delete=models.CASCADE, related_name='expenses')
     description = models.CharField(max_length=255, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    budget_source = models.CharField(max_length=6, choices=BudgetSource.choices)
+    budget_source = models.CharField(max_length=6, choices=BudgetSource.choices, null=True, blank=True)
     category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True, blank=True,  related_name='expenses')
     vendor = models.ForeignKey('Vendor', on_delete=models.SET_NULL, null=True, related_name='expenses')  # Link to Vendor model
     created_at = models.DateTimeField(auto_now_add=True)

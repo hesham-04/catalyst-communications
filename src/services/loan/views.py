@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
 from src.services.project.models import Project
+from src.services.project.bll import add_loan_to_project
 from .forms import LoanForm
 from .forms import LoanReturnForm
 from .models import Loan, LoanReturn
+from src.services.project.bll import return_loan_to_lender
 
 
 class LendLoanView(CreateView):
@@ -17,17 +19,43 @@ class LendLoanView(CreateView):
 
     def form_valid(self, form):
         loan = form.save(commit=False)
+        lender = form.cleaned_data['lender']
+        amount = form.cleaned_data['loan_amount']
+        destination = form.cleaned_data['destination']
+        reason = form.cleaned_data['reason']
+
+        # Make changes to the Project & Ledger before creating the loan Object
+        add_loan_to_project(
+            project_id=self.kwargs['pk'],
+            amount=amount,
+            source=lender,
+            destination=destination,
+            reason=reason
+        )
+
+        # Link the project to loan object
         loan.project = self.get_object()
         loan.save()
-        self.get_object().adjust_budget(loan.loan_amount, 'LOAN', 'CREDIT')
-        self.get_object().total_budget_assigned += loan.loan_amount
-        messages.success(self.request, "Loan successfully assigned to project.")
+
+        messages.success(self.request, "Loan successfully created for project.")
         return redirect('project:detail', pk=self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['project'] = self.get_object()
         return context
+
+
+class LoanListView(ListView):
+    model = Loan
+    template_name = 'loan/loan_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project'] = get_object_or_404(Project, id=self.kwargs['pk'])
+        return context
+    def get_queryset(self):
+        return Loan.objects.filter(project=self.kwargs['pk']).order_by('-due_date')
 
 
 class ReturnLoanView(CreateView):
@@ -40,10 +68,23 @@ class ReturnLoanView(CreateView):
     def form_valid(self, form):
         loan = self.get_object()
         loan_return = form.save(commit=False)
+
+        return_amount = form.cleaned_data['return_amount']
+        remarks = form.cleaned_data['remarks']
+
+        # Create an expense Object for this project.
+        # Subtract from the Loan model.
+        return_loan_to_lender(
+            loan_id = loan.pk,
+            project_id=loan.project.id,
+            amount=return_amount,
+            source=None,
+            destination=loan.lender.name,
+            reason=remarks
+        )
+
         loan_return.loan = loan
         loan_return.save()
-
-        loan.update_remaining_amount(loan_return.return_amount)
         messages.success(self.request, "Loan return successfully recorded.")
         return redirect('project:detail', pk=loan.project.id)
 

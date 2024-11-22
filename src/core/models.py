@@ -15,7 +15,7 @@ class BillingAddress(models.Model):
     fax = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
-        return f"{self.customer.display_name} - Billing - {self.city}, {self.state}"
+        return f"{self.customer.get_full_name} - Billing - {self.city}, {self.state}"
 
 
 class ShippingAddress(models.Model):
@@ -31,7 +31,7 @@ class ShippingAddress(models.Model):
     fax = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
-        return f"{self.customer.display_name} - Shipping - {self.city}, {self.state}"
+        return f"{self.customer.get_full_name} - Shipping - {self.city}, {self.state}"
 
 
 
@@ -43,17 +43,3 @@ class Tax(models.Model):
     def __str__(self):
         return self.name
 
-
-class Transaction(models.Model):
-    class TransactionType(models.TextChoices):
-        DEBIT = 'DEBIT', 'Debit'
-        CREDIT = 'CREDIT', 'Credit'
-
-    project = models.ForeignKey('project.Project', on_delete=models.CASCADE, related_name='transactions')
-    source = models.CharField(max_length=6, choices=[('BANK', 'Bank'), ('CASH', 'Cash in Hand'), ('ACC', 'Account'), ('CLIENT', 'Client Provided')])
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    transaction_type = models.CharField(max_length=6, choices=TransactionType.choices)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.project} - {self.transaction_type} {self.amount} from {self.source}"

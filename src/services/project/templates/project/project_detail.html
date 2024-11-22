@@ -24,7 +24,7 @@
             </div>
 
             <div class="row">
-                <div style="height:400px;" class="col-md-6">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <div class="row align-items-center">
@@ -38,18 +38,11 @@
                             </div>  <!--end row-->
                         </div><!--end card-header-->
                         <div class="card-body pt-0">
-                            <p class="text-muted fw-medium mb-3">{{ project.description }}</p>
-                            <div class="mb-3">
-                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Javascript</span>
-                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Python</span>
-                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Angular</span>
-                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Reactjs</span>
-                                <span class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1">Flutter</span>
-                            </div>
+                            <p class="text-muted fw-medium mb-3">{{ project.description|slice:150}}...</p>
                             <ul class="list-unstyled mb-0">
                                 <li class=""><i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
                                     <b> Client Name </b> :<a href="{% url 'customer:detail' project.customer.id %}">
-                                        {{ project.customer.display_name }}</a>
+                                        {{ project.customer.get_full_name }}</a>
                                 </li>
                                 <li class="mt-2"><i class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
                                     <b> Project status </b> : <span
@@ -62,7 +55,7 @@
                                         class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Paid</span>
                                 </li>
                                 <li class="mt-2"><i class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-                                    <b> Address </b> : {{ project.customer.shipping_address.city }}
+                                    <b> Address </b> :{% if project.get_address %} {{ project.get_address }} {% else %} No Address {% endif %}
                                 </li>
                                 <li class="mt-2"><i class="las la-phone me-2 text-secondary fs-22 align-middle"></i> <b>
                                     Phone </b> : {{ project.customer.phone }}
@@ -76,74 +69,26 @@
                         </div><!--end card-body-->
                     </div>
                 </div>
-                <div style="height:400px;" class="col-md-6">
+                <div class="col-md-6">
                     <div class="row">
                         <div class="card bg-globe-img">
                             <div class="card-body">
                                 <div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fs-16 fw-semibold">Current Budget</span>
-                                        <form class="">
-                                            <div>
-                                                <div class="dynamic-select example-select" id="dynamic-select" style="">
-                                                    <input type="hidden" name="example-select" value="1">
-                                                    <div class="dynamic-select-header" style="">
 
-                                                        <img src="{% static 'website/images/logos/m-card.png' %}"
-                                                             alt="xx25"
-                                                             class=""
-                                                             style="">
-                                                        <span class="dynamic-select-option-text">xx25</span>
 
-                                                    </div>
-                                                    <div class="dynamic-select-options" style="">
-                                                        <div class="dynamic-select-option dynamic-select-selected"
-                                                             data-value="1" style="width:100%;">
-
-                                                            <img src="{% static 'website/images/logos/m-card.png' %}"
-                                                                 alt="xx25" class=""
-                                                                 style="">
-                                                            <span class="dynamic-select-option-text">xx25</span>
-
-                                                        </div>
-
-                                                        <div class="dynamic-select-option" data-value="2"
-                                                             style="width:100%;">
-
-                                                            <img src="{% static 'website/images/logos/ame-bank.png' %}"
-                                                                 alt="xx56" class=""
-                                                                 style="">
-                                                            <span class="dynamic-select-option-text">xx56</span>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <h4 class="my-2 fs-24 fw-semibold">{{ project.project_budget }} <small
+                                    <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small
                                             class="font-14">PKR</small></h4>
-                                    <p class="mb-3 text-muted fw-semibold">
-                                        <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
-                                        Outstanding balance boost
-                                    </p>
+
                                     <a href="{% url 'project:add_budget' pk=project.id %}"
                                        class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Assign
                                         Budget</a>
                                     <a href="{% url 'expense:create' pk=project.id %}"
                                        class="btn btn-soft-warning {% if project.project_status != 'IP' %}disabled{% endif %}">Add
                                         Expense</a>
-                                    {% if project.loan %}
-                                    <a href="{% url 'loan:return_loan' pk=project.loan.id %}"
-                                       class="btn btn-soft-danger {% if project.project_status != 'IP' %}disabled{% endif %}">Loan
-                                        Remaining:
-                                        {{ project.loan.remaining_amount }}</a>
-                                    {% else %}
-                                    <a href="{% url 'loan:lend_loan' pk=project.id %}"
-                                       class="btn btn-soft-warning {% if project.project_status != 'IP' %}disabled{% endif %}">Take
-                                        Out Loan</a>
-                                    {% endif %}
+
+                                    <a href="{% url 'loan:list' pk=project.id  %}"
+                                       class="btn btn-soft-danger {% if project.project_status != 'IP' %}disabled{% endif %}">Loan Management</a>
+
 
 
 
@@ -167,13 +112,13 @@
                                     <div class="col-3">
                                         <div class="p-2 border-dashed border-warning rounded">
                                             <h5 class="mt-1 mb-0 fw-medium">{{ project.project_client_fund }} PKR</h5>
-                                            <small class="text-dark">Client Funds</small>
+                                            <small class="text-dark">Payable</small>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="p-2 border-dashed border-warning rounded ">
                                             <h5 class="mt-1 mb-0 fw-medium">{{ project.project_loan_recieved }} PKR</h5>
-                                            <small class="text-dark">Loaned </small>
+                                            <small class="text-dark">Receivables </small>
                                         </div>
                                     </div><!--end col-->
                                 </div>
@@ -236,7 +181,7 @@
                 </div>
             </div>
 
-            <div class="row mt-5">
+            <div class="row">
                 <div class="col-md-6">
                     <div class="card shadow-lg">
                         <div class="card-body">

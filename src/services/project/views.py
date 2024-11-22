@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy, reverse
-from django.views.generic import TemplateView, CreateView, RedirectView
+from django.views.generic import TemplateView, CreateView, RedirectView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Project, CashInHand, AccountBalance
@@ -7,6 +7,7 @@ from .forms import AddBudgetForm
 from .forms import ProjectForm
 from src.services.expense.views import Expense
 from ..invoice.models import Invoice
+from .bll import add_budget_to_project
 
 
 class ProjectView(TemplateView):
@@ -42,35 +43,43 @@ class ProjectDetailView(TemplateView):
 
 
 
-def add_budget(request, pk):
-    project = get_object_or_404(Project, id=pk)
-    cash_balance = CashInHand.objects.first().balance
-    account_balance = AccountBalance.objects.first().balance
-    client_funds = project.client_funds_received
 
-    if request.method == 'POST':
-        form = AddBudgetForm(request.POST)
-        if form.is_valid():
-            amount = form.cleaned_data['amount']
-            source = form.cleaned_data['source']
-            transaction_type = form.cleaned_data['transaction_type']
+class AddBudgetView(FormView):
+    template_name = 'project/add_budget.html'
+    form_class = AddBudgetForm
 
-            # Adjust balances and project budget
-            project.adjust_budget(amount, source, transaction_type)
-            messages.success(request, "Budget successfully updated.")
-            return redirect('project:detail', pk=pk)
-    else:
-        form = AddBudgetForm()
+    def dispatch(self, request, *args, **kwargs):
+        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
 
-    context = {
-        'project': project,
-        'form': form,
-        'cash_balance': cash_balance,
-        'account_balance': account_balance,
-        'client_funds': client_funds,
-    }
-    return render(request, 'project/add_budget.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project'] = self.project
+        context['cash_balance'] = CashInHand.objects.first().balance
+        context['account_balance'] = AccountBalance.objects.first().balance
+        return context
 
+    def form_valid(self, form):
+        amount = form.cleaned_data['amount']
+        source = form.cleaned_data['source']
+        destination = form.cleaned_data['destination']
+        reason = form.cleaned_data['reason']
+
+        add_budget_to_project(
+            project_id=self.project.pk,
+            amount=amount,
+            source=source,
+            destination=destination,
+            reason=reason
+        )
+
+        messages.success(self.request, "Budget successfully updated.")
+
+        return redirect('project:detail', pk=self.project.pk)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "There was an error with your submission.")
+        return super().form_invalid(form)
 
 class StartProjectView(RedirectView):
     """A view that changes the project status to in progress and redirects to the project detail page"""

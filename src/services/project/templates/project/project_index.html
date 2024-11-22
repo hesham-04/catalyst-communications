@@ -395,7 +395,7 @@
                                     <tr>
                                         <td><a href="{% url 'project:detail' project.id %}">{{ project.project_name }}</a>
                                         </td>
-                                        <td>{{ project.customer.display_name }}</td>
+                                        <td>{{ project.customer.get_full_name }}</td>
                                         <td>{{ project.description|slice:20 }}</td>
                                         <td>${{ project.project_budget }}</td>
                                         <td>

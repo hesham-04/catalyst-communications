@@ -1,12 +1,9 @@
-from django.db import models
-
 # Create your models here.
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
-from num2words import num2words  # Ensure `num2words` is installed in your environment
-
-from src.services.project.models import Project  # Import the Project model
+from num2words import num2words
+from src.services.project.models import Project
 
 
 class Invoice(models.Model):
@@ -42,11 +39,11 @@ class Invoice(models.Model):
             self.invoice_number = '# INV-{:06d}'.format(self.invoice_id)
         super().save(*args, **kwargs)
 
-
     @classmethod
     def calculate_total_receivables(cls, project_id):
         total_receivables = cls.objects.filter(project_id=project_id).aggregate(total=Sum('total_amount'))
         return round(total_receivables['total'] or 0, 2)
+
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.client_name} - {self.project.project_name}"
 
@@ -60,10 +57,8 @@ class InvoiceItem(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
 
     def save(self, *args, **kwargs):
-        # Calculate the amount based on quantity and rate
-        self.amount = self.quantity * self.rate
+        self.amount = int(self.quantity) * int(self.rate)
         super().save(*args, **kwargs)
-        # Update the total amount in the associated invoice
         self.invoice.calculate_total_amount()
 
     @property
