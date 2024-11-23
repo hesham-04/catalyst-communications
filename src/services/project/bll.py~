@@ -105,8 +105,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         amount=amount,
         budget_source=source,
         category=None,
-        vendor=None, #destination
-        payment_status=Expense.PaymentStatus.UNPAID
+        vendor=None #destination
     )
 
     Ledger.objects.create(

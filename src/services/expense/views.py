@@ -1,16 +1,14 @@
 from datetime import date
-
 from django.core.checks import messages
-from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import CreateView
-
+from django.views.generic.edit import CreateView, FormView
 from src.services.project.models import Project
-from .forms import ExpenseForm, ExpenseFormCreate, ExpenseCategoryForm
+from .forms import ExpenseForm, ExpenseFormCreate, ExpenseCategoryForm, ExpensePaymentForm
 from .models import Expense, ExpenseCategory
-from ..project.bll import create_expense_calculations
+from ..project.bll import create_expense_calculations, pay_expense
+
 
 # List All Expense
 class ExpenseIndexView(TemplateView):
@@ -109,7 +107,40 @@ class ExpenseCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('expense:index', kwargs={'pk': self.object.project.pk})
 
-""" Category Views ------------------------------------------------------------------ """
+class ExpensePaymentView(FormView):
+    template_name = 'expense/expense_payment.html'
+    form_class = ExpensePaymentForm
+    success_url = reverse_lazy('expense:index')
+
+
+    def form_valid(self, form):
+        expense = get_object_or_404(Expense, pk=self.kwargs['pk'])
+        project = expense.project
+        source = form.cleaned_data['source']
+        remarks = form.cleaned_data['remarks']
+
+        # Validate the data
+        if source == 'CASH':
+            if expense.amount > expense.project.project_cash:
+                form.add_error('amount', 'Amount exceeds project cash budget.')
+                return self.form_invalid(form)
+        elif source == 'ACC':
+            if expense.amount > expense.project.project_account_balance:
+                form.add_error('amount', 'Amount exceeds project account balance.')
+                return self.form_invalid(form)
+
+        # Deduct the amount from the source
+        pay_expense(project_id=project.pk, expense_id=expense.pk, budget_source=source, destination=expense.vendor, amount=expense.amount, reason=remarks)
+        return super().form_valid(form)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['expense'] = get_object_or_404(Expense, pk=self.kwargs['pk'])
+        context['project'] = context['expense'].project
+        return context
+
+
 class ExpenseCategoryCreateView(CreateView):
     model = ExpenseCategory
     form_class = ExpenseCategoryForm

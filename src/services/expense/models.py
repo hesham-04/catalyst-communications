@@ -27,7 +27,7 @@ class Expense(models.Model):
     vendor = models.ForeignKey('vendor.Vendor', on_delete=models.SET_NULL, null=True,
                                related_name='expenses')  # Link to Vendor model
     created_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=6, choices=PaymentStatus.choices, default=PaymentStatus.UNPAID)
+    payment_status = models.CharField(max_length=6, choices=PaymentStatus.choices, default=PaymentStatus.PAID)
 
     def __str__(self):
         return f"{self.project.project_name} - {self.amount} from {self.budget_source} ({self.category})"

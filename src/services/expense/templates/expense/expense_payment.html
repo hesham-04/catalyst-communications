@@ -1,0 +1,61 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">Expense Payment</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">CATALYST</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Payment</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
+
+                <div class="row justify-content-center mt-5">
+                    <h4 class="text-center">Expense Paymnet for Project: <b>{{ project.project_name }}</b></h4>
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card border-2 shadow-lg">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="fs-20 fw-semibold mb-2"> Expense:</span>
+                                        <p class="text-danger mt-1 mb-0"><i class="fa fa-coins me-1"></i> Amount: {{ expense.amount }} PKR</p>
+                                        <p class="text-danger mb-0"><i class="fa fa-user me-1"></i> Vendor: {{ expense.vendor }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="fs-20 fw-semibold mb-3 ">Project Assets:</span>
+                                        <p class="text-success mt-1 mb-0"><i class="fa fa-money-bill-wave-alt me-1"></i> CASH: {{ project.project_cash }} PKR</p>
+                                        <p class="text-success mb-0"><i class="fa fa-user me-1"></i> Account Balance: {{ project.project_account_balance }} PKR</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <form method="post" class="form mt-2">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <p class="fw-100 fs-10 mt-3 text-muted">*This Amount will be deduced from the selected Field of the Project*</p>
+
+                                </form>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
+                </div><!--end row-->
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

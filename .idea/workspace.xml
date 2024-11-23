@@ -5,24 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/catalyst-communications.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/catalyst-communications.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/expense/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0002_expensecategory_alter_expense_budget_source_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0003_vendor_expense_vendor.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0004_alter_expense_category.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0005_alter_expense_budget_source.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0006_expense_payment_status.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/0007_alter_expense_budget_source.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/migrations/__init__.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/expense/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/templates/expense/expense_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/templates/expense/expense_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/templates/expense/vendor_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/expense/templates/expense/category_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/templates/expense/category_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/expense/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/expense/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/templates/loan/lend_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/templates/loan/lend_loan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/bll.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/bll.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/include/expense_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/include/expense_table.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/transaction/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/transaction/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/vendor/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/vendor/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/vendor/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,8 +34,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -74,7 +75,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "com.codeium.AppSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -110,11 +111,22 @@
       <workItem from="1732195844841" duration="1843000" />
       <workItem from="1732197777386" duration="44044000" />
       <workItem from="1732311157826" duration="151000" />
-      <workItem from="1732311327515" duration="2926000" />
+      <workItem from="1732311327515" duration="10388000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/services/loan/forms.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

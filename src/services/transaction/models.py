@@ -11,7 +11,7 @@ class Ledger(models.Model):
         ('RETURN_LOAN', 'Loan Returned'),
 
         ('CREATE_EXPENSE', 'Expense Created'),
-        ('RETURN_EXPENSE', 'Expense Returned'),
+        ('PAY_EXPENSE', 'Expense Paid'),
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)

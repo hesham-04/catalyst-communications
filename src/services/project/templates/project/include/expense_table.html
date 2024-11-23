@@ -12,7 +12,6 @@
                                         <th class="border-top-0">Category</th>
                                         <th class="border-top-0">Amount</th>
                                         <th class="border-top-0">Status</th>
-                                        <th class="border-top-0">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>{% for expense in project.expenses.all %}
@@ -29,14 +28,10 @@
                                             </td>
                                             {% else %}
                                                 <td>
-                                                <span class="badge bg-danger-subtle text-success fs-11 fw-medium px-2"> PAID </span>
+                                                <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2"> PAID </span>
                                             </td>
                                             {% endif %}
-                                            <td>
-                                                <a href="#"><i class="las la-download text-secondary fs-18"></i></a>
-                                                <a href="#"><i
-                                                        class="las la-trash-alt text-secondary fs-18"></i></a>
-                                            </td>
+
                                         </tr>
                                     {% empty %}
                                         <tr>

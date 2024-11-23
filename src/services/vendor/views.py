@@ -14,7 +14,7 @@ from ..project.models import Project
 class VendorCreateView(CreateView):
     model = Vendor
     form_class = VendorForm
-    success_url = reverse_lazy('expense:index')  # Redirect after creation
+    success_url = reverse_lazy('vendor:vendors')  # Redirect after creation
 
 class VendorListView(ListView):
     model = Vendor

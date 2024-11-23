@@ -93,7 +93,7 @@
                                     <div class="col-md-6 text-end">
                                         <form method="get" class="row g-3 align-items-center mb-4">
                                             <!-- Project Filter -->
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <select name="project" id="project" class="form-select">
                                                     <option value="">All Projects</option>
                                                     {% for project in projects %}
@@ -106,7 +106,7 @@
                                             </div>
 
                                             <!-- Category Filter -->
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <select name="category" id="category" class="form-select">
                                                     <option value="">All Categories</option>
                                                     {% for category in categories %}
@@ -118,18 +118,18 @@
                                                 </select>
                                             </div>
 
-                                            <!-- Status Filter -->
-                                            <div class="col-md-3">
-                                                <select name="status" id="status" class="form-select">
-                                                    <option value="">All Statuses</option>
-                                                    {% for status, label in statuses %}
-                                                        <option value="{{ status }}"
-                                                                {% if status == request.GET.status %}selected{% endif %}>
-                                                            {{ label }}
-                                                        </option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
+{#                                            <!-- Status Filter -->#}
+{#                                            <div class="col-md-3">#}
+{#                                                <select name="status" id="status" class="form-select">#}
+{#                                                    <option value="">All Statuses</option>#}
+{#                                                    {% for status, label in statuses %}#}
+{#                                                        <option value="{{ status }}"#}
+{#                                                                {% if status == request.GET.status %}selected{% endif %}>#}
+{#                                                            {{ label }}#}
+{#                                                        </option>#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+{#                                            </div>#}
 
                                             <!-- Submit Button -->
                                             <div class="col-md-3 d-flex align-items-end">
@@ -150,7 +150,6 @@
                                         <th class="border-top-0">Category</th>
                                         <th class="border-top-0">Amount</th>
                                         <th class="border-top-0">Status</th>
-                                        <th class="border-top-0">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>{% for expense in expenses %}
@@ -170,14 +169,14 @@
                                                 </td>
                                             {% else %}
                                                 <td>
-                                                    <span class="badge bg-danger-subtle text-success fs-11 fw-medium px-2"> PAID </span>
+                                                    <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2"> PAID </span>
                                                 </td>
                                             {% endif %}
-                                            <td>
-                                                <div class="btn btn-soft-success"><i class="fa fa-money-bill-wave"></i>
-                                                    Pay Now
-                                                </div>
-                                            </td>
+{#                                            <td>#}
+{#                                                <a href="{% url 'expense:pay-expense' pk=expense.pk %}" class="btn btn-soft-success"><i class="fa fa-money-bill-wave"></i>#}
+{#                                                    Pay Now#}
+{#                                                </a>#}
+{#                                            </td>#}
                                         </tr>
                                     {% empty %}
                                         <tr>

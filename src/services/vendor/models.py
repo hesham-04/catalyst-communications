@@ -5,6 +5,13 @@ from src.services.expense.models import Expense
 
 
 class Vendor(models.Model):
+    CURRENCY_CHOICES = [
+        ('USD', 'US Dollar'),
+        ('EUR', 'Euro'),
+        ('PKR', 'Pakistani Rupee'),
+    ]
+
+
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, blank=True, null=True)
     iban = models.CharField(max_length=34, blank=True, null=True)  # Bank account IBAN
@@ -17,8 +24,8 @@ class Vendor(models.Model):
     website = models.URLField(blank=True, null=True)
 
     total_expense = models.DecimalField(max_digits=12, decimal_places=2, default=0)  # Total expenses paid to the vendor
-    currency = models.CharField(max_length=10, default='USD')  # Default transaction currency
 
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')  # Default transaction currency
     is_active = models.BooleanField(default=True)  # Whether the vendor is active
     created_at = models.DateTimeField(auto_now_add=True)  # Record creation date
     updated_at = models.DateTimeField(auto_now=True)  # Last update timestamp
