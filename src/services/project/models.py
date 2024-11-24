@@ -47,11 +47,11 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.project_name or 'Project'} - {self.get_project_status_display()}"
+        return f"{self.project_name or 'Project'}"
 
     def get_total_budget(self):
         return self.project_cash + self.project_account_balance
-    
+
 
     def get_address(self):
         billing_address = BillingAddress.objects.filter(customer_id=self.customer.pk).first()

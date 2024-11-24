@@ -56,3 +56,4 @@ coverage/
 
 # Pytest
 .pytest_cache/
+/migrations

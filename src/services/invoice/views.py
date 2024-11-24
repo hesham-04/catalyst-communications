@@ -21,8 +21,10 @@ class CreateInvoiceView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm, extra=1)
         context['formset'] = InvoiceItemFormSet(queryset=InvoiceItem.objects.none())
+
         return context
 
     def form_valid(self, form):
@@ -30,10 +32,15 @@ class CreateInvoiceView(CreateView):
         form.instance.project = project
         invoice = form.save()
 
-
-
         InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm)
         formset = InvoiceItemFormSet(self.request.POST)
+
+        print(self.request.POST)
+
+        if formset.is_valid():
+            print("Formset is valid")
+        else:
+            print("Formset errors:", formset.errors)
 
         if formset.is_valid():
             for item_form in formset:

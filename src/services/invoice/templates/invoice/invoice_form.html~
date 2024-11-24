@@ -72,7 +72,7 @@
         </div>
     </div>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
     let itemFormIndex = 1; // Start from the next available index, since the first item already exists in the HTML
 
     const addItemButton = document.getElementById('add-item');
@@ -90,18 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update the form field names and IDs for the new form
         newItemForm.querySelectorAll('[name], [id]').forEach(function(input) {
-            // Only attempt to replace if the input element has a name and id attribute
-            if (input.name && input.id) {
-                const newName = input.name.replace(/\d+/, itemFormIndex);  // Replace the number in the name
-                const newId = input.id.replace(/\d+/, itemFormIndex);      // Replace the number in the ID
+            const newName = input.name.replace(/\d+/, itemFormIndex);  // Replace the number in the name
+            const newId = input.id.replace(/\d+/, itemFormIndex);      // Replace the number in the ID
 
-                input.name = newName;
-                input.id = newId;
+            input.name = newName;
+            input.id = newId;
 
-                // Clear the values of the input fields in the cloned form (if necessary)
-                if (input.type !== 'hidden') {
-                    input.value = '';
-                }
+            // Clear the values of the input fields in the cloned form (if necessary)
+            if (input.type !== 'hidden') {
+                input.value = '';
             }
         });
 
