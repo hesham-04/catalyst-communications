@@ -11,7 +11,8 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                        <h4 class="page-title">Update Account Balance</h4>
+
+                        <h4 class="page-title">Account Balance</h4>
                         <div class="">
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item"><a href="#">Approx</a>
@@ -24,14 +25,20 @@
             </div><!--end row-->
 
             <div class="row justify-content-center">
-                <h4 class="text-center">Update Cash in hand</b> </h4>
+                {% if object %}
+                    <h4 class="text-center">Update Balance</b> </h4>
+                {% else %}
+                    <h4 class="text-center">Create Account</b> </h4>
+
+                {% endif %}
+
                 <div class="col-md-12 col-lg-6">
                     <div class="card border-2 border-warning">
                         <div class="card-body">
                             <form method="post" class="form">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Update</button>
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary mt-2">Update</button>
             </form>
                         </div><!--end card-body-->
                     </div><!--end card-->

@@ -6,18 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/account_balance_update.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/accountbalance_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/assets_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/assets_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/invoice/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_print.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_print.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/invoice/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/invoice/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/include/expense_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/include/expense_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/cash_in_hand_update.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/cashinhand_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/assets/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/assets/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +100,7 @@
       <workItem from="1732311327515" duration="12726000" />
       <workItem from="1732356335740" duration="14257000" />
       <workItem from="1732430324201" duration="24342000" />
-      <workItem from="1732525908667" duration="4762000" />
+      <workItem from="1732525908667" duration="7645000" />
     </task>
     <servers />
   </component>

@@ -1,0 +1,81 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">Accounts</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Loan</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">All Accounts</h4>
+                            </div><!--end col-->
+                            <div class="col-auto">
+                                <a href="{%  url 'assets:accounts_create' %}"><div class="btn btn-primary"> Add Account</div></a>
+                            </div><!--end col-->
+                        </div>  <!--end row-->
+                    </div><!--end card-header-->
+                    <div class="card-body pt-0">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th class="border-top-0">Name</th>
+                                    <th class="border-top-0">Balance</th>
+                                    <th class="border-top-0">Updated at</th>
+                                    <th class="border-top-0">Starting Balance</th>
+                                    <th class="border-top-0">Transactions</th>
+                                </tr><!--end tr-->
+                                </thead>
+                                <tbody>
+                                {% for object in object_list %}
+                                    <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{% static 'img/user-default.jpeg' %}" height="40"
+                                                 class="me-2 align-self-center rounded" alt="...">
+                                            <div class="flex-grow-1 text-truncate align-self-center mt-1">
+                                                <h6 class="m-0"><a href="{% url 'assets:account_balance_update' object.pk %}"> {{ object.account_name }}</a></h6>
+                                            </div><!--end media body-->
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fs-12 text-primary">{{ object.balance }} PKR</a></td>
+                                    <td>{{ object.updated_at }}</td>
+                                    <td> 00.00 PKR </td>
+                                    <td> - </td>
+                                </tr><!--end tr-->
+                                {% empty %}
+                                    <p class="text-danger"> No Accounts Added</p>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table> <!--end table-->
+                        </div><!--end /div-->
+                    </div><!--end card-body-->
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
