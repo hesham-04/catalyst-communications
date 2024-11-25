@@ -3,55 +3,53 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
-<div class="page-wrapper">
+    <div class="page-wrapper">
 
-    <!-- Page Content-->
-    <div class="page-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+        <!-- Page Content-->
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
 
-                        <h4 class="page-title">Account Balance</h4>
-                        <div class="">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="#">Approx</a>
-                                </li><!--end nav-item-->
-                                <li class="breadcrumb-item active">Account Balance</li>
-                            </ol>
-                        </div>
-                    </div><!--end page-title-box-->
-                </div><!--end col-->
-            </div><!--end row-->
+                            <h4 class="page-title">Account Balance</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">Approx</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Account Balance</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
 
-            <div class="row justify-content-center">
-                {% if object %}
-                    <h4 class="text-center">Update Balance</b> </h4>
-                {% else %}
-                    <h4 class="text-center">Create Account</b> </h4>
+                <div class="row justify-content-center">
+                    {% if object %}
+                        <h4 class="text-center">Update Balance</b> </h4>
+                    {% else %}
+                        <h4 class="text-center">Create Account</b> </h4>
+                    {% endif %}
 
-                {% endif %}
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card border-2 shadow-lg">
+                            <div class="card-body">
+                                <form method="post" class="form">
+                                    {% csrf_token %}
+                                    {{ form|crispy }}
+                                    <button type="submit" class="btn btn-primary mt-2">Update</button>
+                                </form>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
+                </div><!--end row-->
 
-                <div class="col-md-12 col-lg-6">
-                    <div class="card border-2 border-warning">
-                        <div class="card-body">
-                            <form method="post" class="form">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <button type="submit" class="btn btn-primary mt-2">Update</button>
-            </form>
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
-            </div><!--end row-->
-
-        </div><!-- container -->
-
+            </div><!-- container -->
 
 
-        <!--end footer-->
+            <!--end footer-->
+        </div>
+        <!-- end page content -->
     </div>
-    <!-- end page content -->
-</div>
 {% endblock %}
 

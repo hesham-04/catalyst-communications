@@ -1,0 +1,97 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Mark Invoice as Paid{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">Mark Invoice as Paid</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'project:index' %}">Projects</a></li>
+                            <li class="breadcrumb-item active">Mark Paid</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <h4 class="text-center">Invoice Fund Transefer</b> </h4>
+
+                    <div class="col-md-6">
+                        <div class="card shadow-lg">
+
+                            <div class="card-body shadow-lg p-2 bg-soft-secondary rounded-bottom">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="mt-1 mb-0 fw-medium fs-14 text-success"> Amount:
+                                            {{ invoice.total_amount }} PKR</h5>
+                                        <p class="text-dark text-uppercase mb-0 fw-normal fs-12">
+                                            Customer: {{ invoice.client_name }}</p>
+                                    </div>
+                                    <!--end col-->
+                                    <div class="col-6 align-self-center text-end">
+                                        <p class="text-dark text-uppercase mb-0 fw-normal fs-12"><i
+                                                class="fas fa-money-check fs-12 me-1 text-dark"></i>Invoice ID:
+                                            {{ invoice.invoice_number }}</p>
+                                        <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Address:
+                                            {{ invoice.address }}</h5>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div>
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        {{ form.transfer_to|as_crispy_field }}
+                                    </div>
+
+                                    <div id="account-field" style="display: none;" class="mb-3">
+                                        {{ form.account|as_crispy_field }}
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Confirm Transfer</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <h5 class="card-title">How Fund Transfer Works</h5>
+                                <p class="card-text">
+                                    Once the invoice is marked as paid, you can allocate the funds to a destination of
+                                    your choice: <br>
+                                    - Select <strong style="color: red;">Bank Account</strong> to transfer funds
+                                    directly to an available account.<br>
+                                    - Choose <strong style="color: red;">Project Cash</strong> to add funds to the
+                                    project's cash reserve.<br>
+                                    - Opt for <strong style="color: red;">Project Account Balance</strong> to update the
+                                    project's account balance.<br><br>
+                                    <span style="color: red;">Note:</span> Ensure you select the appropriate destination
+                                    for accurate financial management.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle visibility of the account dropdown
+        const transferToField = document.querySelector('select[name="transfer_to"]');
+        const accountField = document.getElementById('account-field');
+
+        transferToField.addEventListener('change', function () {
+            if (this.value === 'account') {
+                accountField.style.display = 'block';
+            } else {
+                accountField.style.display = 'none';
+            }
+        });
+    </script>
+{% endblock content %}

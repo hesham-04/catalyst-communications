@@ -53,4 +53,4 @@ class AccountBalance(models.Model):
         self.save()
 
     def __str__(self):
-        return f"{self.account_name} - Balance: {self.balance}"
+        return f"{self.account_name}"

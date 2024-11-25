@@ -1,6 +1,7 @@
 from django.db import transaction
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
+from src.services.invoice.models import Invoice
 from src.services.loan.models import Loan
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
@@ -143,8 +144,6 @@ def create_expense_calculations(project_id, amount, budget_source, reason=None):
         reason=reason,
     )
 
-
-
 @transaction.atomic
 def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None):
     project = Project.objects.select_for_update().get(pk=project_id)
@@ -166,3 +165,46 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
         destination=None,
         reason=reason,
     )
+
+@transaction.atomic
+def process_invoice_payment(invoice_id, destination,amount, account_id=None):
+    try:
+        invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
+        invoice.status = "PAID"
+        invoice.save(update_fields=['status'])
+
+        account = AccountBalance.objects.select_for_update().get(pk=account_id)
+
+        ledger_reason = f"Payment for Invoice #{invoice.invoice_number} - Project:{invoice.project.project_name}"
+        destination_name = None
+
+        if destination == 'account' and account:
+            account.balance += amount
+            account.save(update_fields=['balance'])
+            destination_name = f"Account: {account.account_name}"
+
+        elif destination == 'project_cash':
+            invoice.project.project_cash += amount
+            invoice.project.save(update_fields=['project_cash'])
+            destination_name = "Project Cash"
+
+        elif destination == 'project_account_balance':
+            invoice.project.project_account_balance += amount
+            invoice.project.save(update_fields=['account_balance'])
+            destination_name = "Project Account Balance"
+
+        if destination_name:
+            Ledger.objects.create(
+                transaction_type="INVOICE_PAYMENT",
+                project=invoice.project,
+                amount=amount,
+                source="Invoice",
+                destination=destination_name,
+                reason=ledger_reason
+            )
+
+        return True, "Invoice successfully paid and funds transferred."
+
+    except Exception as e:
+        # Handle unexpected errors
+        return False, f"An error occurred while processing the payment: {str(e)}"

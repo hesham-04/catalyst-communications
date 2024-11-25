@@ -1,19 +1,23 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
+from crispy_forms.templatetags.crispy_forms_field import css_class
 from django import forms
 from .models import Invoice, InvoiceItem
+from ..assets.models import AccountBalance
+
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['client_name', 'company_name', 'phone', 'address', 'subject', 'notes', 'letterhead']
+        fields = ['client_name', 'company_name', 'phone', 'address', 'due_date', 'subject', 'notes', 'letterhead']
 
         widgets = {
             'client_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Client Name'}),
             'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Name'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
             'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}),
+            'due_date': forms.DateInput(attrs={'class':'form-control', 'type': 'Date'}),
             'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Notes', 'rows': 1}),
             'letterhead': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -42,7 +46,8 @@ class InvoiceForm(forms.ModelForm):
                 css_class='row'
             ),
             Row(
-                Column('letterhead', css_class='form-check mb-3 ms-2'),
+                Column('due_date', css_class='form-group col-md-6 mb-3'),
+                Column('letterhead', css_class='form-check mt-4  ms-2'),
                 css_class='row'
             )
         )
@@ -60,8 +65,8 @@ class InvoiceItemForm(forms.ModelForm):
         widgets = {
             'item_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item name'}),
             'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Quantity'}),
-            'rate': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Rate'}),
+            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Quantity', 'required': True}),
+            'rate': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Rate', 'required': True}),
             'tax': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': False}),
         }
 
@@ -83,3 +88,28 @@ class InvoiceItemForm(forms.ModelForm):
     #             css_class='row'
     #         ),
     #     )
+
+
+class TransferFundsForm(forms.Form):
+    DESTINATION_CHOICES = [
+        ('account', 'Wallet Account'),
+        ('project_cash', 'Project Cash'),
+        ('project_account_balance', 'Project Account Balance'),
+    ]
+
+    transfer_to = forms.ChoiceField(choices=DESTINATION_CHOICES, required=True, label="Transfer To", initial='project_cash')
+    account = forms.ModelChoiceField(
+        queryset=AccountBalance.objects.all(),
+        required=False,
+        label="Bank Account (if selected)"
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        transfer_to = cleaned_data.get('transfer_to')
+        account = cleaned_data.get('account')
+
+        # Ensure a bank account is selected if 'account' is chosen
+        if transfer_to == 'account' and not account:
+            raise forms.ValidationError("Please select a bank account for this transfer.")
+        return cleaned_data

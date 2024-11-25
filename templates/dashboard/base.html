@@ -31,6 +31,21 @@
 </style>
 <body>
 
+{% if messages %}
+    <div id="popupAlerts" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show shadow-sm border-theme-white-2 rounded-pill mb-3" role="alert">
+                <div class="d-inline-flex justify-content-center align-items-center thumb-xs {% if message.tags == 'success' %}bg-success{% elif message.tags == 'error' %}bg-danger{% endif %} rounded-circle mx-auto me-1">
+                    <i class="fas {% if message.tags == 'success' %}fa-check{% elif message.tags == 'error' %}fa-exclamation-triangle{% endif %} align-self-center mb-0 text-white"></i>
+                </div>
+                <strong>{% if message.tags == 'success' %}Well done!{% elif message.tags == 'error' %}Oh no!{% endif %}</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
 <!-- Top Bar Start -->
 <div class="topbar d-print-none">
     <div class="container-fluid">
@@ -373,6 +388,27 @@
 <!-- end page-wrapper -->
 
 <!-- Javascript  -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if messages %}
+            // Select the popup container
+            var popupAlerts = document.getElementById('popupAlerts');
+
+            // Show popup with a fade-in effect
+            setTimeout(function () {
+                popupAlerts.classList.add('show');
+            }, 100); // Delay the appearance for a smooth effect
+
+            // Automatically hide the alert after 5 seconds
+            setTimeout(function () {
+                var alerts = popupAlerts.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    alert.classList.remove('show');
+                });
+            }, 2000); // Alert will fade out after 5 seconds
+        {% endif %}
+    });
+</script>
 <!-- vendor js -->
 
 <script src="{% static 'website/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

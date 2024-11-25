@@ -12,6 +12,8 @@ class Ledger(models.Model):
 
         ('CREATE_EXPENSE', 'Expense Created'),
         ('PAY_EXPENSE', 'Expense Paid'),
+
+        ('INVOICE_PAYMENT', 'Invoice Paid')
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
