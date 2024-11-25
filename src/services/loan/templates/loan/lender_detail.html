@@ -1,0 +1,154 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title"> Lender Detail</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Lenders</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                {# IMAGE DIV #}
+                                <div class="text-center">
+                                    <img style="max-height: 100px" class="rounded-circle"
+                                         src="{% static 'img/user-default.jpeg' %}"
+                                         height="150px" alt="no-user-image">
+                                </div>
+
+                                {# NAME AND OTHER #}
+                                <div class="text-center mt-2">
+                                    <h5 class="mb-0">
+                                        {{ object.name }}
+                                        {% if user.is_active %}
+                                            <i class="fa fa-check-circle text-success"></i>
+                                        {% endif %}
+                                    </h5>
+                                    <p class="fw-light text-muted mb-0">{{ object.email }}</p>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i class="fa fa-phone me-1"></i>Phone</p>
+                                        <p class="mb-0 text-center">{{ object.phone }}</p>
+                                    </div>
+                                    <div class="col text-center">
+                                        <p class="mb-0 text-center h5"><i class="fa fa-credit-card me-1"></i>IBAN</p>
+                                        <p class="mb-0 text-center">{{ object.iban }}</p>
+                                    </div>
+                                    <div class="col text-center">
+                                        <p class="mb-0 text-center h5"><i class="fa-solid fa-money-bills me-1"></i>Due
+                                            Payments</p>
+                                        <p class="mb-0 text-center">{{ object.get_total_due }}.00 PKR</p>
+                                    </div>
+
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i
+                                                class="fa-solid fa-envelope-open-text me-1"></i>Account Number
+                                        </p>
+                                        <p class="mb-0 text-center">{{ object.account_number }}</p>
+                                    </div>
+
+                                    <div class="col">
+                                        <p class="mb-0 text-center h5"><i
+                                                class="fa-solid fa-tower-observation me-1"></i>BIC</p>
+                                        <p class="mb-0 text-center text-danger">
+                                            {{ object.bic }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# STATISTICS #}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">All Loans
+                                            <a href="#">
+                                                <div class="btn btn-success float-end"><i class="fas fa-plus"></i>
+                                                    Create Loan
+                                                </div>
+                                            </a>
+                                        </h4>
+                                    </div><!--end col-->
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered mb-0 table-centered">
+                                        <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Total Amount</th>
+                                            <th>Remaining</th>
+                                            <th>Due Date</th>
+                                            <th class="text-center">Returned</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in loans %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'project:detail' object.project.pk %}">{{ object.project.project_name }}</a>
+                                                </td>
+                                                <td>{{ object.loan_amount }}</td>
+                                                <td>{{ object.remaining_amount }}</td>
+                                                <td>{{ object.due_date }}</td>
+                                                <td class="text-center {% if object.is_repaid %} text-success {% else %} text-danger {% endif %} ">
+                                                    <span><i
+                                                            class="fa-solid {% if object.is_repaid %}fa-circle-check {% else %}fa-circle-xmark{% endif %}"></i></span>
+                                                </td>
+                                                <td class="text-center text-success"><a href="{% url 'loan:return_loan' object.pk %}"> <i
+                                                        class="fa-solid fa-pen-to-square"></i></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table><!--end /table-->
+                                </div><!--end /tableresponsive-->
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

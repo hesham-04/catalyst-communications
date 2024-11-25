@@ -7,245 +7,301 @@
 {% block content %}
 
 
-<div class="page-wrapper">
-    <div class="page-content">
-        <div class="container-fluid">
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
 
 
-            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                <h4 class="page-title"> Project Detail</h4>
-                <div class="">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                        </li><!--end nav-item-->
-                        <li class="breadcrumb-item active">Edit</li>
-                    </ol>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title">{{ project.project_name }}</h4>
-                                </div><!--end col-->
-                                <div class="col-auto">
-                                    <a href="#" class="float-end text-muted d-inline-flex text-decoration-underline"><i
-                                            class="iconoir-edit-pencil fs-18 me-1"></i>Edit</a>
-                                </div><!--end col-->
-                            </div>  <!--end row-->
-                        </div><!--end card-header-->
-                        <div class="card-body pt-0">
-                            <p class="text-muted fw-medium mb-3">{{ project.description|slice:150}}...</p>
-                            <ul class="list-unstyled mb-0">
-                                <li class=""><i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
-                                    <b> Client Name </b> :<a href="{% url 'customer:detail' project.customer.id %}">
-                                        {{ project.customer.get_full_name }}</a>
-                                </li>
-                                <li class="mt-2"><i class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
-                                    <b> Project status </b> : <span
-                                            class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
-                                        {{ project.get_project_status_display }}</span>
-                                </li>
-                                <li class="mt-2"><i
-                                        class="las la-university me-2 text-secondary fs-22 align-middle"></i> <b>
-                                    Payment Status </b> : <span
-                                        class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Paid</span>
-                                </li>
-                                <li class="mt-2"><i class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-                                    <b> Address </b> :{% if project.get_address %} {{ project.get_address }} {% else %} No Address {% endif %}
-                                </li>
-                                <li class="mt-2"><i class="las la-phone me-2 text-secondary fs-22 align-middle"></i> <b>
-                                    Phone </b> : {{ project.customer.phone }}
-                                </li>
-                                <li class="mt-2"><i class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
-                                    <b> Email </b> : {{ project.customer.email }}
-                                </li>
-
-                            </ul>
-
-                        </div><!--end card-body-->
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title"> Project Detail</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="card bg-globe-img">
-                            <div class="card-body">
-                                <div>
 
-
-                                    <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small
-                                            class="font-14">PKR</small></h4>
-
-                                    <a href="{% url 'project:add_budget' pk=project.id %}"
-                                       class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Assign
-                                        Budget</a>
-                                    <a href="{% url 'expense:create' pk=project.id %}"
-                                       class="btn btn-soft-warning {% if project.project_status != 'IP' %}disabled{% endif %}">Add
-                                        Expense</a>
-
-                                    <a href="{% url 'loan:list' pk=project.id  %}"
-                                       class="btn btn-soft-danger {% if project.project_status != 'IP' %}disabled{% endif %}">Loan Management</a>
-
-
-
-
-                                </div>
-                                <div class="row mt-3">
-                                    <span class="fs-16 fw-semibold mb-3 ">Project Assets</span>
-
-                                    <div class="col-3">
-                                        <div class="p-2 border-dashed border-danger rounded">
-                                            <h5 class="mt-1 mb-0 fw-medium">{{ project.project_cash }} PKR</h5>
-                                            <small class="text-dark">Cash In Hand</small>
-                                        </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">{{ project.project_name }}</h4>
                                     </div><!--end col-->
-                                    <div class="col-3">
-                                        <div class="p-2 border-dashed border-primary rounded">
-                                            <h5 class="mt-1 mb-0 fw-medium">{{ project.project_account_balance }}
-                                                PKR</h5>
-                                            <small class="text-dark">Account Balance</small>
-                                        </div>
+                                    <div class="col-auto">
+                                        <a href="#"
+                                           class="float-end text-muted d-inline-flex text-decoration-underline"><i
+                                                class="iconoir-edit-pencil fs-18 me-1"></i>Edit</a>
                                     </div><!--end col-->
-                                    <div class="col-3">
-                                        <div class="p-2 border-dashed border-warning rounded">
-                                            <h5 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h5>
-                                            <small class="text-danger">Payables</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="p-2 border-dashed border-warning rounded ">
-                                            <h5 class="mt-1 mb-0 fw-medium">{{ project.project_loan_recieved }} PKR</h5>
-                                            <small class="text-dark">Receivables </small>
-                                        </div>
-                                    </div><!--end col-->
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 d-flex mt-3">
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <p class="text-muted fw-medium mb-3">{{ project.description|slice:150 }}...</p>
+                                <ul class="list-unstyled mb-0">
+                                    <li class=""><i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
+                                        <b> Client Name </b> :<a href="{% url 'customer:detail' project.customer.id %}">
+                                            {{ project.customer.get_full_name }}</a>
+                                    </li>
+                                    <li class="mt-2"><i
+                                            class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
+                                        <b> Project status </b> : <span
+                                                class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
+                                        {{ project.get_project_status_display }}</span>
+                                    </li>
+                                    <li class="mt-2"><i
+                                            class="las la-university me-2 text-secondary fs-22 align-middle"></i> <b>
+                                        Payment Status </b> : <span
+                                            class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Paid</span>
+                                    </li>
+                                    <li class="mt-2"><i
+                                            class="las la-language me-2 text-secondary fs-22 align-middle"></i>
+                                        <b> Address </b> :{% if project.get_address %}
+                                            {{ project.get_address }} {% else %} No Address {% endif %}
+                                    </li>
+                                    <li class="mt-2"><i class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
+                                        <b>
+                                            Phone </b> : {{ project.customer.phone }}
+                                    </li>
+                                    <li class="mt-2"><i
+                                            class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                        <b> Email </b> : {{ project.customer.email }}
+                                    </li>
 
-                                        <a href="{% url 'invoice:create' pk=project.id %}"
-                                           class="btn  btn-primary {% if project.project_status != 'IP' %}disabled{% endif %}">Create
-                                            Invoice</a>
-                                        {% if project.quotation %}
-                                        <a href="{% url 'quotation:print' pk=project.quotation.quotation_id %}"
-                                           class="btn btn-soft-primary ms-3" target="_blank">View Quotation</a>
-                                        {% else %}
-                                        <a href="{% url 'quotation:create_quotation' pk=project.id %}"
-                                           class="btn  btn-danger ms-3">Create Quote</a>
-                                        {% endif %}
-                                        {% if project.project_status == 'AW' %}
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#quoteApprovedModal"
-                                           class="btn btn-success ms-3 ">Approved?</a>
-                                        <div class="modal fade" id="quoteApprovedModal" tabindex="-1"
-                                             aria-labelledby="quoteApprovedModalLabel" aria-hidden="true"
-                                             data-bs-backdrop="false" data-bs-keyboard="false">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="quoteApprovedModalLabel">Quote
-                                                            Approved</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure the project quote has been approved?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">No
-                                                        </button>
-                                                        <a href="{% url 'project:start_project' project.id %}"
-                                                           type="button"
-                                                           class="btn btn-primary">Yes</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% else %}
-                                        {% endif %}
-                                        {% if project.project_status == 'IP' %}
-                                        <a href="{% url 'loan:lend_loan' pk=project.id %}"
-                                       class="btn btn-success ms-3 {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>
-                                        {% endif %}
+                                </ul>
 
-                                    </div>
-                                </div>
-                                <!--end row-->
-                            </div>
-                            <!--end card-body-->
+                            </div><!--end card-body-->
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="card bg-globe-img">
+                                <div class="card-body">
+                                    <div>
 
-                </div>
-            </div>
+
+                                        <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small
+                                                class="font-14">PKR</small></h4>
+
+                                        <a href="{% url 'project:add_budget' pk=project.id %}"
+                                           class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Assign
+                                            Budget</a>
+                                        <a href="{% url 'expense:create' pk=project.id %}"
+                                           class="btn btn-soft-warning {% if project.project_status != 'IP' %}disabled{% endif %}">Add
+                                            Expense</a>
+
+                                        <a href="{% url 'loan:list' pk=project.id %}"
+                                           class="btn btn-soft-danger {% if project.project_status != 'IP' %}disabled{% endif %}">Loan
+                                            Management</a>
 
 
-            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                <h4 class="page-title"> Project Management</h4>
-            </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <span class="fs-16 fw-semibold mb-3 ">Project Assets</span>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="col-md-12">
-                        {% include 'project/include/expense_table.html' %}
+                                        <div class="col-3">
+                                            <div class="p-2 border-dashed border-danger rounded">
+                                                <h5 class="mt-1 mb-0 fw-medium">{{ project.project_cash }} PKR</h5>
+                                                <small class="text-dark">Cash In Hand</small>
+                                            </div>
+                                        </div><!--end col-->
+                                        <div class="col-3">
+                                            <div class="p-2 border-dashed border-primary rounded">
+                                                <h5 class="mt-1 mb-0 fw-medium">{{ project.project_account_balance }}
+                                                    PKR</h5>
+                                                <small class="text-dark">Account Balance</small>
+                                            </div>
+                                        </div><!--end col-->
+                                        <div class="col-3">
+                                            <div class="p-2 border-dashed border-warning rounded">
+                                                <h5 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h5>
+                                                <small class="text-danger">Payables</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="p-2 border-dashed border-warning rounded ">
+                                                <h5 class="mt-1 mb-0 fw-medium">{{ project.project_loan_recieved }}
+                                                    PKR</h5>
+                                                <small class="text-dark">Receivables </small>
+                                            </div>
+                                        </div><!--end col-->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 d-flex mt-3">
+
+                                            <a href="{% url 'invoice:create' pk=project.id %}"
+                                               class="btn  btn-danger {% if project.project_status != 'IP' %}disabled{% endif %}">Create
+                                                Invoice</a>
+                                            {% if project.quotation %}
+                                                <a href="{% url 'quotation:print' pk=project.quotation.quotation_id %}"
+                                                   class="btn btn-soft-primary ms-3" target="_blank">View Quotation</a>
+                                            {% else %}
+                                                <a href="{% url 'quotation:create_quotation' pk=project.id %}"
+                                                   class="btn  btn-danger ms-3">Create Quote</a>
+                                            {% endif %}
+                                            {% if project.project_status == 'AW' %}
+                                                <a href="" data-bs-toggle="modal" data-bs-target="#quoteApprovedModal"
+                                                   class="btn btn-success ms-3 ">Approved?</a>
+                                                <div class="modal fade" id="quoteApprovedModal" tabindex="-1"
+                                                     aria-labelledby="quoteApprovedModalLabel" aria-hidden="true"
+                                                     data-bs-backdrop="false" data-bs-keyboard="false">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="quoteApprovedModalLabel">
+                                                                    Quote
+                                                                    Approved</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure the project quote has been approved?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">No
+                                                                </button>
+                                                                <a href="{% url 'project:start_project' project.id %}"
+                                                                   type="button"
+                                                                   class="btn btn-primary">Yes</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                            {% endif %}
+                                            {% if project.project_status == 'IP' %}
+                                                <a href="{% url 'loan:lend_loan' pk=project.id %}"
+                                                   class="btn btn-success ms-3 {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                    <!--end row-->
+                                </div>
+                                <!--end card-body-->
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="row">
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title"> Project Management</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="col-md-12">
                             <div class="card shadow-lg">
                                 <div class="card-body">
-                                    <h4 class="card-title"><a href="{% url 'invoice:create' pk=project.id %}">Invoice
-                                        Summary</a></h4>
+                                    <h4 class="card-title">Expense Summary</h4>
                                     <table class="table mb-0">
                                         <thead class="table-light">
                                         <tr>
-                                            <th class="border-top-0">Invoice Number</th>
-                                            <th class="border-top-0">Issue Date</th>
-                                            <th class="border-top-0">Total Amount</th>
+                                            <th class="border-top-0">Date</th>
+                                            <th class="border-top-0">Source</th>
+                                            <th class="border-top-0">Description</th>
+                                            <th class="border-top-0">Vendor</th>
+                                            <th class="border-top-0">Amount</th>
                                             <th class="border-top-0">Status</th>
-                                            <th class="border-top-0">Action</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        {% for invoice in project.invoices.all|slice:":5" %}
-                                        <tr>
-                                            <td>{{ invoice.invoice_number }}</td>
-                                            <td>{{ invoice.date|date:"d M Y" }}
-                                            <td>{{ invoice.total_amount }} PKR</td>
-                                            <td>
-                            <span class="badge {% if invoice.status == 'paid' %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} fs-11 fw-medium px-2">
-                                {{ invoice.get_status_display }} AM
-                            </span>
-                                            </td>
-                                            <td>
-                                                <a href="#"><i
-                                                        class="las la-eye text-secondary fs-18"></i></a>
-                                                <a href="#"><i class="las la-download text-secondary fs-18"></i></a>
-                                                <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
-                                            </td>
-                                        </tr>
+                                        <tbody>{% for expense in project.expenses.all|slice:":3" %}
+                                            <tr>
+                                                <td>{{ expense.created_at|date:"d M" }}</td>
+                                                <td>{{ expense.get_budget_source_display }}</td>
+                                                <td>{{ expense.description|slice:20 }}</td>
+                                                <td>{% if expense.vendor.name %}{{ expense.vendor.name }}{% else %}
+                                                    &nbsp; &nbsp;  - {% endif %}</td>
+                                                <td>{{ expense.amount }}</td>
+                                                {% if expense.payment_status == 'UNPAID' %}
+                                                    <td>
+                                                        <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2"> Unpaid </span>
+                                                    </td>
+                                                {% else %}
+                                                    <td>
+                                                        <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2"> PAID </span>
+                                                    </td>
+                                                {% endif %}
+
+                                            </tr>
                                         {% empty %}
-                                        <tr>
-                                            <td colspan="5" class="text-center">No invoices recorded for this project.
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td colspan="6" class="text-center">No expenses recorded for this
+                                                    project.
+                                                </td>
+                                            </tr>
                                         {% endfor %}
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card shadow-lg">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Invoice Summary</h4>
+                                        <table class="table mb-0">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th class="border-top-0">Invoice Number</th>
+                                                <th class="border-top-0">Issue Date</th>
+                                                <th class="border-top-0">Total Amount</th>
+                                                <th class="border-top-0">Status</th>
+                                                <th class="border-top-0">Items</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for invoice in project.invoices.all|slice:":3" %}
+                                                <tr>
+                                                    <td><a href="{% url 'invoice:detail' invoice.pk %}">{{ invoice.invoice_number }}</a></td>
+                                                    <td>{{ invoice.date|date:"d M Y" }}
+                                                    <td>{{ invoice.total_amount }} PKR</td>
+                                                    <td>
+                                                        {% if invoice.status == 'PAID' %}
+
+                                                            <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2 ms-1">
+                                                            {{ invoice.status }}
+                                                        </span>
+                                                        {% else %}
+                                                            <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">
+                                                            {{ invoice.status }}
+                                                        </span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {{ invoice.items.count }}
+                                                    </td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No invoices recorded for this
+                                                        project.
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}

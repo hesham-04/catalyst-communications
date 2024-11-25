@@ -14,14 +14,14 @@
                                         <th class="border-top-0">Status</th>
                                     </tr>
                                     </thead>
-                                    <tbody>{% for expense in project.expenses.all %}
+                                    <tbody>{% for expense in project.expenses.all|slice:":3" %}
                                         <tr>
-                                            <td>{{ expense.created_at|date:"d M Y" }}</td>
+                                            <td>{{ expense.created_at|date:"d M" }}</td>
                                             <td>{{ expense.get_budget_source_display }}</td>
-                                            <td>{{ expense.description|slice:40 }}</td>
+                                            <td>{{ expense.description|slice:10 }}</td>
                                             <td>{% if expense.vendor.name %}{{ expense.vendor.name }}{% else %} &nbsp; &nbsp;  - {% endif %}</td>
                                             <td>{% if expense.category.name %}{{ expense.category.name }}{% else %}&nbsp; &nbsp; &nbsp;  - {% endif %}</td>
-                                            <td>${{ expense.amount }}</td>
+                                            <td>{{ expense.amount }}</td>
                                             {% if expense.payment_status == 'UNPAID' %}
                                             <td>
                                                 <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2"> Unpaid </span>

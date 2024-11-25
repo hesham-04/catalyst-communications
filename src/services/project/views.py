@@ -97,3 +97,10 @@ class StartProjectView(RedirectView):
         project.project_status = Project.ProjectStatus.IN_PROGRESS
         project.save()
         return reverse('project:detail', kwargs={'pk': project.pk})
+
+
+
+
+
+
+

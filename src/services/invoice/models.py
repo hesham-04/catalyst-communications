@@ -7,6 +7,10 @@ from src.services.project.models import Project
 
 
 class Invoice(models.Model):
+    INVOICE_STATUS = (
+        ("PENDING", "PENDING"),
+        ("PAID", "PAID"),
+    )
     invoice_id = models.AutoField(primary_key=True)
     date = models.DateField(default=timezone.now)
 
@@ -21,6 +25,7 @@ class Invoice(models.Model):
 
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_in_words = models.CharField(max_length=255)
+    status = models.CharField(max_length=10, choices=INVOICE_STATUS, default="PENDING")
 
     letterhead = models.BooleanField(default=True)
 
@@ -63,7 +68,7 @@ class InvoiceItem(models.Model):
     quantity = models.IntegerField(default=1)
     rate = models.DecimalField(max_digits=15, decimal_places=2)
     amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
-    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null =True, blank=True)
 
     def save(self, *args, **kwargs):
         self.amount = int(self.quantity) * int(self.rate)
@@ -77,3 +82,8 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return self.display_name
 
+    def get_total_amount(self):
+        total = self.quantity * self.rate
+        if self.tax:
+            total += total * (self.tax / 100)
+        return total

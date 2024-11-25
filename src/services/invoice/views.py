@@ -1,7 +1,7 @@
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 
 from .forms import InvoiceForm, InvoiceItemForm
 from .models import Invoice, InvoiceItem
@@ -53,11 +53,20 @@ class CreateInvoiceView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('invoice:print', kwargs={'pk': self.object.pk})
+        return reverse('invoice:detail', kwargs={'pk': self.object.pk})
 
 
 class PrintInvoiceView(TemplateView):
     template_name = 'invoice/invoice_print.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['invoice'] = get_object_or_404(Invoice, pk=self.kwargs['pk'])
+        return context
+
+class InvoiceDetailView(DetailView):
+    model = Invoice
+    template_name = 'invoice/invoice_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

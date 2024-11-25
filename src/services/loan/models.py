@@ -17,6 +17,12 @@ class Lender(models.Model):
     def __str__(self):
         return self.name
 
+    def get_total_due(self):
+        """
+        Calculate the total due amount for all loans of this lender.
+        """
+        return self.loans.aggregate(total_due=models.Sum('remaining_amount'))['total_due'] or 0
+
 
 class Loan(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="loans")
@@ -37,6 +43,9 @@ class Loan(models.Model):
 
     def __str__(self):
         return f"Loan for {self.project.project_name} from {self.lender.name}"
+
+
+
 
 
     def get_total_paid(self):

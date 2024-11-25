@@ -132,7 +132,6 @@
                                                         <!-- Larger width for Project Breakdown -->
                                                         <th style="width: 10%;">Rate</th>
                                                         <th style="width: 10%;">Quantity</th>
-
                                                         <th style="width: 10%;">Tax</th>
                                                         <th style="width: 10%;">Subtotal</th>
                                                     </tr>
@@ -146,8 +145,8 @@
                                                         </td>
                                                         <td>{{ item.rate }} PKR</td>
                                                         <td>{{ item.quantity }}</td>
-                                                        <td>{{ item.quantity }}</td>
-                                                        <td>${{ item.rate|multiply:item.quantity }}</td>
+                                                        <td>{{ item.tax }}</td>
+                                                        <td>${{ item.get_total_amount }}</td>
                                                     </tr>
                                                 {% endfor %}
 
@@ -160,21 +159,14 @@
                                                         PKR</b>
                                                     </td>
                                                 </tr>
+
                                                 <tr>
-                                                    <td colspan="1" class="border-0"></td>
-                                                    <td colspan="1" class="border-0"></td>
-                                                    <td colspan="2" class="border-0 fs-14 text-dark"><b>Sub Total:</b>
-                                                    </td>
-                                                    <td class="border-0 fs-14 text-dark"><b>{{ invoice.percent_tax }}
-                                                        %</b>
-                                                    </td>
+                                                    <th colspan="1" class="border-0"></th>
+                                                    <th colspan="1" class="border-0"></th>
+                                                    <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>
+                                                    <td class="border-0 fs-14 text-dark"><b>
+                                                        {{ invoice.total_in_words|capitalize_and_replace }}</b></td>
                                                 </tr>
-                                                <!--                                        <tr>-->
-                                                <!--                                            <th colspan="1" class="border-0"></th>-->
-                                                <!--                                            <td colspan="2" class="border-0 fs-14 text-dark"><b>In Words</b></td>-->
-                                                <!--                                            <td class="border-0 fs-14 text-dark"><b>-->
-                                                <!--                                                {{ invoice.total_in_words|capitalize_and_replace }}</b></td>-->
-                                                <!--                                        </tr>-->
                                                 <tr>
                                                     <th colspan="1" class="border-0"></th>
                                                     <th colspan="1" class="border-0"></th>
