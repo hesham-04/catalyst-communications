@@ -31,29 +31,110 @@
                 <div class="row">
 
                     <div class="col-md-6">
-                        <div class="card-body p-2 bg-soft-secondary rounded-bottom mt-2">
+
+
+                        <div class="col-md-12">
+                            <div class="card shadow-lg">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h4 class="card-title">{{ invoice.invoice_number }}</h4>
+                                            <p class="text-muted mt-1">{{ invoice.subject }}</p>
+                                        </div><!--end col-->
+                                        <div class="col-auto">
+
+                                        </div><!--end col-->
+                                    </div>  <!--end row-->
+                                </div><!--end card-header-->
+                                <div class="card-body pt-0">
+                                    <ul class="list-unstyled mb-0">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <li class=""><i
+                                                        class="las la-user me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Client Name </b> :<a
+                                                            href="#">
+                                                        {{ invoice.client_name }}</a>
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Project </b> : {{ invoice.project.project_name }}
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-university me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b>
+                                                        Payment Status </b> : <span
+                                                            class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Paid</span>
+                                                </li>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <li class="mt-2"><i
+                                                        class="las la-language me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Address </b> : {{ invoice.address }}
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b>
+                                                        Phone </b> : {{ invoice.phone }}
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                                    <b> Amount </b> : {{ invoice.total_amount }} PKR
+                                                </li>
+                                            </div>
+                                        </div>
+
+                                    </ul>
+                                    <p class="text-muted pt-0 fw-medium mt-3">{{ invoice.notes|slice:150 }}...</p>
+
+
+                                </div><!--end card-body-->
+                            </div>
+                        </div>
+                        <div class="card-body shadow-lg p-2 bg-soft-secondary rounded-bottom mt-2">
                             <div class="row">
                                 <div class="col-6">
-                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Lender</h5>
-                                    <p class="text-dark text-uppercase mb-0 fw-normal fs-12">DUE
-                                        DATE: Nov. 30, 2024</p>
+                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">
+                                        Client: {{ invoice.client_name }}</h5>
+                                    <p class="text-dark text-uppercase mb-0 fw-normal fs-12">
+                                        Company: {{ invoice.company_name }}</p>
                                 </div>
                                 <!--end col-->
                                 <div class="col-6 align-self-center text-end">
                                     <p class="text-dark text-uppercase mb-0 fw-normal fs-12"><i
-                                            class="fas fa-money-check fs-12 me-2 text-dark"></i>Lender BIC:
-                                        245324</p>
-                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">IBAN:
-                                        2452354</h5>
+                                            class="fas fa-money-check fs-12 me-1 text-dark"></i>Contact:
+                                        {{ invoice.phone }}</p>
+                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Address:
+                                        {{ invoice.address }}</h5>
                                 </div><!--end col-->
                             </div><!--end row-->
                         </div>
 
+
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="printable-section" >
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card" style="
+    position: relative;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;">
+
+                            <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url({% static 'logo.png' %});
+        background-repeat: no-repeat;
+        background-size: 50%;
+        background-position: center;
+        opacity: 0.07; /* Make the watermark barely visible */
+        pointer-events: none; /* Make the watermark non-interactive */
+        z-index: 1;">
+    </div>
                                 <div class="card-body rounded-top">
                                     <div class="row">
                                         <div class="col-4 align-self-center">
@@ -101,7 +182,7 @@
                                                 <address class="fs-13 ms-1" style="display: block !important;">
                                                     <strong class="fs-14">Billed To :</strong><br>
                                                     {{ invoice.project.customer.get_full_name }} <br>
-                                                    {{ invoice.project.get_address }}<br>
+                                                    {{ invoice.address }}<br>
                                                     <strong title="Phone">Phone:</strong> {{ invoice.project.customer.phone }}
                                                 </address>
                                             </div>
@@ -114,9 +195,9 @@
 
                                     </div><!--end row-->
 
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="table-responsive project-Invoice">
+                                    <div class="row bg-white">
+                                        <div class="col-lg-12 bg-white">
+                                            <div class="table-responsive project-Invoice bg-white">
                                                 <table class="table table-bordered mb-0">
                                                     <thead class="table-light">
                                                     <tr>
@@ -196,7 +277,8 @@
                                         </div><!--end col-->
                                         <div class="col-lg-12 col-xl-4">
                                             <div class="float-end d-print-none mt-2 mt-md-0">
-                                                <a href="javascript:window.print()" class="btn btn-info">Print</a>
+                                                <a href="javascript:void(0)" onclick="printSection()" class="btn btn-info">Print</a>
+
                                                 <a href="{% url 'project:detail' pk=invoice.project.id %}"
                                                    class="btn btn-danger">Cancel</a>
                                             </div>
@@ -213,4 +295,23 @@
             </div>
         </div>
     </div>
+
+
+
+
+<script>
+    function printSection() {
+        var printContents = document.getElementById("printable-section").innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        // Replace the body content with only the printable section's content
+        document.body.innerHTML = printContents;
+
+        // Trigger the print dialog
+        window.print();
+
+        // Restore the original page content after printing
+        document.body.innerHTML = originalContents;
+    }
+</script>
 {% endblock %}

@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/account_balance_update.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/accountbalance_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/assets_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/assets_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/cash_in_hand_update.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/cashinhand_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,29 +43,29 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hesham&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/github/catalyst-communications/static/img&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.codeium.enabled": "true",
+    "git-widget-placeholder": "hesham",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/github/catalyst-communications/static",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\github\catalyst-communications\static\img" />
       <recent name="D:\github\catalyst-communications\static" />
+      <recent name="D:\github\catalyst-communications\static\img" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\github\catalyst-communications\src\services\vendor\templates\vendor" />
@@ -100,7 +97,7 @@
       <workItem from="1732311327515" duration="12726000" />
       <workItem from="1732356335740" duration="14257000" />
       <workItem from="1732430324201" duration="24342000" />
-      <workItem from="1732525908667" duration="7645000" />
+      <workItem from="1732525908667" duration="10463000" />
     </task>
     <servers />
   </component>
