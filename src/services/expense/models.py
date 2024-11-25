@@ -33,9 +33,10 @@ class Expense(models.Model):
         return f"{self.project.project_name} - {self.amount} from {self.budget_source} ({self.category})"
 
     @classmethod
-    def calculate_total_expenses(cls, project_id):
-        total_expenses = cls.objects.filter(project_id=project_id).aggregate(total=Sum('amount'))
-        return round(total_expenses['total'] or 0, 2)
+    def calculate_total_expenses(cls, project_id=None):
+        if project_id:
+            return cls.objects.filter(project_id=project_id).aggregate(total=Sum('amount'))['total'] or 0
+        return cls.objects.aggregate(total=Sum('amount'))['total'] or 0
 
     class Meta:
         ordering = ['-created_at']

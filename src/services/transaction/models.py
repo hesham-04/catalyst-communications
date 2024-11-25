@@ -24,3 +24,7 @@ class Ledger(models.Model):
 
     def __str__(self):
         return f"Project: {self.project} - Source: {self.source} - Destination: {self.destination} - {self.transaction_type}: {self.amount}"
+
+
+    class Meta:
+        ordering = ['-created_at']
