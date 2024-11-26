@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'src.services.assets',
     'src.services.transaction',
     'src.services.vendor',
+    'src.services.charts',
     'src.core',
 
 ]

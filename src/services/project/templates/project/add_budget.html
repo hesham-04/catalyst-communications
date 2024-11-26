@@ -38,9 +38,12 @@
                                             class="font-14">PKR</small>
                                     </h4>
                                     <p class="mb-3 text-muted fw-semibold">
-                                    <button type="submit" class="btn btn-soft-primary mt-2">Past Transactions</button>
-
-                                    <button type="button" class="btn btn-soft-danger mt-2">Details</button>
+                                        <a href="{% url 'assets:index' %}">
+                                            <button type="submit" class="btn btn-soft-primary mt-2">Wallet</button>
+                                        </a>
+                                        <a href="{% url 'project:detail' project.pk %}">
+                                            <button type="button" class="btn btn-soft-danger mt-2">Details</button>
+                                        </a>
                                 </div>
 
                                 <div class="row align-items-center mt-3">
@@ -95,7 +98,7 @@
                             <div class="card-body">
                                 <form method="post" class="form">
                                     {% csrf_token %}
-                                    {{ form.as_p }}
+                                    {{ form|crispy }}
                                     <button type="submit" class="btn btn-primary mb-0">Add Budget</button>
                                 </form>
                             </div><!--end card-body-->

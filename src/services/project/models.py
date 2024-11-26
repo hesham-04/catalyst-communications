@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 from src.core.models import BillingAddress, ShippingAddress
 from src.services.assets.models import CashInHand, AccountBalance
@@ -62,3 +63,27 @@ class Project(models.Model):
             return f"{shipping_address.city} - {shipping_address.state}"
         else:
             return None
+
+    def get_trial_balance(self):
+        total_invoices = self.invoices.aggregate(total=Sum('total_amount'))['total'] or 0
+        total_expenses = self.expenses.aggregate(total=Sum('amount'))['total'] or 0
+        cash_balance = self.project_cash
+        account_balance = self.project_account_balance
+
+        return {
+            "Total Invoices (Credit)": total_invoices,
+            "Total Expenses (Debit)": total_expenses,
+            "Cash Balance": cash_balance,
+            "Account Balance": account_balance,
+            "Net Balance": (cash_balance + account_balance + total_invoices - total_expenses)
+        }
+
+    def generate_trial_balance(self):
+        trial_balance = []
+        invoices_total = self.invoices.aggregate(total=Sum('total_amount'))['total'] or 0
+        expenses_total = self.expenses.aggregate(total=Sum('amount'))['total'] or 0
+
+        trial_balance.append({'Account': 'Invoices (Credit)', 'Amount': invoices_total})
+        trial_balance.append({'Account': 'Expenses (Debit)', 'Amount': expenses_total})
+        trial_balance.append({'Account': 'Net Balance', 'Amount': invoices_total - expenses_total})
+        return trial_balance

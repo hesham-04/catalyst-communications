@@ -11,4 +11,5 @@ urlpatterns = [
     path('assets/', include('src.services.assets.urls')),
     path('vendor/', include('src.services.vendor.urls')),
     path('transaction/', include('src.services.transaction.urls')),
+    path('charts/', include('src.services.charts.urls')),
 ]
