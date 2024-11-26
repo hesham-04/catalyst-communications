@@ -104,6 +104,7 @@ class InvoicePaidView(View):
             )
 
             if success:
+                messages.success(request, f'Funds Successfully Transferred to {transfer_to}')
                 return HttpResponseRedirect(reverse('project:detail', args=[invoice.project.pk]))
             else:
                 messages.error(request, message)

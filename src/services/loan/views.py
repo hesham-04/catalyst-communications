@@ -72,14 +72,16 @@ class ReturnLoanView(CreateView):
 
         return_amount = form.cleaned_data['return_amount']
         remarks = form.cleaned_data['remarks']
+        source = form.cleaned_data['source']
 
         # Create an expense Object for this project.
         # Subtract from the Loan model.
+
         return_loan_to_lender(
             loan_id=loan.pk,
             project_id=loan.project.id,
             amount=return_amount,
-            source=None,
+            source=source,
             destination=loan.lender.name,
             reason=remarks
         )

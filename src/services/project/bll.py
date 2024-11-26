@@ -75,6 +75,8 @@ def add_loan_to_project(project_id, amount, source, destination, reason):
         project.project_cash += amount
     elif destination == 'ACC':
         project.project_account_balance += amount
+
+
     project.save()
 
     Ledger.objects.create(
@@ -91,6 +93,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     project = Project.objects.select_for_update().get(pk=project_id)
     loan = Loan.objects.select_for_update().get(pk=loan_id)
 
+
     if amount <= 0:
         raise ValueError("Amount must be greater than zero.")
 
@@ -104,6 +107,19 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     loan.save()
 
 
+    if source == 'CASH':
+        if project.project_cash < amount:
+            raise ValueError("Insufficient cash in hand.")
+        project.project_cash -= amount
+
+    elif source == 'ACC':
+        if project.project_account_balance < amount:
+            raise ValueError("Insufficient Project Account Balance")
+        project.project_cash -= amount
+
+    project.save()
+
+
     Expense.objects.create(
         project=project,
         description="Loan return",
@@ -111,7 +127,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         budget_source=source,
         category=None,
         vendor=None, #destination
-        payment_status=Expense.PaymentStatus.UNPAID
+        payment_status=Expense.PaymentStatus.PAID
     )
 
     Ledger.objects.create(
@@ -173,7 +189,7 @@ def process_invoice_payment(invoice_id, destination,amount, account_id=None):
         invoice.status = "PAID"
         invoice.save(update_fields=['status'])
 
-        account = AccountBalance.objects.select_for_update().get(pk=account_id)
+        if account_id: account = AccountBalance.objects.select_for_update().get(pk=account_id)
 
         ledger_reason = f"Payment for Invoice #{invoice.invoice_number} - Project:{invoice.project.project_name}"
         destination_name = None
@@ -190,7 +206,7 @@ def process_invoice_payment(invoice_id, destination,amount, account_id=None):
 
         elif destination == 'project_account_balance':
             invoice.project.project_account_balance += amount
-            invoice.project.save(update_fields=['account_balance'])
+            invoice.project.save(update_fields=['project_account_balance'])
             destination_name = "Project Account Balance"
 
         if destination_name:

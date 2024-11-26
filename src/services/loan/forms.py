@@ -49,7 +49,7 @@ class LoanForm(forms.ModelForm):
 class LoanReturnForm(forms.ModelForm):
     class Meta:
         model = LoanReturn
-        fields = ['return_amount', 'return_date', 'remarks']
+        fields = ['return_amount', 'return_date', 'remarks', 'source']
 
         widgets = {
             'return_amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter return amount'}),
@@ -60,5 +60,6 @@ class LoanReturnForm(forms.ModelForm):
                     'placeholder': 'Select date and time',
                 }
             ),
+            'source': forms.Select(attrs={'class': 'form-control'}),
             'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional remarks', 'rows': 3}),
         }

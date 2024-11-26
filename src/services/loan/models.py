@@ -61,6 +61,10 @@ class Loan(models.Model):
 
 
 class LoanReturn(models.Model):
+    class BudgetSource(models.TextChoices):
+        CASH = 'CASH', 'Cash in Hand'
+        ACCOUNT = 'ACC', 'Account'
+
     loan = models.ForeignKey(
         Loan,
         on_delete=models.CASCADE,
@@ -71,6 +75,7 @@ class LoanReturn(models.Model):
         max_digits=12,
         decimal_places=2,
     )
+    source =  models.CharField(max_length=6, choices=BudgetSource.choices, null=True)
     return_date = models.DateTimeField(
         default=timezone.now,
     )
