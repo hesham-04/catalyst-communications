@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 
-from src.services.project.models import Project
 from src.services.project.bll import add_loan_to_project
+from src.services.project.bll import return_loan_to_lender
+from src.services.project.models import Project
 from .forms import LoanForm
 from .forms import LoanReturnForm
-from .models import Loan, LoanReturn
-from src.services.project.bll import return_loan_to_lender
+from .models import Loan, LoanReturn, Lender
 
 
 class LendLoanView(CreateView):
@@ -54,6 +54,7 @@ class LoanListView(ListView):
         context = super().get_context_data(**kwargs)
         context['project'] = get_object_or_404(Project, id=self.kwargs['pk'])
         return context
+
     def get_queryset(self):
         return Loan.objects.filter(project=self.kwargs['pk']).order_by('-due_date')
 
@@ -71,14 +72,16 @@ class ReturnLoanView(CreateView):
 
         return_amount = form.cleaned_data['return_amount']
         remarks = form.cleaned_data['remarks']
+        source = form.cleaned_data['source']
 
         # Create an expense Object for this project.
         # Subtract from the Loan model.
+
         return_loan_to_lender(
-            loan_id = loan.pk,
+            loan_id=loan.pk,
             project_id=loan.project.id,
             amount=return_amount,
-            source=None,
+            source=source,
             destination=loan.lender.name,
             reason=remarks
         )
@@ -94,4 +97,17 @@ class ReturnLoanView(CreateView):
         context['loan'] = loan
         context['project'] = loan.project
         context['return_logs'] = LoanReturn.objects.filter(loan=loan).order_by('-return_date')
+        return context
+
+
+class LenderListView(ListView):
+    model = Lender
+
+
+class LenderDetailView(DetailView):
+    model = Lender
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['loans'] = self.object.loans.all()
         return context

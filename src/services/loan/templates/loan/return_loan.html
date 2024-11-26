@@ -45,8 +45,12 @@
                                             <span class="text-success"><i class="fas fa-calendar me-1"></i>Created on: {{ loan.date_issued }}: </span>
                                             {{ loan.reason }}
                                         </p>
-                                        <button type="submit" class="btn btn-soft-primary">Transfer</button>
-                                        <button type="button" class="btn btn-soft-danger">Request</button>
+                                        <a href="{% url 'loan:lender-detail' loan.lender.pk %}">
+                                            <button type="submit" class="btn btn-soft-primary">Lender</button>
+                                        </a>
+                                        <a href="{% url 'project:detail' loan.project.pk %}">
+                                            <button type="button" class="btn btn-soft-danger">Project</button>
+                                        </a>
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-4">

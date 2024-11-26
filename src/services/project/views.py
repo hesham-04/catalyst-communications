@@ -42,9 +42,6 @@ class ProjectDetailView(TemplateView):
         return context
 
 
-
-
-
 class AddBudgetView(FormView):
     template_name = 'project/add_budget.html'
     form_class = AddBudgetForm
@@ -56,8 +53,19 @@ class AddBudgetView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['project'] = self.project
-        context['cash_balance'] = CashInHand.objects.first().balance
-        context['account_balance'] = AccountBalance.objects.first().balance
+
+        if CashInHand.objects.first():
+            cih = CashInHand.objects.first().balance
+        else:
+            cih = 0
+
+        if AccountBalance.objects.first():
+            ab = AccountBalance.objects.first().balance
+        else:
+            ab = 0
+
+        context['cash_balance'] = cih
+        context['account_balance'] = ab
         return context
 
     def form_valid(self, form):
@@ -89,3 +97,10 @@ class StartProjectView(RedirectView):
         project.project_status = Project.ProjectStatus.IN_PROGRESS
         project.save()
         return reverse('project:detail', kwargs={'pk': project.pk})
+
+
+
+
+
+
+

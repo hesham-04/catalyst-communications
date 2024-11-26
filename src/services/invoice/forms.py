@@ -1,13 +1,115 @@
+from crispy_forms.bootstrap import FormActions
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Row, Column, Submit
+from crispy_forms.templatetags.crispy_forms_field import css_class
 from django import forms
 from .models import Invoice, InvoiceItem
+from ..assets.models import AccountBalance
+
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['client_name', 'company_name', 'phone',  'address', 'percent_tax', 'subject', 'notes']
+        fields = ['client_name', 'company_name', 'phone', 'address', 'due_date', 'subject', 'notes', 'letterhead']
+
+        widgets = {
+            'client_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Client Name'}),
+            'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Name'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}),
+            'due_date': forms.DateInput(attrs={'class':'form-control', 'type': 'Date'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Notes', 'rows': 1}),
+            'letterhead': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'row g-3'
+        self.helper.layout = Layout(
+            Row(
+                Column('client_name', css_class='form-group col-md-6 mb-3'),
+                Column('company_name', css_class='form-group col-md-6 mb-3'),
+                css_class='row'
+            ),
+            Row(
+                Column('phone', css_class='form-group col-md-6 mb-3'),
+                Column('address', css_class='form-group col-md-6 mb-3'),
+                css_class='row'
+            ),
+            Row(
+                Column('subject', css_class='form-group col-md-6 mb-3'),
+                Column('notes', css_class='form-group col-md-6 mb-3'),
+
+                css_class='row'
+            ),
+            Row(
+                Column('due_date', css_class='form-group col-md-6 mb-3'),
+                Column('letterhead', css_class='form-check mt-4  ms-2'),
+                css_class='row'
+            )
+        )
 
 
 class InvoiceItemForm(forms.ModelForm):
     class Meta:
         model = InvoiceItem
-        fields = ['item_name', 'description', 'quantity', 'rate']
+        fields = ['item_name', 'description', 'quantity', 'rate', 'tax']
+
+        # Commented Out because when applied:
+            # 1. We have to Use {% crispy formset %}
+            # 2. Which then renders  a separate form within the initial <form>
+
+        widgets = {
+            'item_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item name'}),
+            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Quantity', 'required': True}),
+            'rate': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Rate', 'required': True}),
+            'tax': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': False}),
+        }
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.helper = FormHelper()
+    #     self.helper.form_method = 'post'
+    #     self.helper.form_class = 'row g-3'
+    #     self.helper.layout = Layout(
+    #         Row(
+    #             Column('item_name', css_class='form-group col-md-6 mb-3'),
+    #             Column('description', css_class='form-group col-md-6 mb-3'),
+    #             css_class='row'
+    #         ),
+    #         Row(
+    #             Column('quantity', css_class='form-group col-md-4 mb-3'),
+    #             Column('rate', css_class='form-group col-md-4 mb-3'),
+    #             Column('tax', css_class='form-group col-md-4 mb-3'),
+    #             css_class='row'
+    #         ),
+    #     )
+
+
+class TransferFundsForm(forms.Form):
+    DESTINATION_CHOICES = [
+        ('account', 'Wallet Account'),
+        ('project_cash', 'Project Cash'),
+        ('project_account_balance', 'Project Account Balance'),
+    ]
+
+    transfer_to = forms.ChoiceField(choices=DESTINATION_CHOICES, required=True, label="Transfer To", initial='project_cash')
+    account = forms.ModelChoiceField(
+        queryset=AccountBalance.objects.all(),
+        required=False,
+        label="Bank Account (if selected)"
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        transfer_to = cleaned_data.get('transfer_to')
+        account = cleaned_data.get('account')
+
+        # Ensure a bank account is selected if 'account' is chosen
+        if transfer_to == 'account' and not account:
+            raise forms.ValidationError("Please select a bank account for this transfer.")
+        return cleaned_data

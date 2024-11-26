@@ -1,8 +1,9 @@
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .models import CashInHand, AccountBalance
+from django.db.models import Sum
+from django.views.generic import TemplateView, UpdateView, ListView
 
-from src.services.assets.forms import CashInHandForm, AccountBalanceForm
-from src.services.assets.models import CashInHand, AccountBalance
 
 
 class IndexView(TemplateView):
@@ -13,28 +14,51 @@ class IndexView(TemplateView):
         cash_in_hand = CashInHand.objects.first()
         context['cash_in_hand'] = cash_in_hand.balance if cash_in_hand else 0
 
-        account_balance = AccountBalance.objects.first()
-        context['account_balance'] = account_balance.balance if account_balance else 0
+
+        account_balance = AccountBalance.objects.aggregate(total_balance=Sum('balance'))['total_balance']
+        accounts = AccountBalance.objects.count()
+        context['account_balance'] = account_balance if account_balance else 0
+        context['accounts'] = accounts if accounts else 0
+
         return context
 
 
 
+# CashInHand Views
+class CashInHandCreateView(CreateView):
+    model = CashInHand
+    fields = ['name', 'balance']
+    template_name = 'cashinhand_form.html'
+    success_url = reverse_lazy('cashinhand_list')
 
 class CashInHandUpdateView(UpdateView):
     model = CashInHand
-    template_name = 'assets/cash_in_hand_update.html'
-    form_class = CashInHandForm
-    success_url = reverse_lazy('assets:index')
+    fields = ['name', 'balance']
+    template_name = 'cashinhand_form.html'
+    success_url = reverse_lazy('cashinhand_list')
 
-    def get_object(self):
-        return CashInHand.objects.first() or CashInHand.objects.create(balance=0)
+class CashInHandDeleteView(DeleteView):
+    model = CashInHand
+    template_name = 'cashinhand_confirm_delete.html'
+    success_url = reverse_lazy('cashinhand_list')
 
+
+
+
+class AccountBalanceCreateView(CreateView):
+    model = AccountBalance
+    fields = ['account_name', 'balance']
+    success_url = reverse_lazy('assets:accounts')
+
+class AccountBalanceList(ListView):
+    model = AccountBalance
 
 class AccountBalanceUpdateView(UpdateView):
     model = AccountBalance
-    template_name = 'assets/account_balance_update.html'
-    form_class = AccountBalanceForm
-    success_url = reverse_lazy('assets:index')
+    fields = ['account_name', 'balance']
+    success_url = reverse_lazy('accountbalance_list')
 
-    def get_object(self):
-        return AccountBalance.objects.first() or AccountBalance.objects.create(account_name='Default Account', balance=0.00)
+class AccountBalanceDeleteView(DeleteView):
+    model = AccountBalance
+    template_name = 'accountbalance_confirm_delete.html'
+    success_url = reverse_lazy('accountbalance_list')

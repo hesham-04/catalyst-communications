@@ -1,5 +1,6 @@
 from django import forms
-from .models import Expense, Vendor, ExpenseCategory
+
+from .models import Expense, ExpenseCategory
 from ..project.models import Project
 
 
@@ -7,8 +8,6 @@ class ExpenseForm(forms.ModelForm):
     class Meta:
         model = Expense
         fields = ['description', 'amount', 'budget_source', 'category', 'vendor']
-
-
 
 
 class ExpenseFormCreate(forms.ModelForm):
@@ -44,18 +43,6 @@ class ExpenseFormCreate(forms.ModelForm):
         return amount
 
 
-
-
-class VendorForm(forms.ModelForm):
-    class Meta:
-        model = Vendor
-        fields = ['name', 'address', 'iban']
-
-    def __init__(self, *args, **kwargs):
-        super(VendorForm, self).__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-control'})
-
 class ExpenseCategoryForm(forms.ModelForm):
     class Meta:
         model = ExpenseCategory
@@ -65,3 +52,15 @@ class ExpenseCategoryForm(forms.ModelForm):
         super(ExpenseCategoryForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
+class ExpensePaymentForm(forms.Form):
+    SOURCE_CHOICES = [
+        ('CASH', 'Project Cash'),
+        ('ACC', 'Project Account'),
+    ]
+
+    source = forms.ChoiceField(
+        choices=SOURCE_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    remarks = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}))

@@ -1,10 +1,15 @@
+from django.contrib import messages
+from django.db import transaction
 from django.forms import modelformset_factory
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic import CreateView, TemplateView
+from django.views import View
+from django.views.generic import CreateView, TemplateView, DetailView
 
-from .forms import InvoiceForm, InvoiceItemForm
+from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm
 from .models import Invoice, InvoiceItem
+from ..project.bll import process_invoice_payment
 from ..project.models import Project
 
 
@@ -21,8 +26,10 @@ class CreateInvoiceView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm, extra=1)
         context['formset'] = InvoiceItemFormSet(queryset=InvoiceItem.objects.none())
+
         return context
 
     def form_valid(self, form):
@@ -30,10 +37,15 @@ class CreateInvoiceView(CreateView):
         form.instance.project = project
         invoice = form.save()
 
-
-
         InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm)
         formset = InvoiceItemFormSet(self.request.POST)
+
+        print(self.request.POST)
+
+        if formset.is_valid():
+            print("Formset is valid")
+        else:
+            print("Formset errors:", formset.errors)
 
         if formset.is_valid():
             for item_form in formset:
@@ -46,7 +58,7 @@ class CreateInvoiceView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('invoice:print', kwargs={'pk': self.object.pk})
+        return reverse('invoice:detail', kwargs={'pk': self.object.pk})
 
 
 class PrintInvoiceView(TemplateView):
@@ -56,3 +68,47 @@ class PrintInvoiceView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['invoice'] = get_object_or_404(Invoice, pk=self.kwargs['pk'])
         return context
+
+
+class InvoiceDetailView(DetailView):
+    model = Invoice
+    template_name = 'invoice/invoice_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['invoice'] = get_object_or_404(Invoice, pk=self.kwargs['pk'])
+        return context
+
+
+
+class InvoicePaidView(View):
+    def get(self, request, *args, **kwargs):
+        invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
+        form = TransferFundsForm()
+        return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
+
+    def post(self, request, *args, **kwargs):
+        invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
+        form = TransferFundsForm(request.POST)
+
+        if form.is_valid():
+            transfer_to = form.cleaned_data['transfer_to']
+            account = form.cleaned_data.get('account')
+            amount = invoice.total_amount
+
+            success, message = process_invoice_payment(
+                invoice_id=invoice.pk,
+                destination=transfer_to,
+                account_id=account.pk if account else None,
+                amount=amount
+            )
+
+            if success:
+                messages.success(request, f'Funds Successfully Transferred to {transfer_to}')
+                return HttpResponseRedirect(reverse('project:detail', args=[invoice.project.pk]))
+            else:
+                messages.error(request, message)
+                return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
+
+        return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
+

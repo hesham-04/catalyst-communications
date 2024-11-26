@@ -7,6 +7,10 @@ from src.services.project.models import Project
 
 
 class Invoice(models.Model):
+    INVOICE_STATUS = (
+        ("PENDING", "PENDING"),
+        ("PAID", "PAID"),
+    )
     invoice_id = models.AutoField(primary_key=True)
     date = models.DateField(default=timezone.now)
 
@@ -20,10 +24,15 @@ class Invoice(models.Model):
     notes = models.TextField()
 
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    percent_tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     total_in_words = models.CharField(max_length=255)
+    status = models.CharField(max_length=10, choices=INVOICE_STATUS, default="PENDING")
+    due_date = models.DateField(default=timezone.now())
+
+    letterhead = models.BooleanField(default=True)
 
     project = models.ForeignKey(Project, related_name="invoices", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
 
     def calculate_total_amount(self):
         total = sum(item.amount for item in self.items.all())
@@ -39,6 +48,7 @@ class Invoice(models.Model):
             self.invoice_number = '# INV-{:06d}'.format(self.invoice_id)
         super().save(*args, **kwargs)
 
+
     @classmethod
     def calculate_total_receivables(cls, project_id):
         total_receivables = cls.objects.filter(project_id=project_id).aggregate(total=Sum('total_amount'))
@@ -46,6 +56,10 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.client_name} - {self.project.project_name}"
+
+    class Meta:
+        ordering=['-created_at']
+
 
 
 class InvoiceItem(models.Model):
@@ -55,6 +69,7 @@ class InvoiceItem(models.Model):
     quantity = models.IntegerField(default=1)
     rate = models.DecimalField(max_digits=15, decimal_places=2)
     amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
+    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null =True, blank=True)
 
     def save(self, *args, **kwargs):
         self.amount = int(self.quantity) * int(self.rate)
@@ -67,3 +82,9 @@ class InvoiceItem(models.Model):
 
     def __str__(self):
         return self.display_name
+
+    def get_total_amount(self):
+        total = self.quantity * self.rate
+        if self.tax:
+            total += total * (self.tax / 100)
+        return total

@@ -11,7 +11,9 @@ class Ledger(models.Model):
         ('RETURN_LOAN', 'Loan Returned'),
 
         ('CREATE_EXPENSE', 'Expense Created'),
-        ('RETURN_EXPENSE', 'Expense Returned'),
+        ('PAY_EXPENSE', 'Expense Paid'),
+
+        ('INVOICE_PAYMENT', 'Invoice Paid')
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
@@ -24,3 +26,7 @@ class Ledger(models.Model):
 
     def __str__(self):
         return f"Project: {self.project} - Source: {self.source} - Destination: {self.destination} - {self.transaction_type}: {self.amount}"
+
+
+    class Meta:
+        ordering = ['-created_at']

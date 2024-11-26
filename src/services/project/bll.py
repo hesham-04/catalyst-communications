@@ -1,6 +1,7 @@
 from django.db import transaction
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
+from src.services.invoice.models import Invoice
 from src.services.loan.models import Loan
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
@@ -15,6 +16,7 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
     :param amount: The amount to transfer
     :param source: The source of the funds ('CASH', 'ACC')
     :param destination: The destination for the funds ('CASH', 'ACC')
+
     """
     if amount <= 0:
         raise ValueError("Amount must be greater than zero.")
@@ -25,11 +27,13 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         project.project_cash += amount
     elif destination == 'ACC':
         project.project_account_balance += amount
+
     project.save()
 
     # Handle source deduction
     if source == 'CASH':
         cash = CashInHand.objects.select_for_update().first()
+
         if not cash or cash.balance < amount:
             raise ValueError("Insufficient cash in hand.")
         cash.balance -= amount
@@ -37,6 +41,7 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
 
     elif source == 'ACC':
         account = AccountBalance.objects.select_for_update().first()
+
         if not account or account.balance < amount:
             raise ValueError("Insufficient account balance.")
         account.balance -= amount
@@ -49,7 +54,7 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         transaction_type="BUDGET_ASSIGN",
         project=project,
         amount=amount,
-        source=source,
+        source="Wallet: " + source,
         destination=destination,
         reason=reason
     )
@@ -70,6 +75,8 @@ def add_loan_to_project(project_id, amount, source, destination, reason):
         project.project_cash += amount
     elif destination == 'ACC':
         project.project_account_balance += amount
+
+
     project.save()
 
     Ledger.objects.create(
@@ -86,6 +93,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     project = Project.objects.select_for_update().get(pk=project_id)
     loan = Loan.objects.select_for_update().get(pk=loan_id)
 
+
     if amount <= 0:
         raise ValueError("Amount must be greater than zero.")
 
@@ -99,13 +107,27 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     loan.save()
 
 
+    if source == 'CASH':
+        if project.project_cash < amount:
+            raise ValueError("Insufficient cash in hand.")
+        project.project_cash -= amount
+
+    elif source == 'ACC':
+        if project.project_account_balance < amount:
+            raise ValueError("Insufficient Project Account Balance")
+        project.project_cash -= amount
+
+    project.save()
+
+
     Expense.objects.create(
         project=project,
         description="Loan return",
         amount=amount,
         budget_source=source,
         category=None,
-        vendor=None #destination
+        vendor=None, #destination
+        payment_status=Expense.PaymentStatus.PAID
     )
 
     Ledger.objects.create(
@@ -137,3 +159,68 @@ def create_expense_calculations(project_id, amount, budget_source, reason=None):
         destination=None,
         reason=reason,
     )
+
+@transaction.atomic
+def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None):
+    project = Project.objects.select_for_update().get(pk=project_id)
+    expense = Expense.objects.select_for_update().get(pk=expense_id)
+    expense.payment_status = Expense.PaymentStatus.PAID
+    if budget_source == 'CASH':
+        project.project_cash -= amount
+
+    elif budget_source == 'ACC':
+        project.project_account_balance -= amount
+
+    project.save()
+
+    Ledger.objects.create(
+        transaction_type="PAY_EXPENSE",
+        project=project,
+        amount=amount,
+        source=f"{budget_source} form {project.project_name}",
+        destination=None,
+        reason=reason,
+    )
+
+@transaction.atomic
+def process_invoice_payment(invoice_id, destination,amount, account_id=None):
+    try:
+        invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
+        invoice.status = "PAID"
+        invoice.save(update_fields=['status'])
+
+        if account_id: account = AccountBalance.objects.select_for_update().get(pk=account_id)
+
+        ledger_reason = f"Payment for Invoice #{invoice.invoice_number} - Project:{invoice.project.project_name}"
+        destination_name = None
+
+        if destination == 'account' and account:
+            account.balance += amount
+            account.save(update_fields=['balance'])
+            destination_name = f"Account: {account.account_name}"
+
+        elif destination == 'project_cash':
+            invoice.project.project_cash += amount
+            invoice.project.save(update_fields=['project_cash'])
+            destination_name = "Project Cash"
+
+        elif destination == 'project_account_balance':
+            invoice.project.project_account_balance += amount
+            invoice.project.save(update_fields=['project_account_balance'])
+            destination_name = "Project Account Balance"
+
+        if destination_name:
+            Ledger.objects.create(
+                transaction_type="INVOICE_PAYMENT",
+                project=invoice.project,
+                amount=amount,
+                source="Invoice",
+                destination=destination_name,
+                reason=ledger_reason
+            )
+
+        return True, "Invoice successfully paid and funds transferred."
+
+    except Exception as e:
+        # Handle unexpected errors
+        return False, f"An error occurred while processing the payment: {str(e)}"

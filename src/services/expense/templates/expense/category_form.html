@@ -7,12 +7,12 @@
         <div class="page-content">
             <div class="container-fluid">
 
-                <div class="card p-4">
-                    <h2 class="text-center mt-3">Create a New Category</h2>
+                <div class="card p-4 mt-5">
+                    <h4 class="text-center mt-3">New Expense Category</h4>
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit">Save</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </form>
                 </div>
 

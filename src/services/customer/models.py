@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Customer(models.Model):
     CUSTOMER_TYPE_CHOICES = [
         ('business', 'Business'),
@@ -38,8 +37,11 @@ class Customer(models.Model):
 
     def get_full_name(self):
         return f"{self.salutation} {self.first_name} {self.last_name}"
+
     def __str__(self):
-        return self.get_full_name()
+        return f"{self.salutation} {self.first_name} {self.last_name}"
+
+
 
 
 class ContactPerson(models.Model):
