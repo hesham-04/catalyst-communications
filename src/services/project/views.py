@@ -74,6 +74,13 @@ class AddBudgetView(FormView):
         destination = form.cleaned_data['destination']
         reason = form.cleaned_data['reason']
 
+        if source == 'ACC':
+            # account = AccountBalance.objects.get(id=source.id)  # FOR LATER
+            account = AccountBalance.objects.first()
+            if account.balance < amount:
+                form.add_error('amount', 'Insufficient balance in the account.')
+                return self.form_invalid(form)
+
         add_budget_to_project(
             project_id=self.project.pk,
             amount=amount,

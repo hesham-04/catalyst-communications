@@ -1,9 +1,10 @@
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
-from .forms import CustomerForm
+
 from src.core.forms import BillingAddressForm, ShippingAddressForm
 from src.core.models import Customer, ShippingAddress, BillingAddress
-from django.shortcuts import redirect, get_object_or_404
+from .forms import CustomerForm
 
 
 # Create your views here.
@@ -28,7 +29,6 @@ class CustomerDetailView(DetailView):
     template_name = 'customer/customer_detail.html'
 
 
-
 class ShippingAddressAddView(CreateView):
     template_name = 'customer/address_form.html'
     model = ShippingAddress
@@ -50,6 +50,8 @@ class ShippingAddressAddView(CreateView):
 
     def get_success_url(self):
         return reverse('customer:detail', kwargs={'pk': self.object.customer.pk})
+
+
 class ShippingAddressUpdateView(UpdateView):
     template_name = 'customer/address_form.html'
     form_class = ShippingAddressForm
@@ -60,7 +62,6 @@ class ShippingAddressUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('customer:detail', kwargs={'pk': self.object.customer.pk})
-
 
 
 class BillingAddressAddView(CreateView):
@@ -96,4 +97,3 @@ class BillingAddressUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('customer:detail', kwargs={'pk': self.object.customer.pk})
-
