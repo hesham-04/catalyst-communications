@@ -4,6 +4,7 @@ from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 
 from .models import Project
+from ..assets.models import AccountBalance
 
 
 class ProjectForm(forms.ModelForm):
@@ -48,21 +49,17 @@ class ProjectForm(forms.ModelForm):
 
 class AddBudgetForm(forms.Form):
     SOURCE_CHOICES = [
-        ('CASH', 'Cash in Hand'),
         ('ACC', 'Account'),
     ]
-    DESTINATION_CHOICES = [
-        ('CASH', 'Project Cash'),
-        ('ACC', 'Project Account'),
-    ]
-
     amount = forms.DecimalField(max_digits=12, decimal_places=2, label="Amount")
-    source = forms.ChoiceField(choices=SOURCE_CHOICES, label="Budget Source (Wallet)")
-    destination = forms.ChoiceField(choices=DESTINATION_CHOICES, label="Budget Destination (Project)")
+    source = forms.ModelChoiceField(
+        queryset=AccountBalance.objects.all(),
+        required=False,
+        label="Bank Account (if selected)"
+    )
     reason = forms.CharField(label="Reason for Transaction", required=True, max_length=255)
 
     # Widgets
     amount.widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter amount'})
     source.widget.attrs.update({'class': 'form-control'})
-    destination.widget.attrs.update({'class': 'form-control'})
     reason.widget.attrs.update({'class': 'form-control'})

@@ -71,8 +71,15 @@ class AddBudgetView(FormView):
     def form_valid(self, form):
         amount = form.cleaned_data['amount']
         source = form.cleaned_data['source']
-        destination = form.cleaned_data['destination']
         reason = form.cleaned_data['reason']
+
+        if amount <= 0:
+            form.add_error('amount', "Amount cannot be zero.")
+            return self.form_invalid(form)
+
+        if AccountBalance.objects.get(pk=source.pk).balance < amount:
+            form.add_error('source', "The selected Account does not have enough Funds.")
+            return self.form_invalid(form)
 
         if source == 'ACC':
             # account = AccountBalance.objects.get(id=source.id)  # FOR LATER
@@ -85,7 +92,7 @@ class AddBudgetView(FormView):
             project_id=self.project.pk,
             amount=amount,
             source=source,
-            destination=destination,
+            destination=None,
             reason=reason
         )
 
