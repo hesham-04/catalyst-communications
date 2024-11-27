@@ -18,34 +18,20 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
     :param destination: The destination for the funds ('CASH', 'ACC')
 
     """
-    if amount <= 0:
-        raise ValueError("Amount must be greater than zero.")
+
 
     # Handle destination addition
     project = Project.objects.select_for_update().get(pk=project_id)
-    if destination == 'CASH':
-        project.project_cash += amount
-    elif destination == 'ACC':
-        project.project_account_balance += amount
-
+    project.project_account_balance += amount
     project.save()
 
     # Handle source deduction
-    if source == 'CASH':
-        cash = CashInHand.objects.select_for_update().first()
+    account = AccountBalance.objects.get(pk=source.pk)
 
-        if not cash or cash.balance < amount:
-            raise ValueError("Insufficient cash in hand.")
-        cash.balance -= amount
-        cash.save()
-
-    elif source == 'ACC':
-        account = AccountBalance.objects.select_for_update().first()
-
-        if not account or account.balance < amount:
-            raise ValueError("Insufficient account balance.")
-        account.balance -= amount
-        account.save()
+    if not account or account.balance < amount:
+        raise ValueError("Insufficient account balance.")
+    account.balance -= amount
+    account.save()
 
 
 
@@ -54,8 +40,8 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         transaction_type="BUDGET_ASSIGN",
         project=project,
         amount=amount,
-        source="Wallet: " + source,
-        destination=destination,
+        source="Wallet: " + source.account_name + f" ({source.pk})",
+        destination="Project:" + project.project_name + f" ({project.pk})",
         reason=reason
     )
 
