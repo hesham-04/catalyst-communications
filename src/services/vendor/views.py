@@ -8,6 +8,8 @@ from .models import (
 from .forms import VendorForm
 from ..expense.models import Expense, ExpenseCategory
 from ..project.models import Project
+from django.db.models import Q
+
 
 
 # Create your views here.
@@ -20,7 +22,6 @@ class VendorListView(ListView):
     model = Vendor
     paginate_by = 100
 
-from django.db.models import Q
 
 class VendorDetailView(DetailView):
     model = Vendor
@@ -28,15 +29,12 @@ class VendorDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Base queryset: Expenses linked to this vendor
         expenses = Expense.objects.filter(vendor=self.object)
 
-        # Extract filter parameters from the request
-        project_id = self.request.GET.get('project')  # Project filter
-        category_id = self.request.GET.get('category')  # Expense Category filter
-        payment_status = self.request.GET.get('status')  # Payment status filter (PAID/UNPAID)
+        project_id = self.request.GET.get('project')
+        category_id = self.request.GET.get('category')
+        payment_status = self.request.GET.get('status')
 
-        # Apply filters dynamically if parameters are present
         if project_id:
             expenses = expenses.filter(project_id=project_id)
         if category_id:

@@ -48,10 +48,10 @@ class Invoice(models.Model):
             self.invoice_number = '# INV-{:06d}'.format(self.invoice_id)
         super().save(*args, **kwargs)
 
-
     @classmethod
     def calculate_total_receivables(cls, project_id):
-        total_receivables = cls.objects.filter(project_id=project_id).aggregate(total=Sum('total_amount'))
+        total_receivables = cls.objects.filter(project_id=project_id, status="PAID").aggregate(
+            total=Sum('total_amount'))
         return round(total_receivables['total'] or 0, 2)
 
     def __str__(self):
