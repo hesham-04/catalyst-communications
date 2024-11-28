@@ -24,12 +24,13 @@
                 </div>
 
 
-                <div class="col-md-12 col-lg-4">
+                <div class="col-md-12">
                     <div class="card bg-globe-img">
                         <div class="card-body">
                             <div>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fs-16 fw-semibold">Balance</span>
+                                    <span class="fs-16 fw-semibold">Project Balance</span>
+                                    <a href="{%  url 'project:transfer_to_cash' project.pk %}"><span class="btn btn-primary">Transfer to Project Cash</span></a>
                                 </div>
 
                                 <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small class="font-14">PKR</small></h4>
@@ -107,8 +108,6 @@
 
                                     </tbody>
                                 </table>
-
-
                             </div>
                         </div>
                     </div>

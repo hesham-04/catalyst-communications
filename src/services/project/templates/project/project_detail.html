@@ -83,7 +83,8 @@
                                         <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }}<small
                                                 class="font-14"> PKR </small></h4>
 
-                                         <a class=" btn btn-secondary" href="{% url 'project:finances' project.pk %}"><i class="fa fa-clipboard-check me-1"></i>Finances</a>
+                                        <a class=" btn btn-secondary" href="{% url 'project:finances' project.pk %}"><i
+                                                class="fa fa-clipboard-check me-1"></i>Finances</a>
 
                                         <a href="{% url 'project:add_budget' pk=project.id %}"
                                            class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Create
@@ -103,18 +104,20 @@
                                         <span class="fs-16 fw-semibold mb-3 ">Project Assets</span>
 
                                         <div class="col-3">
-                                            <div class="p-2 border-dashed border-danger rounded">
-                                                <h5 class="mt-1 mb-0 fw-medium">{{ project.project_cash }} PKR</h5>
-                                                <small class="text-dark">Cash In Hand</small>
-                                            </div>
-                                        </div><!--end col-->
-                                        <div class="col-3">
                                             <div class="p-2 border-dashed border-primary rounded">
                                                 <h5 class="mt-1 mb-0 fw-medium">{{ project.project_account_balance }}
                                                     PKR</h5>
                                                 <small class="text-dark">Account Balance</small>
                                             </div>
                                         </div><!--end col-->
+
+                                        <div class="col-3">
+                                            <div class="p-2 border-dashed border-danger rounded">
+                                                <h5 class="mt-1 mb-0 fw-medium">{{ project.project_cash }} PKR</h5>
+                                                <small class="text-dark">Cash In Hand</small>
+                                            </div>
+                                        </div><!--end col-->
+
                                         <div class="col-3">
                                             <div class="p-2 border-dashed border-warning rounded">
                                                 <h5 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h5>
@@ -266,7 +269,9 @@
                                             <tbody>
                                             {% for invoice in project.invoices.all|slice:":3" %}
                                                 <tr>
-                                                    <td><a href="{% url 'invoice:detail' invoice.pk %}">{{ invoice.invoice_number }}</a></td>
+                                                    <td>
+                                                        <a href="{% url 'invoice:detail' invoice.pk %}">{{ invoice.invoice_number }}</a>
+                                                    </td>
                                                     <td>{{ invoice.date|date:"d M Y" }}
                                                     <td>{{ invoice.total_amount }} PKR</td>
                                                     <td>

@@ -224,7 +224,7 @@ def create_journal_expense_calculations(reason, destination, amount, source, acc
         Ledger.objects.create(
             transaction_type="CREATE_JOURNAL_EXPENSE",
             amount=amount,
-            source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else "Wallet: Cash In Hand",
+            source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else f"Wallet: Cash In Hand ({cashinhand.pk})",
             destination=f"Vendor: {vendor.name} ({vendor.pk})",
             reason="Expense creation"
         )

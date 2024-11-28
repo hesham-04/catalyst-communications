@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    ProjectView, ProjecCreateView, ProjectDetailView, AddBudgetView, StartProjectView, ProjectFinances
+    ProjectView, ProjecCreateView, ProjectDetailView, AddBudgetView, StartProjectView, ProjectFinances, CreateProjectCash
 )
 
 app_name = 'project'
@@ -11,6 +11,8 @@ urlpatterns = [
     path('detail/<int:pk>/', ProjectDetailView.as_view(), name='detail'),
     path('project/<int:pk>/add_budget/', AddBudgetView.as_view(), name='add_budget'),
     path('project/<int:pk>/start_project/', StartProjectView.as_view(), name='start_project'),
+
+    path('transfer/<str:pk>/', CreateProjectCash.as_view(), name='transfer_to_cash'),
 
     path('finances/<str:pk>/', ProjectFinances.as_view(), name='finances')
 
