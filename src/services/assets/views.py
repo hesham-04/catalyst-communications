@@ -1,5 +1,7 @@
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views import View
 from .models import CashInHand, AccountBalance
 from django.db.models import Sum
 from django.views.generic import TemplateView, UpdateView, ListView
@@ -21,6 +23,17 @@ class IndexView(TemplateView):
         context['accounts'] = accounts if accounts else 0
 
         return context
+
+
+class CashInHandIndexView(View):
+    def get(self, request, *args, **kwargs):
+        cashinhand = CashInHand.objects.first() or 0
+
+        context ={
+            'cashinhand': cashinhand,
+        }
+
+        return render(request, 'assets/cashinhand_list.html', context)
 
 
 
@@ -56,9 +69,9 @@ class AccountBalanceList(ListView):
 class AccountBalanceUpdateView(UpdateView):
     model = AccountBalance
     fields = ['account_name', 'balance']
-    success_url = reverse_lazy('accountbalance_list')
+    success_url = reverse_lazy('assets:accounts')
 
 class AccountBalanceDeleteView(DeleteView):
     model = AccountBalance
     template_name = 'accountbalance_confirm_delete.html'
-    success_url = reverse_lazy('accountbalance_list')
+    success_url = reverse_lazy('assets:accounts')

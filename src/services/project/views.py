@@ -1,4 +1,6 @@
+from django.db.models import Sum
 from django.urls import reverse_lazy, reverse
+from django.views import View
 from django.views.generic import TemplateView, CreateView, RedirectView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -8,6 +10,7 @@ from .forms import ProjectForm
 from src.services.expense.views import Expense
 from ..invoice.models import Invoice
 from .bll import add_budget_to_project
+from ..transaction.models import Ledger
 
 
 class ProjectView(TemplateView):
@@ -38,7 +41,7 @@ class ProjectDetailView(TemplateView):
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
         context['payable'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
-        context['receivables'] = Invoice.calculate_total_receivables(project_id=kwargs['pk'])
+        context['receivables'] = Invoice.calculate_total_receieved(project_id=kwargs['pk'])
         return context
 
 
@@ -114,7 +117,49 @@ class StartProjectView(RedirectView):
 
 
 
+class ProjectFinances(View):
+    template_name = 'project/finances.html'
 
+    def get(self, request, pk):
+        project = Project.objects.get(pk=pk)
 
+        transaction_filter = request.GET.get('transaction_type', None)
 
+        ledger_entries = Ledger.objects.filter(project_id=project.pk)
 
+        if transaction_filter:
+            ledger_entries = ledger_entries.filter(transaction_type=transaction_filter)
+
+        totals_by_type = {
+            transaction[0]: ledger_entries.filter(transaction_type=transaction[0]).aggregate(Sum('amount'))['amount__sum']
+            for transaction in Ledger.TRANSACTION_TYPES
+        }
+
+        visible_transaction_types = [
+            ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
+            ('CREATE_EXPENSE', 'Expense Created'),
+            ('PAY_EXPENSE', 'Expense Paid'),
+            ('INVOICE_PAYMENT', 'Invoice Paid')
+        ]
+
+        budget_assign_transactions = Ledger.objects.filter(
+            project_id=project.pk,
+            transaction_type='BUDGET_ASSIGN'
+        )
+
+        budget_from_invoice = Invoice.objects.filter(status='PAID')
+        total_budget_assigned = budget_assign_transactions.aggregate(Sum('amount'))['amount__sum'] or 0
+
+        Expense.calculate_total_expenses(project_id=project.pk)
+
+        context = {
+            "project": project,
+            "ledger_entries": ledger_entries,
+            "totals_by_type": totals_by_type,
+            "transaction_types": visible_transaction_types,
+            "selected_transaction_type": transaction_filter,
+            'budget_assigned': total_budget_assigned,
+            'money_form_invoice': Invoice.calculate_total_receieved(project_id=project.pk),
+            'Project_expenditure': Expense.calculate_total_expenses(project_id=project.pk)
+        }
+        return render(request, self.template_name, context)

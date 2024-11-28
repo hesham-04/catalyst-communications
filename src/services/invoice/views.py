@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, TemplateView, DetailView
@@ -80,7 +80,6 @@ class InvoiceDetailView(DetailView):
         return context
 
 
-
 class InvoicePaidView(View):
     def get(self, request, *args, **kwargs):
         invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
@@ -92,23 +91,22 @@ class InvoicePaidView(View):
         form = TransferFundsForm(request.POST)
 
         if form.is_valid():
-            transfer_to = form.cleaned_data['transfer_to']
-            account = form.cleaned_data.get('account')
+            account = form.cleaned_data['account']
             amount = invoice.total_amount
 
+            # Processing the invoice payment
             success, message = process_invoice_payment(
                 invoice_id=invoice.pk,
-                destination=transfer_to,
-                account_id=account.pk if account else None,
+                destination='account',
+                account_id=account.pk,
                 amount=amount
             )
 
             if success:
-                messages.success(request, f'Funds Successfully Transferred to {transfer_to}')
-                return HttpResponseRedirect(reverse('project:detail', args=[invoice.project.pk]))
+                messages.success(request, 'Funds Successfully Transferred')
+                return redirect(reverse('project:detail', args=[invoice.project.pk]))
             else:
                 messages.error(request, message)
                 return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
 
         return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
-

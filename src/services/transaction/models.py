@@ -11,7 +11,7 @@ class Ledger(models.Model):
         ('RETURN_LOAN', 'Loan Returned'),
 
         ('CREATE_EXPENSE', 'Expense Created'),
-        ('PAY_EXPENSE', 'Expense Paid'),
+        ('CREATE_JOURNAL_EXPENSE', 'Journal Expense Created'),
 
         ('INVOICE_PAYMENT', 'Invoice Paid')
     ]

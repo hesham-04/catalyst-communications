@@ -5,6 +5,7 @@ from src.services.invoice.models import Invoice
 from src.services.loan.models import Loan
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
+from src.services.vendor.models import Vendor
 
 
 @transaction.atomic
@@ -40,8 +41,8 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         transaction_type="BUDGET_ASSIGN",
         project=project,
         amount=amount,
-        source="Wallet: " + source.account_name + f" ({source.pk})",
-        destination="Project:" + project.project_name + f" ({project.pk})",
+        source=f"Wallet: {source.account_name} ({source.pk})",
+        destination=f"Project: {project.project_name} ({project.pk})",
         reason=reason
     )
 
@@ -126,7 +127,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     )
 
 @transaction.atomic
-def create_expense_calculations(project_id, amount, budget_source, reason=None):
+def create_expense_calculations(project_id, amount, budget_source, destination, reason=None):
     project = Project.objects.select_for_update().get(pk=project_id)
 
     if budget_source == 'CASH':
@@ -136,13 +137,14 @@ def create_expense_calculations(project_id, amount, budget_source, reason=None):
         project.project_account_balance -= amount
 
     project.save()
+    vendor=Vendor.objects.get(pk=destination)
 
     Ledger.objects.create(
         transaction_type="CREATE_EXPENSE",
         project=project,
         amount=amount,
-        source=f"{budget_source} form {project.project_name}",
-        destination=None,
+        source=f"Project {project.project_name} {budget_source} ({project.pk})",
+        destination=f"Vendor: {vendor.name} ({vendor.pk})",
         reason=reason,
     )
 
@@ -169,7 +171,7 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
     )
 
 @transaction.atomic
-def process_invoice_payment(invoice_id, destination,amount, account_id=None):
+def process_invoice_payment(invoice_id, destination, amount, account_id=None):
     try:
         invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
         invoice.status = "PAID"
@@ -177,36 +179,60 @@ def process_invoice_payment(invoice_id, destination,amount, account_id=None):
 
         if account_id: account = AccountBalance.objects.select_for_update().get(pk=account_id)
 
-        ledger_reason = f"Payment for Invoice #{invoice.invoice_number} - Project:{invoice.project.project_name}"
-        destination_name = None
+        ledger_reason = f"Payment for Invoice"
 
         if destination == 'account' and account:
             account.balance += amount
             account.save(update_fields=['balance'])
-            destination_name = f"Account: {account.account_name}"
 
-        elif destination == 'project_cash':
-            invoice.project.project_cash += amount
-            invoice.project.save(update_fields=['project_cash'])
-            destination_name = "Project Cash"
 
-        elif destination == 'project_account_balance':
-            invoice.project.project_account_balance += amount
-            invoice.project.save(update_fields=['project_account_balance'])
-            destination_name = "Project Account Balance"
 
-        if destination_name:
-            Ledger.objects.create(
-                transaction_type="INVOICE_PAYMENT",
-                project=invoice.project,
-                amount=amount,
-                source="Invoice",
-                destination=destination_name,
-                reason=ledger_reason
-            )
+        Ledger.objects.create(
+            transaction_type="INVOICE_PAYMENT",
+            project=invoice.project,
+            amount=amount,
+            source=f"Invoice Paid: {invoice.client_name} ({invoice.pk})",
+            destination=f"Wallet: {account.account_name} ({account.pk})",
+            reason=ledger_reason
+        )
+
+
 
         return True, "Invoice successfully paid and funds transferred."
 
     except Exception as e:
         # Handle unexpected errors
         return False, f"An error occurred while processing the payment: {str(e)}"
+
+
+
+@transaction.atomic
+def create_journal_expense_calculations(reason, destination, amount, source, account_pk=None):
+    try:
+        if source == "ACC":
+            account = AccountBalance.objects.select_for_update().get(pk=account_pk)
+            account.balance -= amount
+            account.save(update_fields=['balance'])
+        else:
+            cashinhand = CashInHand.objects.first()
+            cashinhand.balance -= amount
+            cashinhand.save(update_fields=['balance'])
+
+        vendor = Vendor.objects.get(pk=destination)
+
+        # Create a ledger entry after updating the account/cash balance
+        Ledger.objects.create(
+            transaction_type="CREATE_JOURNAL_EXPENSE",
+            amount=amount,
+            source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else "Wallet: Cash In Hand",
+            destination=f"Vendor: {vendor.name} ({vendor.pk})",
+            reason="Expense creation"
+        )
+        return True, "Journal Entry Successfully created"
+
+
+    except Exception as e:
+        # Catch any unexpected exceptions
+        return False, f"An error occurred while processing the payment: {str(e)}"
+
+    return True, "Transaction successful"

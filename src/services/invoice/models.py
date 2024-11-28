@@ -26,7 +26,7 @@ class Invoice(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_in_words = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=INVOICE_STATUS, default="PENDING")
-    due_date = models.DateField(default=timezone.now())
+    due_date = models.DateField(default=timezone.now)
 
     letterhead = models.BooleanField(default=True)
 
@@ -48,10 +48,16 @@ class Invoice(models.Model):
             self.invoice_number = '# INV-{:06d}'.format(self.invoice_id)
         super().save(*args, **kwargs)
 
+    @classmethod
+    def calculate_total_receieved(cls, project_id=None):
+        total_receivables = cls.objects.filter(project_id=project_id, status="PAID").aggregate(
+            total=Sum('total_amount'))
+        return round(total_receivables['total'] or 0, 2)
 
     @classmethod
-    def calculate_total_receivables(cls, project_id):
-        total_receivables = cls.objects.filter(project_id=project_id).aggregate(total=Sum('total_amount'))
+    def calculate_total_receivables(cls, project_id=None):
+        total_receivables = cls.objects.filter(project_id=project_id, status="PENDING").aggregate(
+            total=Sum('total_amount'))
         return round(total_receivables['total'] or 0, 2)
 
     def __str__(self):

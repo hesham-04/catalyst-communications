@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (
     IndexView, CashInHandUpdateView, AccountBalanceUpdateView,
-    AccountBalanceList, AccountBalanceCreateView
+    AccountBalanceList, AccountBalanceCreateView, CashInHandIndexView
 )
 
 app_name = 'assets'
@@ -13,6 +13,7 @@ urlpatterns = [
 
 
     path('cash-in-hand/update/', CashInHandUpdateView.as_view(), name='cash_in_hand_update'),
-    path('account-balance/<str:pk>/', AccountBalanceUpdateView.as_view(), name='account_balance_update'),
+    path('cash-in-hand/', CashInHandIndexView.as_view(), name='cash_list'),
 
+    path('account-balance/<str:pk>/', AccountBalanceUpdateView.as_view(), name='account_balance_update'),
 ]

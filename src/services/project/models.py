@@ -87,3 +87,4 @@ class Project(models.Model):
         trial_balance.append({'Account': 'Expenses (Debit)', 'Amount': expenses_total})
         trial_balance.append({'Account': 'Net Balance', 'Amount': invoices_total - expenses_total})
         return trial_balance
+

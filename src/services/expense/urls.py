@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
-    CreateExpenseView, ExpenseIndexView, ExpenseCreateView, ExpenseCategoryCreateView, ExpensePaymentView
+    CreateExpenseView, ExpenseIndexView, ExpenseCreateView, ExpenseCategoryCreateView, ExpensePaymentView,
+    JournalExpenseCreateView
 )
 
 app_name = 'expense'
@@ -10,9 +11,11 @@ urlpatterns = [
     path('create/', ExpenseCreateView.as_view(), name='create-expense-home'),
 
     path('pay-expense/<int:pk>/', ExpensePaymentView.as_view(), name='pay-expense'),
+    path('journal-create/', JournalExpenseCreateView.as_view(), name='journal-create'),
 ]
 
 urlpatterns += [
     path('expense-category/create/', ExpenseCategoryCreateView.as_view(), name='expense-category-create'),
 
 ]
+

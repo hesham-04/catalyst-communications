@@ -13,7 +13,7 @@
                         <h4 class="page-title">Assets</h4>
                         <div class="">
                             <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="#">Approx</a>
+                                <li class="breadcrumb-item"><a href="#">Catalyst</a>
                                 </li><!--end nav-item-->
                                 <li class="breadcrumb-item active">Dashboard</li>
                             </ol>
@@ -26,8 +26,8 @@
                     <div class="card ribbon-box right overflow-hidden">
                         <div class="card-body text-center p-4">
                             <i class="fa fa-bank fa-3x text-primary"></i>
-                            <h5 class="mb-1 mt-4"><a href="apps-ecommerce-seller-details.html" class="link-primary">Account Balance</a></h5>
-                            <p class="text-muted mb-4">Catalyst Communications</p>
+                            <h5 class="mb-1 mt-4 text-primary">Account Balance</h5>
+                            <p class="text- mb-4">Catalyst Communications</p>
                             <div class="row mt-4">
                                 <div class="col-lg-6 border-end-dashed border-end text-dark"><h5> {{ accounts }}</h5>
                                     <span class="text-muted">Active Accounts</span></div>
@@ -42,13 +42,21 @@
                     <div class="card ribbon-box right overflow-hidden">
                         <div class="card-body text-center p-4">
                             <i class="fas fa-money-bill fa-3x text-warning"></i>
-                            <h5 class="mb-1 mt-4"><a href="apps-ecommerce-seller-details.html" class="link-warning">Cash in Hand</a></h5>
+                            <h5 class="mb-1 mt-4 text-warning ">Cash in Hand</h5>
                             <p class="text-muted mb-4">Catalyst Communications</p>
                             <div class="row mt-4 justify-content-center">
                                 <div class="col-lg-6"><h5>{{ cash_in_hand }} PKR</h5>                        <span class="text-muted"> Balance</span>
                                 </div>
                             </div>
-                            <div class="mt-4"><a href="{% url 'assets:cash_in_hand_update' %}" class="btn btn-warning w-100">Manage</a></div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mt-4"><a href="{% url 'assets:cash_list' %}" class="btn btn-warning w-100">Manage</a></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mt-4"><a href="{% url 'expense:journal-create' %}" class="btn btn-outline-warning w-100">New</a></div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

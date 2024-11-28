@@ -40,3 +40,35 @@ class Expense(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+
+
+class JournalExpense(models.Model):
+
+    class BudgetSource(models.TextChoices):
+        CASH = 'CASH', 'Cash in Hand'
+        ACCOUNT = 'ACC', 'Account'
+
+    description = models.CharField(max_length=255, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    budget_source = models.CharField(max_length=6, choices=BudgetSource.choices, null=True, blank=True)
+    category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='journal_expenses')
+    vendor = models.ForeignKey('vendor.Vendor', on_delete=models.SET_NULL, null=True,
+                               related_name='journal_expenses')  # Link to Vendor model
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.project.project_name} - {self.amount} from {self.budget_source} ({self.category})"
+
+    @classmethod
+    def calculate_total_expenses(cls, project_id=None):
+        if project_id:
+            return cls.objects.filter(project_id=project_id).aggregate(total=Sum('amount'))['total'] or 0
+        return cls.objects.aggregate(total=Sum('amount'))['total'] or 0
+
+    class Meta:
+        ordering = ['-created_at']
+

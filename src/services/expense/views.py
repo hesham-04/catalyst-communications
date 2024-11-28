@@ -1,13 +1,15 @@
 from datetime import date
-from django.core.checks import messages
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, FormView
 from src.services.project.models import Project
-from .forms import ExpenseForm, ExpenseFormCreate, ExpenseCategoryForm, ExpensePaymentForm
-from .models import Expense, ExpenseCategory
-from ..project.bll import create_expense_calculations, pay_expense
+from .forms import ExpenseForm, ExpenseFormCreate, ExpenseCategoryForm, ExpensePaymentForm, JournalExpenseForm
+from .models import Expense, ExpenseCategory, JournalExpense
+from ..assets.models import CashInHand, AccountBalance
+from ..project.bll import create_expense_calculations, pay_expense, create_journal_expense_calculations
 
 
 # List All Expense
@@ -53,7 +55,7 @@ class CreateExpenseView(CreateView):
                 return self.form_invalid(form)
 
 
-        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source, reason=description)
+        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source, destination=vendor.pk, reason=description)
         expense = form.save()
         return redirect(reverse('project:detail', kwargs={'pk': project.pk}))
 
@@ -146,3 +148,61 @@ class ExpenseCategoryCreateView(CreateView):
     form_class = ExpenseCategoryForm
     template_name = 'expense/category_form.html'  # Define your HTML template
     success_url = reverse_lazy('expense:index')  # Redirect after creation
+
+
+
+
+class JournalExpenseCreateView(CreateView):
+    model = JournalExpense
+    form_class = JournalExpenseForm
+    success_url = reverse_lazy('assets:index')
+    template_name = 'expense/journalexpense_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cashinhand'] = CashInHand.objects.first().balance if CashInHand.objects.exists() else 0
+        context['account_balance'] = AccountBalance.get_total_balance()
+        context['expenses_today'] = self.get_expenses_today()
+        return context
+
+    def form_valid(self, form):
+        amount = form.cleaned_data['amount']
+        source = form.cleaned_data['budget_source']
+        destination = form.cleaned_data['vendor']
+        description = form.cleaned_data['description']
+
+        if source == 'ACC':
+            try:
+                account = AccountBalance.objects.get(pk=form.cleaned_data['account_pk'])
+                if account.balance < amount:
+                    form.add_error("amount", "The selected account does not have enough funds.")
+                    return self.form_invalid(form)
+            except AccountBalance.DoesNotExist:
+                form.add_error("budget_source", "Selected account does not exist.")
+                return self.form_invalid(form)
+
+        else:
+            cash = CashInHand.objects.first()
+            if not cash:
+                form.add_error("budget_source", "Cash in hand record not found.")
+                return self.form_invalid(form)
+            if cash.balance < amount:
+                form.add_error("amount", "Not enough cash in hand.")
+                return self.form_invalid(form)
+
+        success, message = create_journal_expense_calculations(reason=description,  destination=destination.pk,  amount=amount, source=source, account_pk=account.pk if source == 'ACC' else None)
+        if not success:
+            form.add_error('budget_source', message)
+            return self.form_invalid(form)
+
+        messages.success(self.request, "Journal expense has been successfully created!")
+        return super().form_valid(form)
+
+    def get_expenses_today(self):
+        today = date.today()
+        expenses_today = JournalExpense.objects.filter(
+            created_at__year=today.year,
+            created_at__month=today.month,
+            created_at__day=today.day
+        )
+        return sum(expense.amount for expense in expenses_today)

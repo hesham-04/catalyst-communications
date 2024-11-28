@@ -1,0 +1,65 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">Assets</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">Catalyst</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Dashboard</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
+
+                <div class="card shadow-lg h-100 bg-white border">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-between">
+                                <p class="text-dark text-uppercase mb-0 fw-semibold fs-14 mt-2">Cash In hand</p>
+                                <a href="{% url 'expense:journal-create' %}"><div class="btn btn-primary float-end"> Create Journal Entry</div></a>
+                            </div>
+                            <!--end col-->
+                            <div class="col-3 align-self-center text-end">
+                                <img src="assets/images/logos/m-card.png" alt="" class="" height="20">
+                            </div><!--end col-->
+                        </div><!--end row-->
+                        <div class="row mt-3 mb-1">
+                            <div class="col-9">
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Balance</p>
+                                <h5 class="mt-1 mb-0 fw-semibold fs-20 text-dark">{{ cashinhand.balance|default:0 }}<small> PKR</small></h5>
+                            </div>
+                            <!--end col-->
+                            <div class="col-3 align-self-center text-end">
+                                <i class="iconoir-wifi fs-24 trans-90 text-muted"></i>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    </div><!--end card-body-->
+                    <div class="card-body p-2 bg-light rounded-bottom">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Starting: {{ cashinhand.created_at }}</p>
+                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Catalyst Communications </h5>
+                            </div>
+                            <!--end col-->
+                            <div class="col-6 align-self-center text-end">
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Admin Controls</p>
+                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">**** **** **** TLOS</h5>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    </div><!--end card-body-->
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
