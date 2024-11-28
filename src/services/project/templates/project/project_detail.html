@@ -81,7 +81,9 @@
                                 <div class="card-body">
                                     <div>
                                         <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }}<small
-                                                class="font-14"> PKR  <a class="float-end text-muted" href="{% url 'project:finances' project.pk %}"><i class="fa fa-clipboard-check fa-xs mb-1"></i></a></small></h4>
+                                                class="font-14"> PKR </small></h4>
+
+                                         <a class=" btn btn-secondary" href="{% url 'project:finances' project.pk %}"><i class="fa fa-clipboard-check me-1"></i>Finances</a>
 
                                         <a href="{% url 'project:add_budget' pk=project.id %}"
                                            class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Create
@@ -123,7 +125,7 @@
                                             <div class="p-2 border-dashed border-warning rounded ">
                                                 <h5 class="mt-1 mb-0 fw-medium">{{ receivables }}
                                                     PKR</h5>
-                                                <small class="text-dark">Receivables </small>
+                                                <small class="text-dark">Received (Invoiced)</small>
                                             </div>
                                         </div><!--end col-->
                                     </div>

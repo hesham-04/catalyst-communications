@@ -148,7 +148,9 @@ class ProjectFinances(View):
         )
 
         budget_from_invoice = Invoice.objects.filter(status='PAID')
-        total_budget_assigned = budget_assign_transactions.aggregate(Sum('amount'))['amount__sum']
+        total_budget_assigned = budget_assign_transactions.aggregate(Sum('amount'))['amount__sum'] or 0
+
+        Expense.calculate_total_expenses(project_id=project.pk)
 
         context = {
             "project": project,
@@ -157,6 +159,7 @@ class ProjectFinances(View):
             "transaction_types": visible_transaction_types,
             "selected_transaction_type": transaction_filter,
             'budget_assigned': total_budget_assigned,
-            'money_form_invoice': Invoice.calculate_total_receivables(project_id=project.pk)
+            'money_form_invoice': Invoice.calculate_total_receivables(project_id=project.pk),
+            'Project_expenditure': Expense.calculate_total_expenses(project_id=project.pk)
         }
         return render(request, self.template_name, context)

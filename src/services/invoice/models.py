@@ -26,7 +26,7 @@ class Invoice(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_in_words = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=INVOICE_STATUS, default="PENDING")
-    due_date = models.DateField(default=timezone.now())
+    due_date = models.DateField(default=timezone.now)
 
     letterhead = models.BooleanField(default=True)
 

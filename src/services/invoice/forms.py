@@ -89,27 +89,9 @@ class InvoiceItemForm(forms.ModelForm):
     #         ),
     #     )
 
-
 class TransferFundsForm(forms.Form):
-    DESTINATION_CHOICES = [
-        ('account', 'Wallet Account'),
-        ('project_cash', 'Project Cash'),
-        ('project_account_balance', 'Project Account Balance'),
-    ]
-
-    transfer_to = forms.ChoiceField(choices=DESTINATION_CHOICES, required=True, label="Transfer To", initial='project_cash')
     account = forms.ModelChoiceField(
         queryset=AccountBalance.objects.all(),
-        required=False,
-        label="Bank Account (if selected)"
+        required=True,
+        label="Select Bank Account"
     )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        transfer_to = cleaned_data.get('transfer_to')
-        account = cleaned_data.get('account')
-
-        # Ensure a bank account is selected if 'account' is chosen
-        if transfer_to == 'account' and not account:
-            raise forms.ValidationError("Please select a bank account for this transfer.")
-        return cleaned_data

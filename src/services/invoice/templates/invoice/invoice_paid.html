@@ -18,15 +18,14 @@
                 </div>
 
                 <div class="row justify-content-center">
-                    <h4 class="text-center">Invoice Fund Transefer</b> </h4>
+                    <h4 class="text-center">Invoice Fund Transfer</h4>
 
                     <div class="col-md-6">
                         <div class="card shadow-lg">
-
                             <div class="card-body shadow-lg p-2 bg-soft-secondary rounded-bottom">
                                 <div class="row">
                                     <div class="col-6">
-                                        <h5 class="mt-1 mb-0 fw-medium fs-14 text-success"> Amount:
+                                        <h5 class="mt-1 mb-0 fw-medium fs-14 text-success">Amount:
                                             {{ invoice.total_amount }} PKR</h5>
                                         <p class="text-dark text-uppercase mb-0 fw-normal fs-12">
                                             Customer: {{ invoice.client_name }}</p>
@@ -45,13 +44,8 @@
                                 <form method="post">
                                     {% csrf_token %}
                                     <div class="mb-3">
-                                        {{ form.transfer_to|as_crispy_field }}
-                                    </div>
-
-                                    <div id="account-field" style="display: none;" class="mb-3">
                                         {{ form.account|as_crispy_field }}
                                     </div>
-
                                     <button type="submit" class="btn btn-primary">Confirm Transfer</button>
                                 </form>
                             </div>
@@ -74,24 +68,9 @@
                                 </p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        // JavaScript to toggle visibility of the account dropdown
-        const transferToField = document.querySelector('select[name="transfer_to"]');
-        const accountField = document.getElementById('account-field');
-
-        transferToField.addEventListener('change', function () {
-            if (this.value === 'account') {
-                accountField.style.display = 'block';
-            } else {
-                accountField.style.display = 'none';
-            }
-        });
-    </script>
 {% endblock content %}

@@ -13,7 +13,7 @@
 
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                    <h4 class="page-title"> Project Detail</h4>
+                    <h4 class="page-title"> Project Finance Detail</h4>
                     <div class="">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
@@ -32,11 +32,13 @@
                                     <span class="fs-16 fw-semibold">Balance</span>
                                 </div>
 
-                                <h4 class="my-2 fs-24 fw-semibold">122.5692.00 <small class="font-14">BTC</small></h4>
+                                <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small class="font-14">PKR</small></h4>
 
-                                <span class="fs-16 fw-semibold">Money Spent from wallet: {{ budget_assigned }} PKR </span>
+                                <span class="fs-16 fw-semibold">Money Spent from wallet:<span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ budget_assigned }} PKR</span></span>
                                 <br>
-                                <span class="fs-16 fw-semibold">Money From Client: {{ money_form_invoice }} PKR </span>
+                                <span class="fs-16 fw-semibold">Money From Client <small>(Paid Invoices)</small> <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2 ms-1 mb-1">{{ money_form_invoice }} PKR </span></span>
+                                <br>
+                                <span class="fs-16 fw-semibold">Project Expenditure: <small>(Expenses Created)</small> <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2 ms-1 mb-1">{{ Project_expenditure }} PKR </span></span>
 
                             </div>
                         </div><!--end card-body-->
