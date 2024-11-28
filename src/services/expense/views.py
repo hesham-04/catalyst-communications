@@ -55,7 +55,7 @@ class CreateExpenseView(CreateView):
                 return self.form_invalid(form)
 
 
-        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source, reason=description)
+        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source, destination=vendor.pk, reason=description)
         expense = form.save()
         return redirect(reverse('project:detail', kwargs={'pk': project.pk}))
 

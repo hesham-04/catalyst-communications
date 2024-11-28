@@ -48,7 +48,15 @@
                                 <div class="col-lg-6"><h5>{{ cash_in_hand }} PKR</h5>                        <span class="text-muted"> Balance</span>
                                 </div>
                             </div>
-                            <div class="mt-4"><a href="{% url 'assets:cash_list' %}" class="btn btn-warning w-100">Manage</a></div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mt-4"><a href="{% url 'assets:cash_list' %}" class="btn btn-warning w-100">Manage</a></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mt-4"><a href="{% url 'expense:journal-create' %}" class="btn btn-outline-warning w-100">New</a></div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

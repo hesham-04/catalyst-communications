@@ -41,7 +41,7 @@ class ProjectDetailView(TemplateView):
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
         context['payable'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
-        context['receivables'] = Invoice.calculate_total_receivables(project_id=kwargs['pk'])
+        context['receivables'] = Invoice.calculate_total_receieved(project_id=kwargs['pk'])
         return context
 
 
@@ -159,7 +159,7 @@ class ProjectFinances(View):
             "transaction_types": visible_transaction_types,
             "selected_transaction_type": transaction_filter,
             'budget_assigned': total_budget_assigned,
-            'money_form_invoice': Invoice.calculate_total_receivables(project_id=project.pk),
+            'money_form_invoice': Invoice.calculate_total_receieved(project_id=project.pk),
             'Project_expenditure': Expense.calculate_total_expenses(project_id=project.pk)
         }
         return render(request, self.template_name, context)

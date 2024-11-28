@@ -127,7 +127,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     )
 
 @transaction.atomic
-def create_expense_calculations(project_id, amount, budget_source, reason=None):
+def create_expense_calculations(project_id, amount, budget_source, destination, reason=None):
     project = Project.objects.select_for_update().get(pk=project_id)
 
     if budget_source == 'CASH':
@@ -137,13 +137,14 @@ def create_expense_calculations(project_id, amount, budget_source, reason=None):
         project.project_account_balance -= amount
 
     project.save()
+    vendor=Vendor.objects.get(pk=destination)
 
     Ledger.objects.create(
         transaction_type="CREATE_EXPENSE",
         project=project,
         amount=amount,
-        source=f"{budget_source} form {project.project_name}",
-        destination=None,
+        source=f"Project {project.project_name} {budget_source} ({project.pk})",
+        destination=f"Vendor: {vendor.name} ({vendor.pk})",
         reason=reason,
     )
 
@@ -220,7 +221,6 @@ def create_journal_expense_calculations(reason, destination, amount, source, acc
         vendor = Vendor.objects.get(pk=destination)
 
         # Create a ledger entry after updating the account/cash balance
-        print("Creating ledger================================================================")
         Ledger.objects.create(
             transaction_type="CREATE_JOURNAL_EXPENSE",
             amount=amount,
@@ -228,7 +228,6 @@ def create_journal_expense_calculations(reason, destination, amount, source, acc
             destination=f"Vendor: {vendor.name} ({vendor.pk})",
             reason="Expense creation"
         )
-        print("created ledger=========================================================================")
         return True, "Journal Entry Successfully created"
 
 

@@ -16,5 +16,4 @@ urlpatterns = [
     path('cash-in-hand/', CashInHandIndexView.as_view(), name='cash_list'),
 
     path('account-balance/<str:pk>/', AccountBalanceUpdateView.as_view(), name='account_balance_update'),
-
 ]
