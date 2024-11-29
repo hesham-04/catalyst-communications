@@ -2,7 +2,7 @@ from django.db import transaction
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
-from src.services.loan.models import Loan
+from src.services.loan.models import Loan, Lender
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
 from src.services.vendor.models import Vendor
@@ -55,23 +55,23 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
     }
 
 @transaction.atomic
-def add_loan_to_project(project_id, amount, source, destination, reason):
+def add_loan_to_project(project_id, amount, source, reason, destination=None):
     project = Project.objects.select_for_update().get(pk=project_id)
     project.total_budget_assigned += amount
-    if destination == 'CASH':
-        project.project_cash += amount
-    elif destination == 'ACC':
-        project.project_account_balance += amount
 
-
+    project.project_account_balance += amount
     project.save()
+
+    lender = Lender.objects.get(pk=source.pk)
+
+
 
     Ledger.objects.create(
         transaction_type="CREATE_LOAN",
         project=project,
         amount=amount,
-        source=source,
-        destination=destination,
+        source=f"Loan: {lender.name} ({lender.pk})",
+        destination=f"Project: {project.project_name} ACC ({project.pk})",
         reason=reason
     )
 
@@ -80,29 +80,13 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
     project = Project.objects.select_for_update().get(pk=project_id)
     loan = Loan.objects.select_for_update().get(pk=loan_id)
 
-
-    if amount <= 0:
-        raise ValueError("Amount must be greater than zero.")
-
-    if amount > loan.remaining_amount:
-        raise ValueError("Amount cannot exceed the remaining loan balance.")
-
     loan.remaining_amount -= amount
     if loan.remaining_amount <= 0:
         loan.remaining_amount = 0
         loan.is_repaid = True
     loan.save()
 
-
-    if source == 'CASH':
-        if project.project_cash < amount:
-            raise ValueError("Insufficient cash in hand.")
-        project.project_cash -= amount
-
-    elif source == 'ACC':
-        if project.project_account_balance < amount:
-            raise ValueError("Insufficient Project Account Balance")
-        project.project_cash -= amount
+    project.project_account_balance -= amount
 
     project.save()
 
@@ -111,7 +95,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         project=project,
         description="Loan return",
         amount=amount,
-        budget_source=source,
+        budget_source='Project ACC',
         category=None,
         vendor=None, #destination
         payment_status=Expense.PaymentStatus.PAID
@@ -121,8 +105,8 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         transaction_type="RETURN_LOAN",
         project=project,
         amount=amount,
-        source=source,
-        destination=destination,
+        source=f"Project: {project.project_name} ACC ({project.pk})",
+        destination=f"Lender: {loan.lender.name} ({loan.id})",
         reason=reason
     )
 
@@ -224,7 +208,7 @@ def create_journal_expense_calculations(reason, destination, amount, source, acc
         Ledger.objects.create(
             transaction_type="CREATE_JOURNAL_EXPENSE",
             amount=amount,
-            source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else "Wallet: Cash In Hand",
+            source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else f"Wallet: Cash In Hand ({cashinhand.pk})",
             destination=f"Vendor: {vendor.name} ({vendor.pk})",
             reason="Expense creation"
         )

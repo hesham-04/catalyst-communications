@@ -4,10 +4,7 @@ from .models import Lender, Loan, LoanReturn
 
 
 class LoanForm(forms.ModelForm):
-    DESTINATION_CHOICES = [
-        ('CASH', 'Project Cash'),
-        ('ACC', 'Project Account'),
-    ]
+
     lender = forms.ModelChoiceField(
         queryset=Lender.objects.all(),
         label="Select Lender",
@@ -21,13 +18,18 @@ class LoanForm(forms.ModelForm):
             attrs={'class': 'form-control', 'placeholder': 'Enter loan amount'}
         )
     )
-    destination = forms.ChoiceField(
-        choices=DESTINATION_CHOICES,
-        label="Destination",
-        widget=forms.Select(
-        attrs={'class': 'form-control', 'placeholder': 'Enter destination'}
+
+    interest_rate = forms.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        label="Interest Rate",
+        widget=forms.NumberInput(
+            attrs={'class': 'form-control', 'placeholder': 'Flat Interest Rate %'}
         )
     )
+
+
+
     reason = forms.CharField(
         label="Reason",
         max_length=255,
@@ -43,13 +45,13 @@ class LoanForm(forms.ModelForm):
 
     class Meta:
         model = Loan
-        fields = ['lender', 'loan_amount', 'destination', 'reason', 'due_date']
+        fields = ['lender', 'loan_amount', 'reason', 'interest_rate', 'due_date']
 
 
 class LoanReturnForm(forms.ModelForm):
     class Meta:
         model = LoanReturn
-        fields = ['return_amount', 'return_date', 'remarks', 'source']
+        fields = ['return_amount', 'return_date', 'remarks',]
 
         widgets = {
             'return_amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter return amount'}),
@@ -60,6 +62,5 @@ class LoanReturnForm(forms.ModelForm):
                     'placeholder': 'Select date and time',
                 }
             ),
-            'source': forms.Select(attrs={'class': 'form-control'}),
             'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional remarks', 'rows': 3}),
         }

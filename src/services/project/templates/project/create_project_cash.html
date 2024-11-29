@@ -1,0 +1,47 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customer Detail{% endblock %}
+{% load static %}
+{% load project_tags %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title"> Project Finance Detail</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                    <div class="card bg-globe-img">
+                        <h4 class="m-2 text-center">Transfer Project funds to Cash In Hand</h4>
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <button type="submit" class="btn btn-primary mt-2 w-100">Transfer</button>
+                            </form>
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

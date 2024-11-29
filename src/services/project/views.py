@@ -1,15 +1,16 @@
+from django.contrib import messages
 from django.db.models import Sum
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import TemplateView, CreateView, RedirectView, FormView
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Project, CashInHand, AccountBalance
-from .forms import AddBudgetForm
-from .forms import ProjectForm
+
 from src.services.expense.views import Expense
-from ..invoice.models import Invoice
 from .bll import add_budget_to_project
+from .forms import AddBudgetForm, CreateProjectCashForm
+from .forms import ProjectForm
+from .models import Project, CashInHand, AccountBalance
+from ..invoice.models import Invoice
 from ..transaction.models import Ledger
 
 
@@ -30,7 +31,6 @@ class ProjecCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('project:detail', kwargs={'pk': self.object.pk})
-
 
 
 class ProjectDetailView(TemplateView):
@@ -107,14 +107,15 @@ class AddBudgetView(FormView):
         messages.error(self.request, "There was an error with your submission.")
         return super().form_invalid(form)
 
+
 class StartProjectView(RedirectView):
     """A view that changes the project status to in progress and redirects to the project detail page"""
+
     def get_redirect_url(self, *args, **kwargs):
         project = get_object_or_404(Project, pk=kwargs['pk'])
         project.project_status = Project.ProjectStatus.IN_PROGRESS
         project.save()
         return reverse('project:detail', kwargs={'pk': project.pk})
-
 
 
 class ProjectFinances(View):
@@ -131,7 +132,8 @@ class ProjectFinances(View):
             ledger_entries = ledger_entries.filter(transaction_type=transaction_filter)
 
         totals_by_type = {
-            transaction[0]: ledger_entries.filter(transaction_type=transaction[0]).aggregate(Sum('amount'))['amount__sum']
+            transaction[0]: ledger_entries.filter(transaction_type=transaction[0]).aggregate(Sum('amount'))[
+                'amount__sum']
             for transaction in Ledger.TRANSACTION_TYPES
         }
 
@@ -163,3 +165,50 @@ class ProjectFinances(View):
             'Project_expenditure': Expense.calculate_total_expenses(project_id=project.pk)
         }
         return render(request, self.template_name, context)
+
+
+
+
+class CreateProjectCash(FormView):
+    form_class = CreateProjectCashForm
+    template_name = 'project/create_project_cash.html'
+
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        project = Project.objects.get(pk=pk)
+        form = self.form_class()
+        return self.render_to_response({'form': form, 'project': project})
+
+    def form_valid(self, form):
+        print()
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        amount = form.cleaned_data.get('amount')
+        reason = form.cleaned_data.get('reason')
+
+        if amount > project.project_account_balance:
+            form.add_error('amount', "Not enough balance in project budget")
+            return self.form_invalid(form)
+
+        project.project_cash += amount
+        project.project_account_balance -= amount
+
+        project.save()
+
+        Ledger.objects.create(
+            transaction_type="TRANSFER",
+            project=project,
+            amount=amount,
+            source=f"Project {project.project_name} ACC ({project.pk})",
+            destination=f"Project {project.project_name} CASH ({project.pk})",
+            reason=reason,
+        )
+
+
+        messages.success(self.request, "Worked like a charm")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('project:detail', kwargs={'pk':self.kwargs.pk})
+
+

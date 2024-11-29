@@ -63,3 +63,12 @@ class AddBudgetForm(forms.Form):
     amount.widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter amount'})
     source.widget.attrs.update({'class': 'form-control'})
     reason.widget.attrs.update({'class': 'form-control'})
+
+
+class CreateProjectCashForm(forms.Form):
+    amount = forms.DecimalField(max_digits=12, decimal_places=2, label="Amount")
+    reason = forms.CharField(label="Reason for Transaction", required=True, max_length=255)
+
+    reason.widget.attrs.update({'class': 'form-control'})
+    amount.widget.attrs.update({'class': 'form-control', 'placeholder': "Enter amount"})
+
