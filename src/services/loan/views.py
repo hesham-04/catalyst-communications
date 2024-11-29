@@ -21,7 +21,6 @@ class LendLoanView(CreateView):
         loan = form.save(commit=False)
         lender = form.cleaned_data['lender']
         amount = form.cleaned_data['loan_amount']
-        destination = form.cleaned_data['destination']
         reason = form.cleaned_data['reason']
 
         # Make changes to the Project & Ledger before creating the loan Object
@@ -29,11 +28,11 @@ class LendLoanView(CreateView):
             project_id=self.kwargs['pk'],
             amount=amount,
             source=lender,
-            destination=destination,
             reason=reason
         )
 
         # Link the project to loan object
+
         loan.project = self.get_object()
         loan.save()
 
@@ -72,16 +71,27 @@ class ReturnLoanView(CreateView):
 
         return_amount = form.cleaned_data['return_amount']
         remarks = form.cleaned_data['remarks']
-        source = form.cleaned_data['source']
 
         # Create an expense Object for this project.
         # Subtract from the Loan model.
+
+        amount = form.cleaned_data['return_amount']
+
+        if amount > loan.remaining_amount:
+            form.add_error('return_amount', "The amount is more than the project loan amount.")
+            return self.form_invalid(form)
+
+        if amount > loan.project.project_account_balance:
+            form.add_error('return_amount', "The amount is more than Project account balance.")
+            return self.form_invalid(form)
+
+
 
         return_loan_to_lender(
             loan_id=loan.pk,
             project_id=loan.project.id,
             amount=return_amount,
-            source=source,
+            source=None,
             destination=loan.lender.name,
             reason=remarks
         )

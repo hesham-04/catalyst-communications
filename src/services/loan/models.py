@@ -24,32 +24,51 @@ class Lender(models.Model):
         return self.loans.aggregate(total_due=models.Sum('remaining_amount'))['total_due'] or 0
 
 
+from django.db import models
+from django.utils import timezone
+
+
 class Loan(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="loans")
     lender = models.ForeignKey(Lender, on_delete=models.CASCADE, related_name="loans")
+
+    # Monetary fields
     loan_amount = models.DecimalField(max_digits=12, decimal_places=2, help_text="Total loan amount")
-    remaining_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0,
+    payable_after_interest = models.DecimalField(max_digits=12, decimal_places=2, help_text="Payable after interest", null=True)
+    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, help_text="Interest rate as a percentage", null=True)
+    remaining_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
                                            help_text="Remaining loan balance")
+
+    # Dates
     date_issued = models.DateField(default=timezone.now, help_text="Date when the loan was issued")
     due_date = models.DateField(help_text="Due date for loan repayment")
+
+    # Status and reason
     is_repaid = models.BooleanField(default=False, help_text="Indicates if the loan has been fully repaid")
     reason = models.CharField(max_length=544, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # Initialize remaining_amount to loan_amount if it's a new loan
+        self.payable_after_interest = self.calculate_payable_after_interest()
+
         if not self.pk:
-            self.remaining_amount = self.loan_amount
+            self.remaining_amount = self.payable_after_interest
         super().save(*args, **kwargs)
+
+    def calculate_payable_after_interest(self):
+        """Calculate the total amount payable after applying the interest rate."""
+        if self.interest_rate is None:
+            return self.loan_amount  # Return loan amount if no interest rate is set
+        if self.interest_rate > 0:
+            interest = self.loan_amount * (self.interest_rate / 100)
+            return self.loan_amount + interest
+        return self.loan_amount
 
     def __str__(self):
         return f"Loan for {self.project.project_name} from {self.lender.name}"
 
-
-
-
-
     def get_total_paid(self):
-        return self.loan_amount - self.remaining_amount
+        """Calculate the total amount paid so far."""
+        return self.payable_after_interest - self.remaining_amount
 
     def update_remaining_amount(self, return_amount):
         """Handles repayments and updates remaining balance."""
@@ -61,9 +80,6 @@ class Loan(models.Model):
 
 
 class LoanReturn(models.Model):
-    class BudgetSource(models.TextChoices):
-        CASH = 'CASH', 'Cash in Hand'
-        ACCOUNT = 'ACC', 'Account'
 
     loan = models.ForeignKey(
         Loan,
@@ -75,7 +91,6 @@ class LoanReturn(models.Model):
         max_digits=12,
         decimal_places=2,
     )
-    source =  models.CharField(max_length=6, choices=BudgetSource.choices, null=True)
     return_date = models.DateTimeField(
         default=timezone.now,
     )

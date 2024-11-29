@@ -45,6 +45,9 @@
                                             <span class="text-success"><i class="fas fa-calendar me-1"></i>Created on: {{ loan.date_issued }}: </span>
                                             {{ loan.reason }}
                                         </p>
+                                        <p class="mb-3 text-dark fw-semibold">
+                                            <span class="text-danger"><i class="fas fa-arrow-up-long me-1"></i>Payable after interest: {{ loan.payable_after_interest }} ({{ loan.interest_rate }})% </span>
+                                        </p>
                                         <a href="{% url 'loan:lender-detail' loan.lender.pk %}">
                                             <button type="submit" class="btn btn-soft-primary">Lender</button>
                                         </a>
