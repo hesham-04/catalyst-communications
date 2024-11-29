@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    LendLoanView, ReturnLoanView, LoanListView, LenderListView,LenderDetailView
+    LendLoanView, ReturnLoanView, LoanListView, LenderListView,LenderDetailView, LenderCreateView
 )
 
 app_name = 'loan'
@@ -12,5 +12,7 @@ urlpatterns = [
 
 
     path('lender/', LenderListView.as_view(), name='lenders'),
-    path('lender/<str:pk>/', LenderDetailView.as_view(), name='lender-detail')
+    path('lender/create/', LenderCreateView.as_view(), name='lender-create'),
+    path('lender/<str:pk>/', LenderDetailView.as_view(), name='lender-detail'),
+
 ]

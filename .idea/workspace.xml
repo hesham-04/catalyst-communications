@@ -6,17 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/migrations/0002_alter_loanreturn_remarks_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/migrations/0003_alter_loan_project.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/migrations/0004_loan_reason.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/migrations/0005_loanreturn_source.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/templates/loan/return_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/templates/loan/return_loan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/templates/loan/lender_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/templates/loan/lender_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/loan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/bll.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/bll.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

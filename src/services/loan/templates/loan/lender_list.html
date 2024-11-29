@@ -26,21 +26,9 @@
                             <div class="col">
                                 <h4 class="card-title">All Lenders</h4>
                             </div><!--end col-->
-                            {#                            <div class="col-auto">#}
-                            {#                                <div class="dropdown">#}
-                            {#                                    <a href="#" class="btn bt btn-light dropdown-toggle" data-bs-toggle="dropdown"#}
-                            {#                                       aria-haspopup="true" aria-expanded="false">#}
-                            {#                                        <i class="icofont-calendar fs-5 me-1"></i> This Month<i#}
-                            {#                                            class="las la-angle-down ms-1"></i>#}
-                            {#                                    </a>#}
-                            {#                                    <div class="dropdown-menu dropdown-menu-end">#}
-                            {#                                        <a class="dropdown-item" href="#">Today</a>#}
-                            {#                                        <a class="dropdown-item" href="#">Last Week</a>#}
-                            {#                                        <a class="dropdown-item" href="#">Last Month</a>#}
-                            {#                                        <a class="dropdown-item" href="#">This Year</a>#}
-                            {#                                    </div>#}
-                            {#                                </div>#}
-                            {#                            </div><!--end col-->#}
+                                <div class="col-auto">
+                                    <a href="{% url 'loan:lender-create' %}"> <div class="btn btn-danger"> Create Lender</div></a>
+                                </div><!--end col-->
                         </div>  <!--end row-->
                     </div><!--end card-header-->
                     <div class="card-body pt-0">
