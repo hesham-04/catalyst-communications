@@ -51,7 +51,7 @@
                                             <img src="{% static 'img/user-default.jpeg' %}" height="40"
                                                  class="me-2 align-self-center rounded" alt="...">
                                             <div class="flex-grow-1 text-truncate align-self-center mt-1">
-                                                <h6 class="m-0"><a href="{% url 'assets:account_balance_update' object.pk %}"> {{ object.account_name }}</a></h6>
+                                                <h6 class="m-0"><a href="{% url 'assets:account-detail' object.pk %}"> {{ object.account_name }}</a></h6>
                                             </div><!--end media body-->
                                         </div>
                                     </td>

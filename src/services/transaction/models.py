@@ -12,6 +12,7 @@ class Ledger(models.Model):
 
         ('CREATE_EXPENSE', 'Expense Created'),
         ('CREATE_JOURNAL_EXPENSE', 'Journal Expense Created'),
+        ('ADD_CASH', 'Added Cash'),
 
         ('INVOICE_PAYMENT', 'Invoice Paid')
     ]

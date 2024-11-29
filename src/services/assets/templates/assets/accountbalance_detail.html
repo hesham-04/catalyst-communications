@@ -1,0 +1,161 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">Assets</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">Catalyst</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Dashboard</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
+
+                <div class="card shadow-lg h-100 bg-black border">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-between">
+                                <p class="text-white text-uppercase mb-0 fw-semibold fs-14 mt-2">{{ object.account_name }}</p>
+                                <a href="{% url 'assets:add-cash-in-hand' %}">
+                                    <div class="btn btn-primary float-end"> Add Cash in Hand</div>
+                                </a>
+                            </div>
+                            <!--end col-->
+                        </div><!--end row-->
+                        <div class="row mt-3 mb-1">
+                            <div class="col-9">
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Balance</p>
+                                <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white">{{ object.balance }}<small>
+                                    PKR</small></h5>
+                            </div>
+                            <!--end col-->
+                            <div class="col-3 align-self-center text-end">
+                                <i class="iconoir-wifi fs-24 trans-90 text-muted"></i>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    </div><!--end card-body-->
+                    <div class="card-body p-2 bg-light rounded-bottom">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">
+                                    Starting: {{ object.created_at }}</p>
+                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Catalyst Communications </h5>
+                            </div>
+                            <!--end col-->
+                            <div class="col-6 align-self-center text-end">
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Admin Controls</p>
+                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">**** **** **** TLOS</h5>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    </div><!--end card-body-->
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">All Transactions</h4>
+                                    </div><!--end col-->
+                                    <div class="col-auto">
+{#                                        Filters#}
+                                    </div><!--end col-->
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th class="border-top-0">Date</th>
+                                            <th class="border-top-0">Type</th>
+                                            <th class="border-top-0">Description</th>
+                                            <th class="border-top-0">Amount</th>
+                                            <th class="border-top-0">Source</th>
+                                            <th class="border-top-0">Destination</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in object_list %}
+                                            <tr>
+                                                <td>{{ object.created_at|date:"d M Y" }}
+                                                    <span>{{ object.created_at|time:"h:ia" }}</span></td>
+                                                <td><span
+                                                        class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" %}badge bg-danger-subtle  text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}</span>
+                                                </td>
+                                                <td>{{ object.reason|slice:20 }}</td>
+                                                <td class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
+                                                <td>{{ object.source }}</td>
+                                                <td>{{ object.destination }}</td>
+
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="5">No objects available.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!--end table-->
+                                </div><!--end /div-->
+                                <div class="d-lg-flex justify-content-lg-between mt-2">
+                                    <div>
+                                        <ul class="pagination mt-1">
+                                            {% if object_list.has_previous %}
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       href="?page={{ object_list.previous_page_number }}">Previous</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% for page_num in object_list.paginator.page_range %}
+                                                {% if page_num == object_list.number %}
+                                                    <li class="page-item active">
+                                                        <a class="page-link" href="#">{{ page_num }}</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           href="?page={{ page_num }}">{{ page_num }}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if object_list.has_next %}
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       href="?page={{ object_list.next_page_number }}">Next</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1">Next</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul><!--end pagination-->
+                                    </div>
+                                </div>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -131,17 +131,14 @@ class ProjectFinances(View):
         if transaction_filter:
             ledger_entries = ledger_entries.filter(transaction_type=transaction_filter)
 
-        totals_by_type = {
-            transaction[0]: ledger_entries.filter(transaction_type=transaction[0]).aggregate(Sum('amount'))[
-                'amount__sum']
-            for transaction in Ledger.TRANSACTION_TYPES
-        }
 
         visible_transaction_types = [
             ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
             ('CREATE_EXPENSE', 'Expense Created'),
             ('PAY_EXPENSE', 'Expense Paid'),
-            ('INVOICE_PAYMENT', 'Invoice Paid')
+            ('INVOICE_PAYMENT', 'Invoice Paid'),
+            ('CREATE_LOAN', 'Loan Created'),
+            ('RETURN_LOAN', 'Loan Returned'),
         ]
 
         budget_assign_transactions = Ledger.objects.filter(
@@ -157,7 +154,6 @@ class ProjectFinances(View):
         context = {
             "project": project,
             "ledger_entries": ledger_entries,
-            "totals_by_type": totals_by_type,
             "transaction_types": visible_transaction_types,
             "selected_transaction_type": transaction_filter,
             'budget_assigned': total_budget_assigned,

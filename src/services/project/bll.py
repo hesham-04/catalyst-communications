@@ -42,7 +42,7 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         project=project,
         amount=amount,
         source=f"Wallet: {source.account_name} ({source.pk})",
-        destination=f"Project: {project.project_name} ({project.pk})",
+        destination=f"Project: {project.project_name} ACC ({project.pk})",
         reason=reason
     )
 
@@ -191,7 +191,7 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
 
 
 @transaction.atomic
-def create_journal_expense_calculations(reason, destination, amount, source, account_pk=None):
+def create_journal_expense_calculations(category, reason, destination, amount, source, account_pk=None):
     try:
         if source == "ACC":
             account = AccountBalance.objects.select_for_update().get(pk=account_pk)
@@ -202,15 +202,15 @@ def create_journal_expense_calculations(reason, destination, amount, source, acc
             cashinhand.balance -= amount
             cashinhand.save(update_fields=['balance'])
 
-        vendor = Vendor.objects.get(pk=destination)
+        vendor = Vendor.objects.get(pk=destination) if destination else None
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(
             transaction_type="CREATE_JOURNAL_EXPENSE",
             amount=amount,
             source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else f"Wallet: Cash In Hand ({cashinhand.pk})",
-            destination=f"Vendor: {vendor.name} ({vendor.pk})",
-            reason="Expense creation"
+            destination=f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"Category: {category.name}",
+            reason=reason + " " +category.name
         )
         return True, "Journal Entry Successfully created"
 
