@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 
 from src.services.project.bll import add_loan_to_project
@@ -121,3 +122,9 @@ class LenderDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['loans'] = self.object.loans.all()
         return context
+
+
+class LenderCreateView(CreateView):
+    model = Lender
+    fields = '__all__'
+    success_url = reverse_lazy("loan:lenders")
