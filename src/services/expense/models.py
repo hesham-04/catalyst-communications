@@ -55,7 +55,7 @@ class JournalExpense(models.Model):
     budget_source = models.CharField(max_length=6, choices=BudgetSource.choices, null=True, blank=True)
     category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='journal_expenses')
-    vendor = models.ForeignKey('vendor.Vendor', on_delete=models.SET_NULL, null=True,
+    vendor = models.ForeignKey('vendor.Vendor', on_delete=models.SET_NULL, null=True, blank=True,
                                related_name='journal_expenses')  # Link to Vendor model
     created_at = models.DateTimeField(auto_now_add=True)
 

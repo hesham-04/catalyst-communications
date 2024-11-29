@@ -18,7 +18,7 @@ class ExpenseIndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['expenses'] = Expense.objects.all().order_by('-created_at')
+        context['expenses'] = JournalExpense.objects.all().order_by('-created_at')
         return context
 
 # Project Detail
@@ -79,35 +79,6 @@ class CreateExpenseView(CreateView):
                                          created_at__day=today.day)
         total = sum(expense.amount for expense in expenses_today)
         return total
-
-# Independent Expense Creation
-class ExpenseCreateView(CreateView):
-    model = Expense
-    form_class = ExpenseFormCreate
-    template_name = 'expense/form.html'
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-
-        project = self.object.project
-        if self.object.budget_source == Expense.BudgetSource.CASH:
-            project.cash_in_hand -= self.object.amount
-        elif self.object.budget_source == Expense.BudgetSource.ACCOUNT:
-            project.account -= self.object.amount
-        elif self.object.budget_source == Expense.BudgetSource.CLIENT_FUNDS:
-            project.client_funds -= self.object.amount
-        elif self.object.budget_source == Expense.BudgetSource.LOAN:
-            project.loan -= self.object.amount
-
-        project.save()
-        self.object.save()
-
-        messages.success(self.request, "Expense created and project budget updated successfully.")
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('expense:index', kwargs={'pk': self.object.project.pk})
 
 class ExpensePaymentView(FormView):
     template_name = 'expense/expense_payment.html'
@@ -170,6 +141,7 @@ class JournalExpenseCreateView(CreateView):
         source = form.cleaned_data['budget_source']
         destination = form.cleaned_data['vendor']
         description = form.cleaned_data['description']
+        category = form.cleaned_data['category']
 
         if source == 'ACC':
             try:
@@ -190,7 +162,7 @@ class JournalExpenseCreateView(CreateView):
                 form.add_error("amount", "Not enough cash in hand.")
                 return self.form_invalid(form)
 
-        success, message = create_journal_expense_calculations(reason=description,  destination=destination.pk,  amount=amount, source=source, account_pk=account.pk if source == 'ACC' else None)
+        success, message = create_journal_expense_calculations(category = category, reason=description,  destination=destination.pk if destination else None,  amount=amount, source=source, account_pk=account.pk if source == 'ACC' else None)
         if not success:
             form.add_error('budget_source', message)
             return self.form_invalid(form)

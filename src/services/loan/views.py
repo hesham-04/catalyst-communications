@@ -88,7 +88,6 @@ class ReturnLoanView(CreateView):
             return self.form_invalid(form)
 
 
-
         return_loan_to_lender(
             loan_id=loan.pk,
             project_id=loan.project.id,
