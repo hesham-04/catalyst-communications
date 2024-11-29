@@ -5,6 +5,7 @@ from src.services.assets.models import CashInHand, AccountBalance
 from src.services.customer.models import Customer
 from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
+from src.services.loan.models import Loan
 
 
 class HomeView(TemplateView):
@@ -23,7 +24,7 @@ class HomeView(TemplateView):
         context['account_balance'] = account_balance_balance
         context['total_balance'] = cash_in_hand_balance + account_balance_balance
         context['customer_count'] = Customer.objects.count()
-        context['payable'] = Expense.calculate_total_expenses(project_id=None)
+        context['payable'] = Loan.calculate_total_unpaid_amount()
         context['receivables'] = Invoice.calculate_total_receivables()
 
         return context

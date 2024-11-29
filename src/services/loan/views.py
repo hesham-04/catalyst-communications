@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
@@ -6,9 +7,9 @@ from django.views.generic import CreateView, ListView, DetailView
 from src.services.project.bll import add_loan_to_project
 from src.services.project.bll import return_loan_to_lender
 from src.services.project.models import Project
-from .forms import LoanForm
+from .forms import LoanForm, MiscLoanForm
 from .forms import LoanReturnForm
-from .models import Loan, LoanReturn, Lender
+from .models import Loan, LoanReturn, Lender, MiscLoan
 
 
 class LendLoanView(CreateView):
@@ -128,3 +129,23 @@ class LenderCreateView(CreateView):
     model = Lender
     fields = '__all__'
     success_url = reverse_lazy("loan:lenders")
+
+
+
+class MiscLoanCreateView(CreateView):
+    model = MiscLoan
+    form_class = MiscLoanForm
+    success_url = reverse_lazy('loan:lenders')
+
+    def form_valid(self, form):
+        with transaction.atomic():
+            misc_loan = form.save(commit=False)
+
+            destination_account = form.cleaned_data['destination']
+
+            destination_account.balance += misc_loan.loan_amount
+            destination_account.save()
+
+            misc_loan.save()
+
+        return super().form_valid(form)

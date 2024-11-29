@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Project{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+            {% if object %}
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">Edit Loan</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'Lender:index' %}">Loan</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
+                </div>
+            {% else %}
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">Add Loan</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'project:index' %}">Loan</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Add</li>
+                        </ol>
+                    </div>
+                </div>
+            {% endif %}
+
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light text-dark text-center">
+                            <h5 class="mb-0">Loan Form</h5> <!-- Replace 'Form Title' with your desired heading -->
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
