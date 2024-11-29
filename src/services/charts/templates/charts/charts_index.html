@@ -5,81 +5,107 @@
 
 
 {% block content %}
-<div class="page-wrapper">
+    <div class="page-wrapper">
 
-    <!-- Page Content-->
-    <div class="page-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                        <h4 class="page-title">Charts of Accounts</h4>
-                        <div class="">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="#">Catalyst</a>
-                                </li><!--end nav-item-->
-                                <li class="breadcrumb-item active">Projects</li>
-                            </ol>
-                        </div>
-                    </div><!--end page-title-box-->
-                </div><!--end col-->
-            </div><!--end row-->
+        <!-- Page Content-->
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">Charts of Accounts</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">Catalyst</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Projects</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
 
 
-            <div class="row justify-content-center">
-                <div class="col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title">All Projects</h4>
-                                </div><!--end col-->
-                            </div>  <!--end row-->
-                        </div><!--end card-header-->
-                        <div class="card-body pt-0">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <thead class="table-light">
-                                    <tr>
-                                        <th class="border-top-0">Name</th>
-                                        <th class="border-top-0">Client</th>
-                                        <th class="border-top-0">Description</th>
-                                        <th class="border-top-0">Budget</th>
-                                        <th class="border-top-0">GENERATE REPORT</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for project in projects %}
-                                    <tr>
-                                        <td><a href="{% url 'project:detail' project.id %}">{{ project.project_name }}</a>
-                                        </td>
-                                        <td>{{ project.customer.get_full_name }}</td>
-                                        <td>{{ project.description|slice:20 }}</td>
-                                        <td>${{ project.get_total_budget }}</td>
-                                        <td>
-                                            <a href="{% url 'charts:generate' project.pk %}" class="btn btn-warning"><i class="fa fa-address-book me-2"></i>Generate Report </a>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="6">No projects found.</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                                <!--end table-->
-                            </div><!--end /div-->
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
+                <div class="row justify-content-center">
+                    <div class="col-md-12 col-lg-12">
 
-            </div><!--end row-->
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light mt-2">
+                            <div class="container-fluid">
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent3">
+                                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                                        <!-- Added ms-auto for right alignment -->
+                                        <li class="nav-item m-1">
+                                            <a class="btn btn-primary" aria-current="page" href="{% url 'charts:generate_monthly_report' month=11 year=2024 %}"><i
+                                                    class="fa fa-envelope me-1"></i>Generate Monthly Report</a>
 
-        </div><!-- container -->
+{#                                            <a href="{% url 'generate_monthly_report' month=11 year=2024 %}">Download November Report</a>#}
 
-        <!--end footer-->
+                                        </li>
+                                        <li class="nav-item m-1">
+                                            <a class="btn btn-warning" aria-current="page" href="#"><i
+                                                    class="fa fa-envelope me-1"></i>Generate Yearly Report</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div><!-- end container -->
+                        </nav>
+
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">All Projects</h4>
+                                    </div><!--end col-->
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th class="border-top-0">Name</th>
+                                            <th class="border-top-0">Client</th>
+                                            <th class="border-top-0">Description</th>
+                                            <th class="border-top-0">Budget</th>
+                                            <th class="border-top-0 text-end">GENERATE REPORT</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for project in projects %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'project:detail' project.id %}">{{ project.project_name }}</a>
+                                                </td>
+                                                <td>{{ project.customer.get_full_name }}</td>
+                                                <td>{{ project.description|slice:20 }}</td>
+                                                <td>${{ project.get_total_budget }}</td>
+                                                <td class="text-end">
+                                                    <a href="{% url 'charts:generate' project.pk %}"
+                                                       class="btn btn-warning"><i class="fa fa-address-book me-2"></i>Generate
+                                                        Report </a>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="6">No projects found.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!--end table-->
+                                </div><!--end /div-->
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
+
+                </div><!--end row-->
+
+            </div><!-- container -->
+
+            <!--end footer-->
+        </div>
+        <!-- end page content -->
     </div>
-    <!-- end page content -->
-</div>
 {% endblock %}
 

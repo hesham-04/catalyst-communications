@@ -35,7 +35,8 @@ class Invoice(models.Model):
 
 
     def calculate_total_amount(self):
-        total = sum(item.amount for item in self.items.all())
+        # Sum the amounts of all related items
+        total = self.items.aggregate(total=Sum('amount'))['total'] or 0
         self.total_amount = total
         self.total_in_words = num2words(total, to="currency", lang="en_IN")
         self.save(update_fields=["total_amount", "total_in_words"])
@@ -78,7 +79,12 @@ class InvoiceItem(models.Model):
     tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null =True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.amount = int(self.quantity) * int(self.rate)
+        # Calculate the total amount including tax
+        base_amount = self.quantity * self.rate
+        tax_amount = base_amount * (self.tax / 100) if self.tax else 0
+        self.amount = base_amount + tax_amount
+
+        # Save the item and update the parent invoice
         super().save(*args, **kwargs)
         self.invoice.calculate_total_amount()
 

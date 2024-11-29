@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Lender, Loan, LoanReturn
+from .models import Lender, Loan, LoanReturn, MiscLoan
+from ..assets.models import AccountBalance
 
 
 class LoanForm(forms.ModelForm):
@@ -64,3 +65,49 @@ class LoanReturnForm(forms.ModelForm):
             ),
             'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional remarks', 'rows': 3}),
         }
+
+
+
+class MiscLoanForm(forms.ModelForm):
+    lender = forms.ModelChoiceField(
+        queryset=Lender.objects.all(),
+        label="Select Lender",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    loan_amount = forms.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        label="Loan Amount",
+        widget=forms.NumberInput(
+            attrs={'class': 'form-control', 'placeholder': 'Enter loan amount'}
+        )
+    )
+    interest_rate = forms.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        label="Interest Rate",
+        widget=forms.NumberInput(
+            attrs={'class': 'form-control', 'placeholder': 'Flat Interest Rate %'}
+        )
+    )
+    reason = forms.CharField(
+        label="Reason",
+        max_length=255,
+        required=True,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+    due_date = forms.DateField(
+        label="Due Date",
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+    )
+    destination = forms.ModelChoiceField(
+        queryset=AccountBalance.objects.all(),
+        label="Destination Account",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    class Meta:
+        model = MiscLoan
+        fields = ['lender', 'loan_amount', 'interest_rate', 'reason', 'due_date', 'destination']
