@@ -5,14 +5,14 @@ from src.services.project.models import Project
 class Ledger(models.Model):
     TRANSACTION_TYPES = [
         ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
-        ('TRANSFER', 'Funds Transfer'),
+        ('TRANSFER', 'Funds Transfer'), # Only from Project ACC to Project CASH
 
         ('CREATE_LOAN', 'Loan Created'),
         ('RETURN_LOAN', 'Loan Returned'),
 
         ('CREATE_EXPENSE', 'Expense Created'),
         ('CREATE_JOURNAL_EXPENSE', 'Journal Expense Created'),
-        ('ADD_CASH', 'Added Cash'),
+        ('ADD_CASH', 'Added Cash'), # Cash Added to The General Cash in Hand
 
         ('INVOICE_PAYMENT', 'Invoice Paid')
     ]

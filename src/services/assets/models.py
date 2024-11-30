@@ -32,7 +32,6 @@ class CashInHand(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        # Restrict to a single instance
         if not self.pk and CashInHand.objects.exists():
             return False
         super().save(*args, **kwargs)
@@ -44,7 +43,9 @@ class CashInHand(models.Model):
 class AccountBalance(models.Model):
     account_name = models.CharField(max_length=255, unique=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    starting_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True, null=True)
 
     def adjust_balance(self, amount, transaction_type):
         """
@@ -96,4 +97,11 @@ class AccountBalance(models.Model):
                 account.save()
         if amount > 0:
             raise ValidationError("Insufficient account balance.")
+        
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.starting_balance = self.balance
+            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+        
 

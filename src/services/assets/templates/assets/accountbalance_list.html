@@ -27,7 +27,9 @@
                                 <h4 class="card-title">All Accounts</h4>
                             </div><!--end col-->
                             <div class="col-auto">
-                                <a href="{%  url 'assets:accounts_create' %}"><div class="btn btn-primary"> Add Account</div></a>
+                                <a href="{% url 'assets:accounts_create' %}">
+                                    <div class="btn btn-primary"> Add Account</div>
+                                </a>
                             </div><!--end col-->
                         </div>  <!--end row-->
                     </div><!--end card-header-->
@@ -46,23 +48,24 @@
                                 <tbody>
                                 {% for object in object_list %}
                                     <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="{% static 'img/user-default.jpeg' %}" height="40"
-                                                 class="me-2 align-self-center rounded" alt="...">
-                                            <div class="flex-grow-1 text-truncate align-self-center mt-1">
-                                                <h6 class="m-0"><a href="{% url 'assets:account-detail' object.pk %}"> {{ object.account_name }}</a></h6>
-                                            </div><!--end media body-->
-                                        </div>
-                                    </td>
-                                    <td><a href="#" class="fs-12 text-primary">{{ object.balance }} PKR</a></td>
-                                    <td>{{ object.updated_at }}</td>
-                                    <td> 00.00 PKR </td>
-                                    <td> - </td>
-                                </tr><!--end tr-->
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="{% static 'img/user-default.jpeg' %}" height="40"
+                                                     class="me-2 align-self-center rounded" alt="...">
+                                                <div class="flex-grow-1 text-truncate align-self-center mt-1">
+                                                    <h6 class="m-0"><a
+                                                            href="{% url 'assets:account-detail' object.pk %}"> {{ object.account_name }}</a>
+                                                    </h6>
+                                                </div><!--end media body-->
+                                            </div>
+                                        </td>
+                                        <td><a href="#" class="fs-12 text-primary">{{ object.balance }} PKR</a></td>
+                                        <td>{{ object.updated_at }}</td>
+                                        <td> 00.00 PKR</td>
+                                        <td> -</td>
+                                    </tr><!--end tr-->
                                 {% empty %}
                                     <p class="text-danger"> No Accounts Added</p>
-
                                 {% endfor %}
 
                                 </tbody>
@@ -71,6 +74,46 @@
                     </div><!--end card-body-->
                 </div>
 
+                <div>
+
+                    <!-- Pagination controls -->
+                    <ul class="pagination mt-1">
+                        <!-- Previous Button -->
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                        {% endif %}
+
+                        <!-- Page Numbers -->
+                        {% for num in paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">{{ num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next Button -->
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
 
 
             </div>

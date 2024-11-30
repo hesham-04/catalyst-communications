@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
@@ -7,14 +9,32 @@ from src.core.models import Customer, ShippingAddress, BillingAddress
 from .forms import CustomerForm
 
 
-# Create your views here.
+from django.views.generic.list import ListView
+
+
 class CustomerView(TemplateView):
     template_name = 'customer/customer_index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['customers'] = Customer.objects.all()[:10]
+
+        search_query = self.request.GET.get('q', '')
+        customers = Customer.objects.all()
+
+        if search_query:
+            customers = customers.filter(
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query)
+            )
+
+        paginator = Paginator(customers, 10)
+        page = self.request.GET.get('page')
+        context['customers'] = paginator.get_page(page)
+
+        context['search_query'] = search_query
         return context
+
 
 
 class CustomerCreateView(CreateView):
