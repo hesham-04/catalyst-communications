@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from num2words import num2words
+
 from src.services.project.models import Project
 
 
@@ -33,9 +34,9 @@ class Invoice(models.Model):
     project = models.ForeignKey(Project, related_name="invoices", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
+    tax = models.BooleanField(default=True, null=True)
 
     def calculate_total_amount(self):
-        # Sum the amounts of all related items
         total = self.items.aggregate(total=Sum('amount'))['total'] or 0
         self.total_amount = total
         self.total_in_words = num2words(total, to="currency", lang="en_IN")
@@ -65,8 +66,7 @@ class Invoice(models.Model):
         return f"Invoice {self.invoice_number} - {self.client_name} - {self.project.project_name}"
 
     class Meta:
-        ordering=['-created_at']
-
+        ordering = ['-created_at']
 
 
 class InvoiceItem(models.Model):
@@ -76,7 +76,7 @@ class InvoiceItem(models.Model):
     quantity = models.IntegerField(default=1)
     rate = models.DecimalField(max_digits=15, decimal_places=2)
     amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
-    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null =True, blank=True)
+    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Calculate the total amount including tax
@@ -84,7 +84,6 @@ class InvoiceItem(models.Model):
         tax_amount = base_amount * (self.tax / 100) if self.tax else 0
         self.amount = base_amount + tax_amount
 
-        # Save the item and update the parent invoice
         super().save(*args, **kwargs)
         self.invoice.calculate_total_amount()
 
@@ -95,8 +94,5 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return self.display_name
 
-    def get_total_amount(self):
-        total = self.quantity * self.rate
-        if self.tax:
-            total += total * (self.tax / 100)
-        return total
+    def get_total_without_tax(self):
+        return self.quantity * self.rate

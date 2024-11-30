@@ -15,6 +15,6 @@ urlpatterns = [
     path('lender/create/', LenderCreateView.as_view(), name='lender-create'),
     path('lender/<str:pk>/', LenderDetailView.as_view(), name='lender-detail'),
 
-    path('lend-misc-loan/', MiscLoanCreateView.as_view(), name='lend-misc-loan'),
+    path('lend-misc-loan/<str:pk>/', MiscLoanCreateView.as_view(), name='lend-misc-loan'),
 
 ]

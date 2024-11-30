@@ -10,7 +10,9 @@
         <div class="container-fluid">
 
             <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                <h4 class="page-title"> Loan Management: {{ project.project_name }}</h4>
+                <h4 class="page-title">
+                    <a class="btn btn-secondary btn-sm" href="{% url 'project:detail' project.pk %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                    Loan Management: {{ project.project_name }}</h4>
                 <div class="">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Loan</a>
