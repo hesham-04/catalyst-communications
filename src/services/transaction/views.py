@@ -7,3 +7,4 @@ from src.services.transaction.models import Ledger
 # Create your views here.
 class TransactionList(ListView):
     model = Ledger
+    paginate_by = 30

@@ -6,23 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/assets/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/accountbalance_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/accountbalance_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/accountbalance_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/accountbalance_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/assets_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/assets_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/cashinhand_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/cashinhand_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/assets/templates/assets/cashinhand_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/templates/assets/cashinhand.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/assets/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/assets/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/assets/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/templates/customer/customer_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/customer/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/expense/templates/expense/expense_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/templates/expense/expense_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/templates/expense/journalexpense_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/templates/expense/journalexpense_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/loan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/bll.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/bll.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/templates/project/project_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/transaction/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/transaction/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/transaction/templates/transaction/ledger_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/transaction/templates/transaction/ledger_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/transaction/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/transaction/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/web/dashboard/templates/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/web/dashboard/templates/dashboard/dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -30,7 +30,7 @@ class IndexView(TemplateView):
         return context
 
 
-class CashInHandIndexView(View):
+class CashInHandDetailView(View):
     def get(self, request, *args, **kwargs):
         cashinhand = CashInHand.objects.first() or 0
 
@@ -106,7 +106,6 @@ class AddCashInHandView(FormView):
         return reverse_lazy('assets:cash_list')
 
 
-
 class CashInHandDeleteView(DeleteView):
     model = CashInHand
     template_name = 'cashinhand_confirm_delete.html'
@@ -123,6 +122,7 @@ class AccountBalanceCreateView(CreateView):
 
 class AccountBalanceList(ListView):
     model = AccountBalance
+    paginate_by = 20
 
 
 class AccountBalanceUpdateView(UpdateView):
@@ -139,4 +139,20 @@ class AccountBalanceDeleteView(DeleteView):
 
 class AccountBalanceDetailView(DetailView):
     model = AccountBalance
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        object_list = Ledger.objects.filter(
+            Q(source__icontains=f"Wallet: {self.object.account_name}") | Q(destination__icontains=f"Wallet: {self.object.account_name}")
+        )
+
+        paginator = Paginator(object_list, 20)
+        page = self.request.GET.get('page')
+        paginated_object_list = paginator.get_page(page)
+
+        context['object_list'] = paginated_object_list
+
+        return context
+
 

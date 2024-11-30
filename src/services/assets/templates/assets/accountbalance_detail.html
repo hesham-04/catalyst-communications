@@ -47,12 +47,12 @@
                         <div class="row">
                             <div class="col-6">
                                 <p class="text-muted text-uppercase mb-0 fw-normal fs-12">
-                                    Starting: {{ object.created_at }}</p>
+                                    Started: {{ object.created_at }}</p>
                                 <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Catalyst Communications </h5>
                             </div>
                             <!--end col-->
                             <div class="col-6 align-self-center text-end">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Admin Controls</p>
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Starting Balance: {{ object.starting_balance }}</p>
                                 <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">**** **** **** TLOS</h5>
                             </div><!--end col-->
                         </div><!--end row-->
@@ -68,7 +68,7 @@
                                         <h4 class="card-title">All Transactions</h4>
                                     </div><!--end col-->
                                     <div class="col-auto">
-{#                                        Filters#}
+                                        {#                                        Filters#}
                                     </div><!--end col-->
                                 </div>  <!--end row-->
                             </div><!--end card-header-->
@@ -90,11 +90,13 @@
                                             <tr>
                                                 <td>{{ object.created_at|date:"d M Y" }}
                                                     <span>{{ object.created_at|time:"h:ia" }}</span></td>
-                                                <td><span
-                                                        class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" %}badge bg-danger-subtle  text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}</span>
+                                                <td>
+                                                    <span
+                                                        class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
+                                                    </span>
                                                 </td>
                                                 <td>{{ object.reason|slice:20 }}</td>
-                                                <td class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
+                                                <td class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
                                                 <td>{{ object.source }}</td>
                                                 <td>{{ object.destination }}</td>
 
