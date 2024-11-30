@@ -14,7 +14,7 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a href="{% url 'project:index' %}"><div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left me-1"></i>Go Back</div></a>
+                        <a href="{% url 'project:index' %}"><div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left-long me-1"></i>Go Back</div></a>
                         Project Detail</h4>
                     <div class="">
                         <ol class="breadcrumb mb-0">
@@ -142,7 +142,7 @@
                                                 Invoice</a>
                                             {% if project.quotation %}
                                                 <a href="{% url 'quotation:print' pk=project.quotation.quotation_id %}"
-                                                   class="btn btn-soft-primary ms-3" target="_blank">View Quotation</a>
+                                                   class="btn btn-soft-primary ms-3" >View Quotation</a>
                                             {% else %}
                                                 <a href="{% url 'quotation:create_quotation' pk=project.id %}"
                                                    class="btn  btn-danger ms-3">Create Quote</a>
@@ -182,7 +182,7 @@
                                             {% endif %}
                                             {% if project.project_status == 'IP' %}
                                                 <a href="{% url 'loan:lend_loan' pk=project.id %}"
-                                                   class="btn btn-success ms-3 {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>
+                                                   class="btn btn-success ms-3 ms-auto {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>
                                             {% endif %}
 
                                         </div>

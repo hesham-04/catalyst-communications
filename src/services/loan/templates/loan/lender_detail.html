@@ -8,7 +8,9 @@
             <div class="container-fluid">
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                    <h4 class="page-title"> Lender Detail</h4>
+                    <h4 class="page-title">
+                        <a class="btn btn-secondary btn-sm" href="{% url 'loan:lenders' %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        Lender Detail</h4>
                     <div class="">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Lenders</a>
@@ -86,7 +88,7 @@
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <h4 class="card-title">All Loans
-                                            <a href="{% url 'loan:lend-misc-loan' %}">
+                                            <a href="{% url 'loan:lend-misc-loan' lender.pk %}">
                                                 <div class="btn btn-success float-end"><i class="fas fa-plus"></i>
                                                     Create Loan
                                                 </div>
@@ -137,18 +139,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 {% endblock %}

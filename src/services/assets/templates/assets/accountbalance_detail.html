@@ -8,7 +8,11 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                            <h4 class="page-title">Assets</h4>
+                            <h4 class="page-title">
+                                <a class="btn btn-secondary btn-sm" href="{% url 'assets:accounts' %}"><i
+                                        class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+
+                                Assets</h4>
                             <div class="">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item"><a href="#">Catalyst</a>
@@ -52,7 +56,8 @@
                             </div>
                             <!--end col-->
                             <div class="col-6 align-self-center text-end">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Starting Balance: {{ object.starting_balance }}</p>
+                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Starting
+                                    Balance: {{ object.starting_balance }}</p>
                                 <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">**** **** **** TLOS</h5>
                             </div><!--end col-->
                         </div><!--end row-->
@@ -92,7 +97,7 @@
                                                     <span>{{ object.created_at|time:"h:ia" }}</span></td>
                                                 <td>
                                                     <span
-                                                        class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
+                                                            class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
                                                     </span>
                                                 </td>
                                                 <td>{{ object.reason|slice:20 }}</td>

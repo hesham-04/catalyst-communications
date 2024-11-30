@@ -1,8 +1,7 @@
-from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Submit
-from crispy_forms.templatetags.crispy_forms_field import css_class
+from crispy_forms.layout import Layout, Row, Column
 from django import forms
+
 from .models import Invoice, InvoiceItem
 from ..assets.models import AccountBalance
 
@@ -17,7 +16,7 @@ class InvoiceForm(forms.ModelForm):
             'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Name'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
             'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}),
-            'due_date': forms.DateInput(attrs={'class':'form-control', 'type': 'Date'}),
+            'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'Date'}),
             'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Notes', 'rows': 1}),
             'letterhead': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -59,15 +58,17 @@ class InvoiceItemForm(forms.ModelForm):
         fields = ['item_name', 'description', 'quantity', 'rate', 'tax']
 
         # Commented Out because when applied:
-            # 1. We have to Use {% crispy formset %}
-            # 2. Which then renders  a separate form within the initial <form>
+        # 1. We have to Use {% crispy formset %}
+        # 2. Which then renders  a separate form within the initial <form>
 
         widgets = {
             'item_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item name', 'required': True}),
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description', 'required': True}),
-            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Quantity', 'required': True}),
-            'rate': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Rate', 'required': True}),
-            'tax': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': True}),
+            'description': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Description', 'required': True}),
+            'quantity': forms.NumberInput(
+                attrs={'class': 'form-control', 'placeholder': 'Item Quantity', 'required': True}),
+            'rate': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Item Rate', 'required': True}),
+            'tax': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': False}),
         }
 
     # def __init__(self, *args, **kwargs):
@@ -88,6 +89,7 @@ class InvoiceItemForm(forms.ModelForm):
     #             css_class='row'
     #         ),
     #     )
+
 
 class TransferFundsForm(forms.Form):
     account = forms.ModelChoiceField(

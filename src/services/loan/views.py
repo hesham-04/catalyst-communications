@@ -136,6 +136,17 @@ class MiscLoanCreateView(CreateView):
     form_class = MiscLoanForm
     success_url = reverse_lazy('loan:lenders')
 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lender']  = Lender.objects.filter(pk=self.kwargs['pk'])
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lender'] = get_object_or_404(Lender, pk=self.kwargs['pk'])
+        return context
+
     def form_valid(self, form):
         with transaction.atomic():
             misc_loan = form.save(commit=False)
