@@ -63,11 +63,11 @@ class InvoiceItemForm(forms.ModelForm):
             # 2. Which then renders  a separate form within the initial <form>
 
         widgets = {
-            'item_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item name'}),
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'item_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item name', 'required': True}),
+            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description', 'required': True}),
             'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Quantity', 'required': True}),
             'rate': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Rate', 'required': True}),
-            'tax': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': False}),
+            'tax': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': True}),
         }
 
     # def __init__(self, *args, **kwargs):

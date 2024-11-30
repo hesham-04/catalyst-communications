@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_paid.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_print.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/invoice/templates/invoice/invoice_print.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
