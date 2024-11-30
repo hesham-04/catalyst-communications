@@ -1,16 +1,25 @@
-from django.shortcuts import render
-from django.views import View
-import openpyxl
-from django.http import HttpResponse
-from src.services.project.models import Project
 from src.services.transaction.models import Ledger
+
+from django.core.paginator import Paginator
+from django.views import View
+from django.shortcuts import render
+
+import openpyxl
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+from django.http import HttpResponse
+from datetime import datetime
+from src.services.project.models import Project
 
 
 class ChartsIndex(View):
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
-        return render(request, 'charts/charts_index.html', {'projects': projects})
 
+        paginator = Paginator(projects, 10)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, 'charts/charts_index.html', {'page_obj': page_obj})
 
 
 def export_project_to_excel(request, pk):
@@ -147,11 +156,6 @@ def export_project_to_excel(request, pk):
 
     return response
 
-import openpyxl
-from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
-from django.http import HttpResponse
-from datetime import datetime
-from src.services.project.models import Project
 
 def generate_monthly_report(request, month, year):
     from openpyxl import Workbook
