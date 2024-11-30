@@ -5,119 +5,145 @@
 
 
 {% block content %}
-<div class="page-wrapper">
+    <div class="page-wrapper">
 
-    <!-- Page Content-->
-    <div class="page-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                        <h4 class="page-title">Projects</h4>
-                        <div class="">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="#">Catalyst</a>
-                                </li><!--end nav-item-->
-                                <li class="breadcrumb-item active">Projects</li>
-                            </ol>
-                        </div>
-                    </div><!--end page-title-box-->
-                </div><!--end col-->
-            </div><!--end row-->
+        <!-- Page Content-->
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">Projects</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">Catalyst</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Projects</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
 
-            <div class="row justify-content-center">
-                <div class="col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title">All Projects</h4>
-                                </div><!--end col-->
-                                <div class="col-auto">
-                                    <div class="dropdown">
-                                        <a href="#" class="btn bt btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                           aria-haspopup="true" aria-expanded="false">
-                                            <i class="icofont-calendar fs-5 me-1"></i> This Month<i
-                                                class="las la-angle-down ms-1"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item" href="#">Today</a>
-                                            <a class="dropdown-item" href="#">Last Week</a>
-                                            <a class="dropdown-item" href="#">Last Month</a>
-                                            <a class="dropdown-item" href="#">This Year</a>
+                <div class="row justify-content-center">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pt-0">
+                                <div class="mb-2 row mt-3">
+                                    <div class="col-sm-6">
+                                        <form method="get" action="" class="d-flex align-items-center">
+                                            <input
+                                                    class="form-control search-box me-2 mb-2 d-inline-block"
+                                                    placeholder="Search..."
+                                                    name="q"
+                                                    value="{{ search_query|default:'' }}"/>
+                                            <button class="btn btn-primary mb-2" type="submit">Search</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-6 float-end">
+                                        <div class="text-sm-end">
+                                            <a href="{% url 'project:create' %}"
+                                               class="btn btn-primary btn-rounded waves-effect waves-light addContact-modal mb-2 btn btn-primary">
+                                                <i class="mdi mdi-plus me-1"></i> New Project
+                                            </a>
                                         </div>
                                     </div>
-                                </div><!--end col-->
-                            </div>  <!--end row-->
-                        </div><!--end card-header-->
-                        <div class="card-body pt-0">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <thead class="table-light">
-                                    <tr>
-                                        <th class="border-top-0">Name</th>
-                                        <th class="border-top-0">Client</th>
-                                        <th class="border-top-0">Description</th>
-                                        <th class="border-top-0">Budget</th>
-                                        <th class="border-top-0">Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for project in projects %}
-                                    <tr>
-                                        <td><a href="{% url 'project:detail' project.id %}">{{ project.project_name }}</a>
-                                        </td>
-                                        <td>{{ project.customer.get_full_name }}</td>
-                                        <td>{{ project.description|slice:20 }}</td>
-                                        <td>${{ project.get_total_budget }}</td>
-                                        <td>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th class="border-top-0">Name</th>
+                                            <th class="border-top-0">Client</th>
+                                            <th class="border-top-0">Description</th>
+                                            <th class="border-top-0">Budget</th>
+                                            <th class="border-top-0">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for project in projects %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'project:detail' project.id %}">{{ project.project_name }}</a>
+                                                </td>
+                                                <td>{{ project.customer.get_full_name }}</td>
+                                                <td>{{ project.description|slice:20 }}</td>
+                                                <td>${{ project.get_total_budget }}</td>
+                                                <td>
                 <span class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
                     {{ project.get_project_status_display }}
                 </span>
-                                        </td>
+                                                </td>
 
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="6">No projects found.</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                                <!--end table-->
-                            </div><!--end /div-->
-                            <div class="d-lg-flex justify-content-lg-between mt-2">
-                                <div class="mb-2 mb-lg-0">
-                                    <a href="{% url 'project:create' %}" class="btn btn-primary px-4">Add Project</a>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="6">No projects found.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!--end table-->
+                                </div><!--end /div-->
+                                <div class="d-lg-flex justify-content-lg-between mt-2">
+
+                                    <div>
+                                        <ul class="pagination mt-1">
+                                            <!-- Previous Button -->
+                                            {% if projects.has_previous %}
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       href="?q={{ search_query }}&page={{ projects.previous_page_number }}"
+                                                       tabindex="-1">Previous</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                                </li>
+                                            {% endif %}
+
+                                            <!-- Page Numbers -->
+                                            {% for num in projects.paginator.page_range %}
+                                                {% if projects.number == num %}
+                                                    <li class="page-item active">
+                                                        <a class="page-link" href="#">{{ num }}</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           href="?q={{ search_query }}&page={{ num }}">{{ num }}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            <!-- Next Button -->
+                                            {% if projects.has_next %}
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       href="?q={{ search_query }}&page={{ projects.next_page_number }}">Next</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">Next</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+
                                 </div>
-                                <div>
-                                    <ul class="pagination">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                        </li>
-                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">2</a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">Next</a>
-                                        </li>
-                                    </ul><!--end pagination-->
-                                </div>
-                            </div>
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
 
-            </div><!--end row-->
+                </div><!--end row-->
 
-        </div><!-- container -->
+            </div><!-- container -->
 
-        <!--end footer-->
+            <!--end footer-->
+        </div>
+        <!-- end page content -->
     </div>
-    <!-- end page content -->
-</div>
 {% endblock %}
 
 

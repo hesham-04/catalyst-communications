@@ -78,6 +78,10 @@
                                             <td>{{ customer.currency }}</td>
 
                                         </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="6">No Customers found.</td>
+                                        </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
