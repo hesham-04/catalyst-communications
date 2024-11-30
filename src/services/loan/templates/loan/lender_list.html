@@ -26,9 +26,11 @@
                             <div class="col">
                                 <h4 class="card-title">All Lenders</h4>
                             </div><!--end col-->
-                                <div class="col-auto">
-                                    <a href="{% url 'loan:lender-create' %}"> <div class="btn btn-danger"> Create Lender</div></a>
-                                </div><!--end col-->
+                            <div class="col-auto">
+                                <a href="{% url 'loan:lender-create' %}">
+                                    <div class="btn btn-danger"> Create Lender</div>
+                                </a>
+                            </div><!--end col-->
                         </div>  <!--end row-->
                     </div><!--end card-header-->
                     <div class="card-body pt-0">
@@ -74,6 +76,38 @@
                                 </tbody>
                             </table> <!--end table-->
                         </div><!--end /div-->
+
+                        <div>
+                            <ul class="pagination mt-1">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for num in page_obj.paginator.page_range %}
+                                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div><!--end card-body-->
                 </div>
 

@@ -11,7 +11,6 @@ class Vendor(models.Model):
         ('PKR', 'Pakistani Rupee'),
     ]
 
-
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, blank=True, null=True)
     iban = models.CharField(max_length=34, blank=True, null=True)

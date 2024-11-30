@@ -6,12 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8682a902-238a-4f9c-aeba-440f49873313" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/templates/expense/expense_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/templates/expense/expense_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/expense/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/expense/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/project/bll.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/project/bll.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/templates/loan/lender_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/templates/loan/lender_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/loan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/loan/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/vendor/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/templates/vendor/vendor_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/vendor/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/vendor/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

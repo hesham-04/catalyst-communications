@@ -113,6 +113,7 @@ class ReturnLoanView(CreateView):
 
 class LenderListView(ListView):
     model = Lender
+    paginate_by = 25
 
 
 class LenderDetailView(DetailView):
