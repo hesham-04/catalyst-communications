@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -13,9 +15,6 @@ from .forms import ProjectForm
 from .models import Project
 from ..invoice.models import Invoice
 from ..transaction.models import Ledger
-
-from django.core.paginator import Paginator
-from django.db.models import Q
 
 
 class ProjectView(TemplateView):
@@ -44,7 +43,6 @@ class ProjectView(TemplateView):
 class ProjectUpdateView(UpdateView):
     model = Project
     fields = ['project_name', 'description']
-
 
 
 class ProjecCreateView(CreateView):
@@ -158,8 +156,9 @@ class ProjectFinances(View):
         visible_transaction_types = [
             ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
             ('CREATE_EXPENSE', 'Expense Created'),
-            ('PAY_EXPENSE', 'Expense Paid'),
             ('INVOICE_PAYMENT', 'Invoice Paid'),
+            ('TRANSFER', 'Funds Transfer'),  # Only from Project ACC to Project CASH
+
             ('CREATE_LOAN', 'Loan Created'),
             ('RETURN_LOAN', 'Loan Returned'),
         ]
