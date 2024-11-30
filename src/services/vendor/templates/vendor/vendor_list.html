@@ -31,48 +31,27 @@
                                     <div class="col-auto">
                                         <form class="row g-2">
                                             <div class="col-auto">
-                                                <a class="btn bg-primary-subtle text-primary dropdown-toggle d-flex align-items-center arrow-none"
-                                                   data-bs-toggle="dropdown" href="#" role="button"
-                                                   aria-haspopup="false" aria-expanded="false"
-                                                   data-bs-auto-close="outside">
-                                                    <i class="iconoir-filter-alt me-1"></i> Filter
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-start">
-                                                    <div class="p-2">
-                                                        <div class="form-check mb-2">
-                                                            <input type="checkbox" class="form-check-input" checked=""
-                                                                   id="filter-all">
-                                                            <label class="form-check-label" for="filter-all">
-                                                                All
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check mb-2">
-                                                            <input type="checkbox" class="form-check-input" checked=""
-                                                                   id="filter-one">
-                                                            <label class="form-check-label" for="filter-one">
-                                                                New
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check mb-2">
-                                                            <input type="checkbox" class="form-check-input" checked=""
-                                                                   id="filter-two">
-                                                            <label class="form-check-label" for="filter-two">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" checked=""
-                                                                   id="filter-three">
-                                                            <label class="form-check-label" for="filter-three">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
+                                                <div class="dropdown">
+                                                    <a class="btn bg-primary-subtle text-primary dropdown-toggle d-flex align-items-center arrow-none"
+                                                       data-bs-toggle="dropdown" href="#" role="button"
+                                                       aria-haspopup="false" aria-expanded="false"
+                                                       data-bs-auto-close="outside">
+                                                        <i class="iconoir-filter-alt me-1"></i> Filter
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <!-- Link to sort vendors by total_expense descending -->
+                                                        <a class="dropdown-item" href="?order=desc">Sort by Total
+                                                            Expense (High to Low)</a>
+                                                        <!-- Option to reset filter (default behavior) -->
+                                                        <a class="dropdown-item" href="?">Reset Filter</a>
                                                     </div>
                                                 </div>
+
                                             </div><!--end col-->
 
                                             <div class="col-auto">
-                                                <a href="{% url 'vendor:create' %}" class="btn btn-primary" ><i class="fa-solid fa-plus me-1"></i>
+                                                <a href="{% url 'vendor:create' %}" class="btn btn-primary"><i
+                                                        class="fa-solid fa-plus me-1"></i>
                                                     Add Vendor
                                                 </a>
                                             </div><!--end col-->
@@ -87,31 +66,62 @@
                                         <tr>
                                             <th class="border-top-0">Name</th>
                                             <th class="border-top-0">Email</th>
-                                            <th class="border-top-0">Unapid Dues</th>
-                                            <th class="border-top-0">Status</th>
+                                            <th class="border-top-0">Paid</th>
                                             <th class="border-top-0 text-center">Contact</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for object in object_list %}
-                                        <tr>
-                                            <td><a href="{%  url 'vendor:detail' object.pk %}">{{ object.name }}</a></td>
-                                            <td>{{ object.email }}</td>
-                                            <td>{{ object.get_total_unpaid_expenses }}</td>
-                                            <td>
-                                                <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">Over Due</span>
-                                            </td>
-                                            <td class="text-center">{{ object.phone }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td><a href="{% url 'vendor:detail' object.pk %}">{{ object.name }}</a>
+                                                </td>
+                                                <td>{{ object.email }}</td>
+                                                <td><span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">{{ object.total_expense }} PKR</span></td>
+
+                                                <td class="text-center">{{ object.phone }}</td>
+                                            </tr>
                                         {% endfor %}
 
 
                                         </tbody>
                                     </table>
                                     <!--end table-->
-                                </div><!--end /div-->
-                            </div>
 
+
+                                </div><!--end /div-->
+                                <div>
+                                    <ul class="pagination mt-1">
+                                        {% if page_obj.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link" tabindex="-1">Previous</a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for num in page_obj.paginator.page_range %}
+                                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                        {% endfor %}
+
+                                        {% if page_obj.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   href="?page={{ page_obj.next_page_number }}">Next</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link" tabindex="-1">Next</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+
+                            </div>
                         </div>
                     </div> <!-- end col -->
                 </div>

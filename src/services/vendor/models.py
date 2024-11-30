@@ -14,21 +14,21 @@ class Vendor(models.Model):
 
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, blank=True, null=True)
-    iban = models.CharField(max_length=34, blank=True, null=True)  # Bank account IBAN
+    iban = models.CharField(max_length=34, blank=True, null=True)
 
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
 
-    registration_number = models.CharField(max_length=50, blank=True, null=True)  # Company registration number
-    vat_number = models.CharField(max_length=50, blank=True, null=True)  # VAT identification number
+    registration_number = models.CharField(max_length=50, blank=True, null=True)
+    vat_number = models.CharField(max_length=50, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
 
-    total_expense = models.DecimalField(max_digits=12, decimal_places=2, default=0)  # Total expenses paid to the vendor
+    total_expense = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
-    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')  # Default transaction currency
-    is_active = models.BooleanField(default=True)  # Whether the vendor is active
-    created_at = models.DateTimeField(auto_now_add=True)  # Record creation date
-    updated_at = models.DateTimeField(auto_now=True)  # Last update timestamp
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

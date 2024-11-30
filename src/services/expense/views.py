@@ -1,27 +1,39 @@
 from datetime import date
+
 from django.contrib import messages
-from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, FormView
+
 from src.services.project.models import Project
-from .forms import ExpenseForm, ExpenseFormCreate, ExpenseCategoryForm, ExpensePaymentForm, JournalExpenseForm
+from .forms import ExpenseForm, ExpenseCategoryForm, ExpensePaymentForm, JournalExpenseForm
 from .models import Expense, ExpenseCategory, JournalExpense
 from ..assets.models import CashInHand, AccountBalance
 from ..project.bll import create_expense_calculations, pay_expense, create_journal_expense_calculations
 
 
-# List All Expense
 class ExpenseIndexView(TemplateView):
     template_name = 'expense/expense_index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['expenses'] = JournalExpense.objects.all().order_by('-created_at')
+
+        expenses_list = JournalExpense.objects.all().order_by('-created_at')
+
+        paginator = Paginator(expenses_list, 10)  # 10 items per page
+        page_number = self.request.GET.get('page', 1)
+        try:
+            expenses_page = paginator.page(page_number)
+        except Exception as e:
+            raise Http404("Invalid page number.")
+
+        context['expenses'] = expenses_page
         return context
 
-# Project Detail
+
 class CreateExpenseView(CreateView):
     model = Expense
     form_class = ExpenseForm
@@ -29,7 +41,7 @@ class CreateExpenseView(CreateView):
 
     def form_valid(self, form):
         project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        form.instance.project = project # Associate the project with the expense.
+        form.instance.project = project  # Associate the project with the expense.
         amount = form.cleaned_data['amount']
         budget_source = form.cleaned_data['budget_source']
         description = form.cleaned_data['description']
@@ -54,8 +66,8 @@ class CreateExpenseView(CreateView):
                 form.add_error('amount', 'Amount exceeds project account balance.')
                 return self.form_invalid(form)
 
-
-        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source, destination=vendor.pk, reason=description)
+        create_expense_calculations(project_id=project.pk, amount=amount, budget_source=budget_source,
+                                    destination=vendor.pk, reason=description)
         expense = form.save()
         return redirect(reverse('project:detail', kwargs={'pk': project.pk}))
 
@@ -80,11 +92,11 @@ class CreateExpenseView(CreateView):
         total = sum(expense.amount for expense in expenses_today)
         return total
 
+
 class ExpensePaymentView(FormView):
     template_name = 'expense/expense_payment.html'
     form_class = ExpensePaymentForm
     success_url = reverse_lazy('expense:index')
-
 
     def form_valid(self, form):
         expense = get_object_or_404(Expense, pk=self.kwargs['pk'])
@@ -103,9 +115,9 @@ class ExpensePaymentView(FormView):
                 return self.form_invalid(form)
 
         # Deduct the amount from the source
-        pay_expense(project_id=project.pk, expense_id=expense.pk, budget_source=source, destination=expense.vendor, amount=expense.amount, reason=remarks)
+        pay_expense(project_id=project.pk, expense_id=expense.pk, budget_source=source, destination=expense.vendor,
+                    amount=expense.amount, reason=remarks)
         return super().form_valid(form)
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -119,8 +131,6 @@ class ExpenseCategoryCreateView(CreateView):
     form_class = ExpenseCategoryForm
     template_name = 'expense/category_form.html'  # Define your HTML template
     success_url = reverse_lazy('expense:index')  # Redirect after creation
-
-
 
 
 class JournalExpenseCreateView(CreateView):
@@ -162,7 +172,10 @@ class JournalExpenseCreateView(CreateView):
                 form.add_error("amount", "Not enough cash in hand.")
                 return self.form_invalid(form)
 
-        success, message = create_journal_expense_calculations(category = category, reason=description,  destination=destination.pk if destination else None,  amount=amount, source=source, account_pk=account.pk if source == 'ACC' else None)
+        success, message = create_journal_expense_calculations(category=category, reason=description,
+                                                               destination=destination.pk if destination else None,
+                                                               amount=amount, source=source,
+                                                               account_pk=account.pk if source == 'ACC' else None)
         if not success:
             form.add_error('budget_source', message)
             return self.form_invalid(form)

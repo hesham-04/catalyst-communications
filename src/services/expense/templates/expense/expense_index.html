@@ -4,118 +4,121 @@
 {% load static %}
 {% block content %}
 
-<div class="page-wrapper">
-    <div class="page-content">
-        <div class="container-fluid">
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
 
 
-            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                <h4 class="page-title">All Expenses</h4>
-                <div class="">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Expenses</a>
-                        </li><!--end nav-item-->
-                        <li class="breadcrumb-item active">Edit</li>
-                    </ol>
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">All Expenses</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Expenses</a>
+                            </li><!--end nav-item-->
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-6 ms-auto text-end">
-                    <a href="{% url 'expense:expense-category-create' %}" class=" btn btn-soft-primary mb-3">Create Expense Category</a>
-                    <a href="{% url 'expense:journal-create' %}" class=" btn btn-soft-danger mb-3">Create General Expense</a>
+                <div class="row">
+                    <div class="col-md-6 ms-auto text-end">
+                        <a href="{% url 'expense:expense-category-create' %}" class=" btn btn-soft-primary mb-3">Create
+                            Expense Category</a>
+                        <a href="{% url 'expense:journal-create' %}" class=" btn btn-soft-danger mb-3">Create General
+                            Expense</a>
 
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-md-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h4 class="card-title">All Transactions</h4>
-                            </div><!--end col-->
-                            <div class="col-auto">
-                                <div class="dropdown">
-                                    <a href="#" class="btn bt btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                       aria-haspopup="true" aria-expanded="false">
-                                        <i class="icofont-calendar fs-5 me-1"></i> This Month<i
-                                            class="las la-angle-down ms-1"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="#">Today</a>
-                                        <a class="dropdown-item" href="#">Last Week</a>
-                                        <a class="dropdown-item" href="#">Last Month</a>
-                                        <a class="dropdown-item" href="#">This Year</a>
-                                    </div>
-                                </div>
-                            </div><!--end col-->
-                        </div>  <!--end row-->
-                    </div><!--end card-header-->
-                    <div class="card-body pt-0">
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <thead class="table-light">
-                                <tr>
-                                    <th class="border-top-0">Date</th>
-                                    <th class="border-top-0">Type</th>
-                                    <th class="border-top-0">Description</th>
-                                    <th class="border-top-0">Amount</th>
-                                    <th class="border-top-0">Source</th>
-                                    <th class="border-top-0">Vendor</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for expense in expenses %}
-                                <tr>
-                                    <td>{{ expense.created_at|date:"d M Y" }}
-                                        <span>{{ expense.created_at|time:"h:ia" }}</span></td>
-                                    <td>{{ expense.get_budget_source_display }}</td>
-                                    <td>{{ expense.description|slice:20 }}</td>
-                                    <td>${{ expense.amount }}</td>
-                                    <td>
-                                        {% if expense.budget_source == 'CASH' %}
-                                        <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2">Cash</span>
-                                        {% elif expense.budget_source == 'CLIENT' %}
-                                        <span class="badge bg-info-subtle text-info fs-11 fw-medium px-2">Client</span>
-                                        {% elif expense.budget_source == 'LOAN' %}
-                                        <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">Loan</span>
+                <div class="col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="card-title">All Transactions</h4>
+                                </div><!--end col-->
+                            </div>  <!--end row-->
+                        </div><!--end card-header-->
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="border-top-0">Date</th>
+                                        <th class="border-top-0">Type</th>
+                                        <th class="border-top-0">Description</th>
+                                        <th class="border-top-0">Amount</th>
+                                        <th class="border-top-0">Source</th>
+                                        <th class="border-top-0">Vendor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for expense in expenses %}
+                                        <tr>
+                                            <td>{{ expense.created_at|date:"d M Y" }}
+                                                <span>{{ expense.created_at|time:"h:ia" }}</span></td>
+                                            <td>{{ expense.get_budget_source_display }}</td>
+                                            <td>{{ expense.description|slice:20 }}</td>
+                                            <td>${{ expense.amount }}</td>
+                                            <td>
+                                                {% if expense.budget_source == 'CASH' %}
+                                                    <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2">Cash</span>
+                                                {% elif expense.budget_source == 'CLIENT' %}
+                                                    <span class="badge bg-info-subtle text-info fs-11 fw-medium px-2">Client</span>
+                                                {% elif expense.budget_source == 'LOAN' %}
+                                                    <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">Loan</span>
+                                                {% else %}
+                                                    <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Account</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if expense.vendor %}{{ expense.vendor.name }}{% else %} &nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;-{% endif %}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="5">No expenses available.</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <!--end table-->
+                            </div><!--end /div-->
+                            <div class="d-lg-flex justify-content-lg-between mt-2">
+                                <div>
+                                    <ul class="pagination mt-1">
+                                        {% if expenses.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ expenses.previous_page_number }}">Previous</a>
+                                            </li>
                                         {% else %}
-                                        <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Account</span>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" tabindex="-1">Previous</a>
+                                            </li>
                                         {% endif %}
-                                    </td>
-                                    <td>{% if expense.vendor %}{{ expense.vendor.name }}{% else %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-{% endif %}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5">No expenses available.</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <!--end table-->
-                        </div><!--end /div-->
-                        <div class="d-lg-flex justify-content-lg-between mt-2">
-                            <div>
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul><!--end pagination-->
+
+                                        {% for num in expenses.paginator.page_range %}
+                                            <li class="page-item {% if expenses.number == num %}active{% endif %}">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                        {% endfor %}
+
+                                        {% if expenses.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   href="?page={{ expenses.next_page_number }}">Next</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link" tabindex="-1">Next</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div><!--end card-body-->
-                </div><!--end card-->
+                        </div><!--end card-body-->
+                    </div><!--end card-->
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
