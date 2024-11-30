@@ -1,8 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 
-from src.core.models import BillingAddress, ShippingAddress
-from src.services.assets.models import CashInHand, AccountBalance
+from src.core.models import BillingAddress
 
 
 class Project(models.Model):
@@ -56,13 +55,10 @@ class Project(models.Model):
 
     def get_address(self):
         billing_address = BillingAddress.objects.filter(customer_id=self.customer.pk).first()
-        shipping_address = ShippingAddress.objects.filter(customer_id=self.customer.pk).first()
         if billing_address:
             return f"{billing_address.city} - {billing_address.state}"
-        elif shipping_address:
-            return f"{shipping_address.city} - {shipping_address.state}"
         else:
-            return None
+            return f"Customer Address Not Defined"
 
     def get_trial_balance(self):
         total_invoices = self.invoices.aggregate(total=Sum('total_amount'))['total'] or 0

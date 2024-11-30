@@ -8,16 +8,29 @@ class QuotationForm(forms.ModelForm):
 
 
 
-
 class QuotationItemForm(forms.ModelForm):
     class Meta:
         model = QuotationItem
         fields = ['item_name', 'description', 'quantity', 'rate']
 
         widgets = {
-            'rate': forms.NumberInput(attrs={
+            'item_name': forms.TextInput(attrs={
                 'required': True,  # HTML required attribute
-                'min': 0,  # Optional: Set a minimum value for rate
+                'placeholder': 'Enter item name',
+            }),
+            'description': forms.Textarea(attrs={
+                'required': True,
+                'placeholder': 'Enter description',
+                'rows': 3,
+            }),
+            'quantity': forms.NumberInput(attrs={
+                'required': True,
+                'min': 1,
+                'placeholder': 'Enter quantity',
+            }),
+            'rate': forms.NumberInput(attrs={
+                'required': True,
+                'min': 0,
                 'placeholder': 'Enter the rate',
             }),
         }

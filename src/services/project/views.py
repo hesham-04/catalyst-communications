@@ -3,15 +3,19 @@ from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import TemplateView, CreateView, RedirectView, FormView
+from django.views.generic import TemplateView, CreateView, RedirectView, FormView, UpdateView
 
+from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.views import Expense
 from .bll import add_budget_to_project
 from .forms import AddBudgetForm, CreateProjectCashForm
 from .forms import ProjectForm
-from .models import Project, CashInHand, AccountBalance
+from .models import Project
 from ..invoice.models import Invoice
 from ..transaction.models import Ledger
+
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 class ProjectView(TemplateView):
@@ -19,8 +23,28 @@ class ProjectView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['projects'] = Project.objects.all()
+
+        search_query = self.request.GET.get('q', '').strip()
+
+        projects = Project.objects.all()
+        if search_query:
+            projects = projects.filter(
+                Q(project_name__icontains=search_query)
+            )
+
+        paginator = Paginator(projects, 20)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['projects'] = page_obj
+        context['search_query'] = search_query
         return context
+
+
+class ProjectUpdateView(UpdateView):
+    model = Project
+    fields = ['project_name', 'description']
+
 
 
 class ProjecCreateView(CreateView):
@@ -131,7 +155,6 @@ class ProjectFinances(View):
         if transaction_filter:
             ledger_entries = ledger_entries.filter(transaction_type=transaction_filter)
 
-
         visible_transaction_types = [
             ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
             ('CREATE_EXPENSE', 'Expense Created'),
@@ -163,12 +186,9 @@ class ProjectFinances(View):
         return render(request, self.template_name, context)
 
 
-
-
 class CreateProjectCash(FormView):
     form_class = CreateProjectCashForm
     template_name = 'project/create_project_cash.html'
-
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
@@ -200,11 +220,8 @@ class CreateProjectCash(FormView):
             reason=reason,
         )
 
-
         messages.success(self.request, "Worked like a charm")
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('project:detail', kwargs={'pk':self.kwargs.pk})
-
-
+        return reverse_lazy('project:detail', kwargs={'pk': self.kwargs.pk})
