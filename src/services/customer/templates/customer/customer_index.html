@@ -53,7 +53,8 @@
                                         <th>Company</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Recieveables</th>
+                                        <th>Receivables</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -76,6 +77,19 @@
                                             <td>{{ customer.email }}</td>
                                             <td>{{ customer.phone }}</td>
                                             <td>{{ customer.currency }}</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-3 text-center text-warning">
+                                                        <i class="fa fa-edit"></i><br>
+                                                        Edit
+                                                    </div>
+                                                    <div class="col-md-3 text-danger text-center">
+                                                        <i class="fa fa-trash text-danger"></i><br>
+                                                        Delete
+                                                    </div>
+                                                </div>
+
+                                            </td>
 
                                         </tr>
                                     {% empty %}

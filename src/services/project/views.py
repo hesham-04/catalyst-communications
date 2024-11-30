@@ -3,7 +3,7 @@ from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import TemplateView, CreateView, RedirectView, FormView
+from django.views.generic import TemplateView, CreateView, RedirectView, FormView, UpdateView
 
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.views import Expense
@@ -39,6 +39,12 @@ class ProjectView(TemplateView):
         context['projects'] = page_obj
         context['search_query'] = search_query
         return context
+
+
+class ProjectUpdateView(UpdateView):
+    model = Project
+    fields = ['project_name', 'description']
+
 
 
 class ProjecCreateView(CreateView):
