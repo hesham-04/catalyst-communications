@@ -2,14 +2,11 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
+from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, DeleteView
 
 from src.core.forms import BillingAddressForm
 from src.core.models import Customer, BillingAddress
 from .forms import CustomerForm
-
-
-from django.views.generic.list import ListView
 
 
 class CustomerView(TemplateView):
@@ -36,6 +33,15 @@ class CustomerView(TemplateView):
         return context
 
 
+class CustomerUpdateView(UpdateView):
+    model = Customer
+    fields = ['first_name', 'last_name', 'email', 'company_name', 'phone' ]
+
+class CustomerDeleteView(DeleteView):
+    model = Customer
+    success_url = reverse_lazy('customer:index')
+
+
 
 class CustomerCreateView(CreateView):
     template_name = 'customer/customer_form.html'
@@ -47,7 +53,6 @@ class CustomerCreateView(CreateView):
 class CustomerDetailView(DetailView):
     model = Customer
     template_name = 'customer/customer_detail.html'
-
 
 
 class BillingAddressAddView(CreateView):

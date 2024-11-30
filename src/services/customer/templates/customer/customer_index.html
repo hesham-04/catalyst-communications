@@ -79,13 +79,18 @@
                                             <td>{{ customer.currency }}</td>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-3 text-center text-warning">
-                                                        <i class="fa fa-edit"></i><br>
-                                                        Edit
-                                                    </div>
-                                                    <div class="col-md-3 text-danger text-center">
-                                                        <i class="fa fa-trash text-danger"></i><br>
-                                                        Delete
+                                                        <div class="col-md-4 text-center">
+                                                            <a class="text-warning" href="{% url 'customer:update' customer.pk %}">
+                                                                <i class="fa fa-edit"></i><br>
+                                                                Edit
+                                                            </a>
+                                                        </div>
+                                                    <div class="col-md-4 text-danger text-center">
+                                                        <a class="text-danger" href="{% url 'customer:delete' customer.pk %}">
+                                                            <i class="fa fa-trash text-danger"></i><br>
+                                                            Delete
+                                                        </a>
+
                                                     </div>
                                                 </div>
 
