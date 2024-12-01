@@ -58,8 +58,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <a href="#"><i class="las la-print text-secondary fs-18"></i></a>
-                                                <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                                <a href="{% url 'expense:expense-category-delete' object.pk %}"><i class="las la-trash-alt text-secondary fs-18"></i></a>
                                             </td>
                                         </tr><!--end tr-->
                                         {% empty %}

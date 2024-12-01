@@ -14,7 +14,8 @@ class Ledger(models.Model):
         ('CREATE_JOURNAL_EXPENSE', 'Journal Expense Created'),
         ('ADD_CASH', 'Added Cash'), # Cash Added to The General Cash in Hand
 
-        ('INVOICE_PAYMENT', 'Invoice Paid')
+        ('INVOICE_PAYMENT', 'Invoice Paid'),
+        ('ADD_ACC_BALANCE', 'Invoice Paid')
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)

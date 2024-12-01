@@ -220,3 +220,4 @@ def create_journal_expense_calculations(category, reason, destination, amount, s
         return False, f"An error occurred while processing the payment: {str(e)}"
 
     return True, "Transaction successful"
+

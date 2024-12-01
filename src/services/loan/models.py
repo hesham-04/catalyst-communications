@@ -22,7 +22,11 @@ class Lender(models.Model):
         """
         Calculate the total due amount for all loans of this lender.
         """
-        return self.loans.aggregate(total_due=models.Sum('remaining_amount'))['total_due'] or 0
+
+        misc_loans = self.misc_loans.aggregate(total_due=Sum('remaining_amount'))['total_due'] or 0
+        loans = self.loans.aggregate(total_due=models.Sum('remaining_amount'))['total_due'] or 0
+
+        return round(loans + misc_loans, 2)
 
 
 class Loan(models.Model):

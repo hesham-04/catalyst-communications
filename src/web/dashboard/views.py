@@ -1,11 +1,12 @@
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.customer.models import Customer
-from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
 from src.services.loan.models import Loan
+from src.services.transaction.models import Ledger
+from src.services.vendor.models import Vendor
 
 
 class HomeView(TemplateView):
@@ -16,7 +17,6 @@ class HomeView(TemplateView):
 
         cash_in_hand = CashInHand.objects.first()
 
-
         cash_in_hand_balance = cash_in_hand.balance if cash_in_hand else 0
         account_balance_balance = AccountBalance.objects.aggregate(total=Sum('balance'))['total'] or 0
 
@@ -26,5 +26,6 @@ class HomeView(TemplateView):
         context['customer_count'] = Customer.objects.count()
         context['payable'] = Loan.calculate_total_unpaid_amount()
         context['receivables'] = Invoice.calculate_total_receivables()
-
+        context['top_vendors'] = Vendor.objects.order_by('-total_expense')[:8]
+        context['transactions'] = Ledger.objects.order_by('-created_at')[:8]
         return context

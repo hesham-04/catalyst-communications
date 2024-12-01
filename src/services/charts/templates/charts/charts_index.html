@@ -36,15 +36,18 @@
                                         <!-- Added ms-auto for right alignment -->
                                         <li class="nav-item m-1">
                                             <a class="btn btn-primary" aria-current="page"
-                                               href="{% url 'charts:generate_monthly_report' month=11 year=2024 %}"><i
+                                               href="{% url 'charts:generate_monthly_report' month=12 year=2024 %}"><i
                                                     class="fa fa-envelope me-1"></i>Generate Monthly Report</a>
 
                                             {#                                            <a href="{% url 'generate_monthly_report' month=11 year=2024 %}">Download November Report</a>#}
-
                                         </li>
                                         <li class="nav-item m-1">
                                             <a class="btn btn-warning" aria-current="page" href="#"><i
                                                     class="fa fa-envelope me-1"></i>Generate Yearly Report</a>
+                                        </li>
+                                        <li class="nav-item m-1">
+                                            <a class="btn btn-warning" aria-current="page" href="{% url 'charts:generate_bank_statements' %}"><i
+                                                    class="fa fa-bank me-2"></i>Generate Bank Report</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -73,7 +76,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for project in page_obj %}
+                                        {% for project in projects %}
                                             <tr>
                                                 <td>
                                                     <a href="{% url 'project:detail' project.id %}">{{ project.project_name }}</a>

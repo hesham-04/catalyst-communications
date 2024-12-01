@@ -25,7 +25,7 @@ class VendorListView(ListView):
     context_object_name = 'vendors'
 
     def get_queryset(self):
-        queryset = Vendor.objects.all()
+        queryset = Vendor.objects.all().order_by('-created_at')
 
         order = self.request.GET.get('order', None)
         if order == 'desc':

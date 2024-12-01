@@ -58,9 +58,14 @@ class Invoice(models.Model):
 
     @classmethod
     def calculate_total_receivables(cls, project_id=None):
-        total_receivables = cls.objects.filter(project_id=project_id, status="PENDING").aggregate(
-            total=Sum('total_amount'))
-        return round(total_receivables['total'] or 0, 2)
+        if project_id:
+            total_receivables = cls.objects.filter(project_id=project_id, status="PENDING").aggregate(
+                total=Sum('total_amount'))
+            return round(total_receivables['total'] or 0, 2)
+        else:
+            total_receivables = cls.objects.filter(status="PENDING").aggregate(
+                total=Sum('total_amount'))
+            return round(total_receivables['total'] or 0, 2)
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.client_name} - {self.project.project_name}"

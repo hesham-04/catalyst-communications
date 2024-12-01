@@ -121,7 +121,13 @@ class LenderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['loans'] = self.object.loans.all()
+
+        loans = self.object.loans.all()
+        misc_loans = self.object.misc_loans.all()
+
+        combined_loans = list(loans) + list(misc_loans)
+
+        context['loans'] = combined_loans
         return context
 
 
@@ -129,7 +135,6 @@ class LenderCreateView(CreateView):
     model = Lender
     fields = '__all__'
     success_url = reverse_lazy("loan:lenders")
-
 
 
 class MiscLoanCreateView(CreateView):

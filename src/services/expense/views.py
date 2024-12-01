@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, DeleteView
 
 from src.services.project.models import Project
 from .forms import ExpenseForm, ExpenseCategoryForm, ExpensePaymentForm, JournalExpenseForm
@@ -131,6 +131,9 @@ class ExpenseCategoryCreateView(CreateView):
     form_class = ExpenseCategoryForm
     template_name = 'expense/category_form.html'  # Define your HTML template
     success_url = reverse_lazy('expense:index')  # Redirect after creation
+
+class ExpenseCategoryDeleteView(DeleteView):
+    model = ExpenseCategory
 
 
 class ExpenseCategoryListView(ListView):
