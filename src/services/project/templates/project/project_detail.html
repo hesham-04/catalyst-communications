@@ -219,7 +219,7 @@
                                             <h4 class="card-title mt-1">Expense Summary</h4>
                                         </div>
                                         <div class="col-md-6 ">
-                                            <a href="#" class="btn btn-soft-warning float-end mb-1">All Expenses</a>
+                                            <a href="{% url 'project:expenses' project.pk %}" class="btn btn-soft-warning float-end mb-1">All Expenses</a>
                                         </div>
                                     </div>
                                     <table class="table mb-0">
@@ -277,7 +277,7 @@
                                                 <h4 class="card-title mt-1">Invoice Summary</h4>
                                             </div>
                                             <div class="col-md-6 ">
-                                                <a href="#" class="btn btn-soft-danger float-end mb-1">All Invoices</a>
+                                                <a href="{% url 'project:invoices' project.pk %}" class="btn btn-soft-danger float-end mb-1">All Invoices</a>
                                             </div>
                                         </div>
                                         <table class="table mb-0">

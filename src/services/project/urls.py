@@ -2,20 +2,23 @@ from django.urls import path
 
 from .views import (
     ProjectView, ProjecCreateView, ProjectDetailView, AddBudgetView, StartProjectView, ProjectFinances, CreateProjectCash,
-    ProjectUpdateView
+    ProjectUpdateView, ProjectExpensesView, ProjectInvoiceView
 )
 
 app_name = 'project'
 urlpatterns = [
     path('', ProjectView.as_view(), name='index'),
     path('create/', ProjecCreateView.as_view(), name='create'),
-    path('detail/<int:pk>/', ProjectDetailView.as_view(), name='detail'),
-    path('project/<int:pk>/start_project/', StartProjectView.as_view(), name='start_project'),
+    path('<str:pk>/detail/', ProjectDetailView.as_view(), name='detail'),
+    path('<str:pk>/start-project/', StartProjectView.as_view(), name='start_project'),
     path('<str:pk>/update/', ProjectUpdateView.as_view(), name='update'),
 
-    path('transfer/<str:pk>/', CreateProjectCash.as_view(), name='transfer_to_cash'),
-    path('project/<int:pk>/add_budget/', AddBudgetView.as_view(), name='add_budget'),
+    path('<str:pk>/transfer/', CreateProjectCash.as_view(), name='transfer_to_cash'),
+    path('<str:pk>/add-budget/', AddBudgetView.as_view(), name='add_budget'),
 
-    path('finances/<str:pk>/', ProjectFinances.as_view(), name='finances')
+    path('<str:pk>/expenses/', ProjectExpensesView.as_view(), name='expenses'),
+    path('<str:pk>/invoices/', ProjectInvoiceView.as_view(), name='invoices'),
+
+    path('<str:pk>/finances/', ProjectFinances.as_view(), name='finances')
 
 ]

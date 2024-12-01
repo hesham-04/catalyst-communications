@@ -224,3 +224,38 @@ class CreateProjectCash(FormView):
 
     def get_success_url(self):
         return reverse_lazy('project:detail', kwargs={'pk': self.kwargs.pk})
+
+
+class ProjectExpensesView(TemplateView):
+    template_name = 'project/project_expenses.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        object_list = Ledger.objects.filter(project_id=self.kwargs['pk'], transaction_type='CREATE_EXPENSE')
+        project = Project.objects.get(pk=self.kwargs['pk'])
+
+        paginator = Paginator(object_list, 20)
+        page = self.request.GET.get('page')
+        paginated_object_list = paginator.get_page(page)
+
+        context['object_list'] = paginated_object_list
+        context['project'] = project
+        return context
+
+class ProjectInvoiceView(TemplateView):
+    template_name = 'project/project_invoice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        object_list = Invoice.objects.filter(project=self.kwargs['pk'])
+        _project = Project.objects.get(pk=self.kwargs['pk'])
+
+        paginator = Paginator(object_list, 20)
+        page = self.request.GET.get('page')
+        paginated_object_list = paginator.get_page(page)
+
+        context['object_list'] = paginated_object_list
+        context['project'] = _project
+        return context
