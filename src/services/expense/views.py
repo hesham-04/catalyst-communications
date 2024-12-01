@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, FormView
 
 from src.services.project.models import Project
@@ -131,6 +131,11 @@ class ExpenseCategoryCreateView(CreateView):
     form_class = ExpenseCategoryForm
     template_name = 'expense/category_form.html'  # Define your HTML template
     success_url = reverse_lazy('expense:index')  # Redirect after creation
+
+
+class ExpenseCategoryListView(ListView):
+    model = ExpenseCategory
+    paginate_by = 20
 
 
 class JournalExpenseCreateView(CreateView):
