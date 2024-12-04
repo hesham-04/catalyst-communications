@@ -1,25 +1,24 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import DetailView, ListView
+
+from .forms import VendorForm
 from .models import (
     Vendor
 )
-from .forms import VendorForm
 from ..expense.models import Expense, ExpenseCategory
 from ..project.models import Project
-from django.db.models import Q
-
 
 
 # Create your views here.
-class VendorCreateView(CreateView):
+class VendorCreateView(LoginRequiredMixin, CreateView):
     model = Vendor
     form_class = VendorForm
     success_url = reverse_lazy('vendor:vendors')  # Redirect after creation
 
 
-class VendorListView(ListView):
+class VendorListView(LoginRequiredMixin, ListView):
     model = Vendor
     paginate_by = 25
     context_object_name = 'vendors'
@@ -33,7 +32,8 @@ class VendorListView(ListView):
 
         return queryset
 
-class VendorDetailView(DetailView):
+
+class VendorDetailView(LoginRequiredMixin, DetailView):
     model = Vendor
 
     def get_context_data(self, **kwargs):

@@ -1,0 +1,99 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customers{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">
+                        Users</h4>
+                    <div class="">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="#">Management</a>
+                            </li><!--end nav-item-->
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Users Details</h4>
+                                    </div><!--end col-->
+                                    <div class="col-auto">
+                                        <button class="btn bg-primary text-white" data-bs-toggle="modal"
+                                                data-bs-target="#addUser"><i class="fas fa-plus me-1"></i> Add User
+                                        </button>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0" id="datatable_1">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            <th>Bio</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in object_list %}
+                                            <tr>
+                                                <td class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="{{ object.image.url|default:"https://placehold.co/150" }}"
+                                                             class="me-2 thumb-md align-self-center rounded" alt="...">
+                                                        <div class="flex-grow-1 text-truncate">
+                                                            <h6 class="m-0">{{ object.first_name }} {{ object.last_name }}</h6>
+                                                            <p class="fs-12 text-muted mb-0">{{ object.role }}</p>
+                                                        </div><!--end media body-->
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {{ object.role }}
+                                                </td>
+                                                <td>
+                                                    {{ object.bio|slice:20 }}
+                                                </td>
+                                                <td>
+                                                    {% if object.is_active %}
+                                                    <span
+                                                        class="badge rounded text-success bg-success-subtle">Active
+                                                    </span>
+                                                    {% else %}
+                                                        <span
+                                                        class="badge rounded text-danger bg-danger-subtle">Not Active
+                                                    </span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-end">
+                                                    <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <th>No Users Available</th>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

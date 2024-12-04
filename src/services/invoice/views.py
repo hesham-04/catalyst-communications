@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -11,7 +12,7 @@ from ..project.bll import process_invoice_payment
 from ..project.models import Project
 
 
-class CreateInvoiceView(CreateView):
+class CreateInvoiceView(LoginRequiredMixin, CreateView):
     model = Invoice
     form_class = InvoiceForm
     template_name = 'invoice/invoice_form.html'
@@ -51,7 +52,7 @@ class CreateInvoiceView(CreateView):
         return reverse('invoice:detail', kwargs={'pk': self.object.pk})
 
 
-class PrintInvoiceView(TemplateView):
+class PrintInvoiceView(LoginRequiredMixin, TemplateView):
     template_name = 'invoice/invoice_print.html'
 
     def get_context_data(self, **kwargs):
@@ -60,7 +61,7 @@ class PrintInvoiceView(TemplateView):
         return context
 
 
-class InvoiceDetailView(DetailView):
+class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
     template_name = 'invoice/invoice_detail.html'
 
@@ -70,7 +71,7 @@ class InvoiceDetailView(DetailView):
         return context
 
 
-class InvoicePaidView(View):
+class InvoicePaidView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
         form = TransferFundsForm()

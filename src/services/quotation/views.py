@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -9,10 +10,7 @@ from .models import Quotation, QuotationItem
 from ..project.models import Project
 
 
-
-
-
-class CreateQuotationView(CreateView):
+class CreateQuotationView(LoginRequiredMixin, CreateView):
     model = Quotation
     form_class = QuotationForm
     template_name = 'quotation/quotation_form.html'
@@ -54,8 +52,7 @@ class CreateQuotationView(CreateView):
         return reverse('quotation:print', kwargs={'pk': self.object.pk})
 
 
-
-class PrintQuotationView(TemplateView):
+class PrintQuotationView(LoginRequiredMixin, TemplateView):
     template_name = 'quotation/quotation_print.html'
 
     def get_context_data(self, **kwargs):

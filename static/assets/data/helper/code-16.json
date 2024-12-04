@@ -1,6 +1,0 @@
-&lt;!-- example --&gt;
-&lt;img src="..." width="100" height="75" class="object-fit-contain border rounded" alt=""&gt;
-&lt;img src="..." width="100" height="75" class="object-fit-cover border rounded" alt=""&gt;
-&lt;img src="..." width="100" height="75" class="object-fit-fill border rounded" alt=""&gt;
-&lt;img src="..." width="100" height="75" class="object-fit-scale border rounded" alt=""&gt;
-&lt;img src="..." width="100" height="75" class="object-fit-none border rounded" alt=""&gt;

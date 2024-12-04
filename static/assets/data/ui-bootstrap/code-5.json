@@ -1,7 +1,0 @@
-&lt;div class="bg-light-subtle p-5 rounded-3"&gt;
-  &lt;h1 class="display-4"&gt;Hello, world!&lt;/h1&gt;
-  &lt;p class="lead"&gt;This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.&lt;/p&gt;
-  &lt;hr class="my-4"&gt;
-  &lt;p&gt;It uses utility classes for typography and spacing to space content out within the larger container.&lt;/p&gt;
-  &lt;a class="btn btn btn-theme btn-lg" href="#" role="button"&gt;Learn more&lt;/a&gt;
-&lt;/div&gt;
