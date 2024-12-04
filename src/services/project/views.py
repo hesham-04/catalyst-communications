@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import Sum
@@ -19,7 +20,7 @@ from ..transaction.models import Ledger
 from ...web.dashboard.utils import get_monthly_income_expense
 
 
-class ProjectView(TemplateView):
+class ProjectView(LoginRequiredMixin, TemplateView):
     template_name = 'project/project_index.html'
 
     def get_context_data(self, **kwargs):
@@ -42,12 +43,12 @@ class ProjectView(TemplateView):
         return context
 
 
-class ProjectUpdateView(UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     fields = ['project_name', 'description']
 
 
-class ProjecCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     template_name = 'project/project_form.html'
     form_class = ProjectForm
     model = Project
@@ -57,7 +58,7 @@ class ProjecCreateView(CreateView):
         return reverse_lazy('project:detail', kwargs={'pk': self.object.pk})
 
 
-class ProjectDetailView(TemplateView):
+class ProjectDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'project/project_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -73,7 +74,7 @@ class ProjectDetailView(TemplateView):
         return context
 
 
-class AddBudgetView(FormView):
+class AddBudgetView(LoginRequiredMixin, FormView):
     template_name = 'project/add_budget.html'
     form_class = AddBudgetForm
 
@@ -136,7 +137,7 @@ class AddBudgetView(FormView):
         return super().form_invalid(form)
 
 
-class StartProjectView(RedirectView):
+class StartProjectView(LoginRequiredMixin, RedirectView):
     """A view that changes the project status to in progress and redirects to the project detail page"""
 
     def get_redirect_url(self, *args, **kwargs):
@@ -146,7 +147,7 @@ class StartProjectView(RedirectView):
         return reverse('project:detail', kwargs={'pk': project.pk})
 
 
-class ProjectFinances(View):
+class ProjectFinances(LoginRequiredMixin, View):
     template_name = 'project/finances.html'
 
     def get(self, request, pk):
@@ -192,7 +193,7 @@ class ProjectFinances(View):
         return render(request, self.template_name, context)
 
 
-class CreateProjectCash(FormView):
+class CreateProjectCash(LoginRequiredMixin, FormView):
     form_class = CreateProjectCashForm
     template_name = 'project/create_project_cash.html'
 
@@ -233,7 +234,7 @@ class CreateProjectCash(FormView):
         return reverse_lazy('project:detail', kwargs={'pk': self.kwargs.pk})
 
 
-class ProjectExpensesView(TemplateView):
+class ProjectExpensesView(LoginRequiredMixin, TemplateView):
     template_name = 'project/project_expenses.html'
 
     def get_context_data(self, **kwargs):
@@ -254,7 +255,7 @@ class ProjectExpensesView(TemplateView):
         return context
 
 
-class ProjectInvoiceView(TemplateView):
+class ProjectInvoiceView(LoginRequiredMixin, TemplateView):
     template_name = 'project/project_invoice.html'
 
     def get_context_data(self, **kwargs):

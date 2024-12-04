@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -9,7 +10,7 @@ from src.core.models import Customer, BillingAddress
 from .forms import CustomerForm
 
 
-class CustomerView(TemplateView):
+class CustomerView(LoginRequiredMixin, TemplateView):
     template_name = 'customer/customer_index.html'
 
     def get_context_data(self, **kwargs):
@@ -33,29 +34,29 @@ class CustomerView(TemplateView):
         return context
 
 
-class CustomerUpdateView(UpdateView):
+class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = Customer
-    fields = ['first_name', 'last_name', 'email', 'company_name', 'phone' ]
+    fields = ['first_name', 'last_name', 'email', 'company_name', 'phone']
 
-class CustomerDeleteView(DeleteView):
+
+class CustomerDeleteView(LoginRequiredMixin, DeleteView):
     model = Customer
     success_url = reverse_lazy('customer:index')
 
 
-
-class CustomerCreateView(CreateView):
+class CustomerCreateView(LoginRequiredMixin, CreateView):
     template_name = 'customer/customer_form.html'
     form_class = CustomerForm
     model = Customer
     success_url = reverse_lazy('customer:index')
 
 
-class CustomerDetailView(DetailView):
+class CustomerDetailView(LoginRequiredMixin, DetailView):
     model = Customer
     template_name = 'customer/customer_detail.html'
 
 
-class BillingAddressAddView(CreateView):
+class BillingAddressAddView(LoginRequiredMixin, CreateView):
     template_name = 'customer/address_form.html'
     model = BillingAddress
     success_url = reverse_lazy('customer:home')
@@ -78,7 +79,7 @@ class BillingAddressAddView(CreateView):
         return reverse('customer:detail', kwargs={'pk': self.object.customer.pk})
 
 
-class BillingAddressUpdateView(UpdateView):
+class BillingAddressUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'customer/address_form.html'
     form_class = BillingAddressForm
     model = BillingAddress

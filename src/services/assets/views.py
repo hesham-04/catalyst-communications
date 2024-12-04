@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.db.models import Sum, Q
@@ -114,30 +115,30 @@ class CashInHandDeleteView(DeleteView):
 """ Account Balance"""
 
 
-class AccountBalanceCreateView(CreateView):
+class AccountBalanceCreateView(LoginRequiredMixin, CreateView):
     model = AccountBalance
     fields = ['account_name', 'balance']
     success_url = reverse_lazy('assets:accounts')
 
 
-class AccountBalanceList(ListView):
+class AccountBalanceList(LoginRequiredMixin, ListView):
     model = AccountBalance
     paginate_by = 20
 
 
-class AccountBalanceUpdateView(UpdateView):
+class AccountBalanceUpdateView(LoginRequiredMixin, UpdateView):
     model = AccountBalance
     fields = ['account_name', 'balance']
     success_url = reverse_lazy('assets:accounts')
 
 
-class AccountBalanceDeleteView(DeleteView):
+class AccountBalanceDeleteView(LoginRequiredMixin, DeleteView):
     model = AccountBalance
     template_name = 'accountbalance_confirm_delete.html'
     success_url = reverse_lazy('assets:accounts')
 
 
-class AccountBalanceDetailView(DetailView):
+class AccountBalanceDetailView(LoginRequiredMixin, DetailView):
     model = AccountBalance
 
     def get_context_data(self, **kwargs):

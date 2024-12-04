@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
@@ -15,7 +16,7 @@ from ..assets.models import CashInHand, AccountBalance
 from ..project.bll import create_expense_calculations, pay_expense, create_journal_expense_calculations
 
 
-class ExpenseIndexView(TemplateView):
+class ExpenseIndexView(LoginRequiredMixin, TemplateView):
     template_name = 'expense/expense_index.html'
 
     def get_context_data(self, **kwargs):
@@ -34,7 +35,7 @@ class ExpenseIndexView(TemplateView):
         return context
 
 
-class CreateExpenseView(CreateView):
+class CreateExpenseView(LoginRequiredMixin, CreateView):
     model = Expense
     form_class = ExpenseForm
     template_name = 'expense/expense_form.html'
@@ -93,7 +94,7 @@ class CreateExpenseView(CreateView):
         return total
 
 
-class ExpensePaymentView(FormView):
+class ExpensePaymentView(LoginRequiredMixin, FormView):
     template_name = 'expense/expense_payment.html'
     form_class = ExpensePaymentForm
     success_url = reverse_lazy('expense:index')
@@ -126,23 +127,24 @@ class ExpensePaymentView(FormView):
         return context
 
 
-class ExpenseCategoryCreateView(CreateView):
+class ExpenseCategoryCreateView(LoginRequiredMixin, CreateView):
     model = ExpenseCategory
     form_class = ExpenseCategoryForm
     template_name = 'expense/category_form.html'  # Define your HTML template
     success_url = reverse_lazy('expense:index')  # Redirect after creation
 
-class ExpenseCategoryDeleteView(DeleteView):
+
+class ExpenseCategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = ExpenseCategory
     success_url = reverse_lazy('expense:expense-category-list')
 
 
-class ExpenseCategoryListView(ListView):
+class ExpenseCategoryListView(LoginRequiredMixin, ListView):
     model = ExpenseCategory
     paginate_by = 20
 
 
-class JournalExpenseCreateView(CreateView):
+class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
     model = JournalExpense
     form_class = JournalExpenseForm
     success_url = reverse_lazy('assets:index')

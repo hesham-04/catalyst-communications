@@ -42,10 +42,10 @@
                                 <div class="table-responsive">
                                     <table class="table mb-0">
                                         <thead class="table-light">
-                                        <tr>
+                                        <tr class="justify-content-between">
                                             <th class="border-top-0">ID</th>
                                             <th class="border-top-0">Name</th>
-                                            <th class="border-top-0">Action</th>
+                                            <th class="border-top-0 text-end">Action</th>
                                         </tr><!--end tr-->
                                         </thead>
                                         <tbody>
@@ -57,7 +57,7 @@
                                                     <h6 class="m-0">{{ object.name }}</h6>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="text-end">
                                                 <a href="{% url 'expense:expense-category-delete' object.pk %}"><i class="las la-trash-alt text-secondary fs-18"></i></a>
                                             </td>
                                         </tr><!--end tr-->

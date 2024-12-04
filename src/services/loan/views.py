@@ -15,7 +15,7 @@ from .models import Loan, LoanReturn, Lender, MiscLoan
 from ..transaction.models import Ledger
 
 
-class LendLoanView(CreateView):
+class LendLoanView(LoginRequiredMixin, CreateView):
     form_class = LoanForm
     template_name = 'loan/lend_loan.html'
 
@@ -50,7 +50,7 @@ class LendLoanView(CreateView):
         return context
 
 
-class LoanListView(ListView):
+class LoanListView(LoginRequiredMixin, ListView):
     model = Loan
     template_name = 'loan/loan_list.html'
 
@@ -63,7 +63,7 @@ class LoanListView(ListView):
         return Loan.objects.filter(project=self.kwargs['pk']).order_by('-due_date')
 
 
-class ReturnLoanView(CreateView):
+class ReturnLoanView(LoginRequiredMixin, CreateView):
     form_class = LoanReturnForm
     template_name = 'loan/return_loan.html'
 
@@ -113,12 +113,12 @@ class ReturnLoanView(CreateView):
         return context
 
 
-class LenderListView(ListView):
+class LenderListView(LoginRequiredMixin, ListView):
     model = Lender
     paginate_by = 25
 
 
-class LenderDetailView(DetailView):
+class LenderDetailView(LoginRequiredMixin, DetailView):
     model = Lender
 
     def get_context_data(self, **kwargs):
@@ -139,7 +139,7 @@ class LenderCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("loan:lenders")
 
 
-class MiscLoanCreateView(CreateView):
+class MiscLoanCreateView(LoginRequiredMixin, CreateView):
     model = MiscLoan
     form_class = MiscLoanForm
     success_url = reverse_lazy('loan:lenders')
@@ -167,7 +167,7 @@ class MiscLoanCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MiscLoanReturnView(FormView):
+class MiscLoanReturnView(LoginRequiredMixin, FormView):
     form_class = MiscLoanReturnForm
     template_name = "loan/miscloan_return.html"
 
@@ -202,6 +202,6 @@ class MiscLoanReturnView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['loan'] = self.object
-        entries=Ledger.objects.filter(transaction_type='MISC_LOAN_RETURN')
+        entries = Ledger.objects.filter(transaction_type='MISC_LOAN_RETURN')
         context['return_logs'] = entries.filter(Q(destination__icontains=f"({self.object.pk})"))
         return context
