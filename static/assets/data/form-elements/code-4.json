@@ -1,6 +1,0 @@
-&lt;div class="form-group row mb-3"&gt;
-  &lt;label for="staticEmail" class="col-sm-2 col-form-label"&gt;Email&lt;/label&gt;
-  &lt;div class="col-sm-10"&gt;
-    &lt;input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"&gt;
-  &lt;/div&gt;
-&lt;/div&gt;

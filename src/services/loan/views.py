@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
@@ -132,7 +133,7 @@ class LenderDetailView(DetailView):
         return context
 
 
-class LenderCreateView(CreateView):
+class LenderCreateView(LoginRequiredMixin, CreateView):
     model = Lender
     fields = '__all__'
     success_url = reverse_lazy("loan:lenders")

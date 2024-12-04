@@ -1,8 +1,0 @@
-&lt;figure&gt;
-  &lt;blockquote class="blockquote"&gt;
-    &lt;p&gt;A well-known quote, contained in a blockquote element.&lt;/p&gt;
-  &lt;/blockquote&gt;
-  &lt;figcaption class="blockquote-footer"&gt;
-    Someone famous in &lt;cite title="Source Title"&gt;Source Title&lt;/cite&gt;
-  &lt;/figcaption&gt;
-&lt;/figure&gt;

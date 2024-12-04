@@ -1,5 +1,0 @@
-&lt;!-- large button --&gt;
-&lt;button type="button" class="btn btn-outline-theme btn-lg"&gt;Large button&lt;/button&gt;
-
-&lt;!-- small button --&gt;
-&lt;button type="button" class="btn btn-outline-theme btn-sm"&gt;Small button&lt;/button&gt;

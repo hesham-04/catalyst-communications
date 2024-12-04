@@ -1,7 +1,0 @@
-&lt;!-- active state --&gt;
-&lt;a href="#" class="btn btn-outline-theme btn-lg active"&gt;Primary link&lt;/a&gt;
-&lt;a href="#" class="btn btn-outline-secondary btn-lg active"&gt;Link&lt;/a&gt;
-
-&lt;!-- disabled state --&gt;
-&lt;button type="button" class="btn btn-lg btn-outline-theme" disabled&gt;Primary button&lt;/button&gt;
-&lt;button type="button" class="btn btn-outline-secondary btn-lg" disabled&gt;Button&lt;/button&gt;
