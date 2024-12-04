@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ledger',
             name='transaction_type',
-            field=models.CharField(choices=[('BUDGET_ASSIGN', 'Budget Assigned to Project'), ('TRANSFER', 'Funds Transfer'), ('CREATE_LOAN', 'Loan Created'), ('RETURN_LOAN', 'Loan Returned'), ('CREATE_EXPENSE', 'Expense Created'), ('CREATE_JOURNAL_EXPENSE', 'Journal Expense Created'), ('ADD_CASH', 'Added Cash'), ('INVOICE_PAYMENT', 'Invoice Paid')], max_length=50),
+            field=models.CharField(choices=[('BUDGET_ASSIGN', 'Budget Assigned to Project'), ('TRANSFER', 'Funds Transfer'), ('CREATE_LOAN', 'Loan Created'), ('RETURN_LOAN', 'Loan Returned'), ('CREATE_EXPENSE', 'Expense Created'), ('MISC_EXPENSE', 'Journal Expense Created'), ('ADD_CASH', 'Added Cash'), ('INVOICE_PAYMENT', 'Invoice Paid')], max_length=50),
         ),
     ]

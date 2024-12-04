@@ -111,3 +111,39 @@ class MiscLoanForm(forms.ModelForm):
     class Meta:
         model = MiscLoan
         fields = ['lender', 'loan_amount', 'interest_rate', 'reason', 'due_date', 'destination']
+
+
+class MiscLoanReturnForm(forms.Form):
+    return_amount = forms.DecimalField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter return amount'
+        }),
+        label="Return Amount",
+        max_digits=10,
+        decimal_places=2,
+    )
+    return_date = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={
+            'type': 'datetime-local',
+            'class': 'form-control',
+            'placeholder': 'Select date and time',
+        }),
+        label="Return Date",
+    )
+
+    source = forms.ModelChoiceField(
+        queryset=AccountBalance.objects.all(),
+        label="Source Account",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    remarks = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Optional remarks',
+            'rows': 3,
+        }),
+        label="Remarks",
+        required=False,
+    )

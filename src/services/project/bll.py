@@ -206,7 +206,7 @@ def create_journal_expense_calculations(category, reason, destination, amount, s
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(
-            transaction_type="CREATE_JOURNAL_EXPENSE",
+            transaction_type="MISC_EXPENSE",
             amount=amount,
             source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else f"Wallet: Cash In Hand ({cashinhand.pk})",
             destination=f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"Category: {category.name}",
@@ -216,8 +216,26 @@ def create_journal_expense_calculations(category, reason, destination, amount, s
 
 
     except Exception as e:
-        # Catch any unexpected exceptions
         return False, f"An error occurred while processing the payment: {str(e)}"
 
-    return True, "Transaction successful"
 
+def create_misc_loan(destination_account, source, reason, amount):
+    try:
+        var = destination_account.balance + amount
+        destination_account.save()
+
+        lender = Lender.objects.get(pk=source)
+
+        Ledger.objects.create(
+            transaction_type="MISC_LOAN_CREATE",
+            project=None,
+            amount=amount,
+            source=f"Loan: {lender.name} ({lender.pk})",
+            destination_account=f"Wallet: {destination_account.account_name} ({destination_account.pk})",
+            reason=reason,
+        )
+
+        return True, "Transaction successful"
+
+    except Exception as e:
+        return False, f"An error occurred while processing the payment: {str(e)}"
