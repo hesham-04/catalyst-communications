@@ -1,7 +1,9 @@
 from django.urls import path
 
+from .forms import MiscLoanReturnForm
 from .views import (
-    LendLoanView, ReturnLoanView, LoanListView, LenderListView,LenderDetailView, LenderCreateView, MiscLoanCreateView
+    LendLoanView, ReturnLoanView, LoanListView, LenderListView, LenderDetailView, LenderCreateView, MiscLoanCreateView,
+    MiscLoanReturnView,
 )
 
 app_name = 'loan'
@@ -16,5 +18,6 @@ urlpatterns = [
     path('lender/<str:pk>/', LenderDetailView.as_view(), name='lender-detail'),
 
     path('lend-misc-loan/<str:pk>/', MiscLoanCreateView.as_view(), name='lend-misc-loan'),
+    path('return-misc-loan/<str:pk>/', MiscLoanReturnView.as_view(), name='return-misc-loan'),
 
 ]

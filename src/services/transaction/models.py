@@ -3,6 +3,7 @@ from src.services.project.models import Project
 
 
 class Ledger(models.Model):
+
     TRANSACTION_TYPES = [
         ('BUDGET_ASSIGN', 'Budget Assigned to Project'), # From Main ACC to Project
         ('TRANSFER', 'Funds Transfer'), # Only from Project ACC to Project CASH

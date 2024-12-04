@@ -97,11 +97,11 @@
                                                     <span>{{ object.created_at|time:"h:ia" }}</span></td>
                                                 <td>
                                                     <span
-                                                            class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
+                                                            class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH'  or object.transaction_type == 'MISC_LOAN_RETURN' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
                                                     </span>
                                                 </td>
                                                 <td>{{ object.reason|slice:20 }}</td>
-                                                <td class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
+                                                <td class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' or object.transaction_type == 'MISC_LOAN_RETURN' %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
                                                 <td>{{ object.source }}</td>
                                                 <td>{{ object.destination }}</td>
 

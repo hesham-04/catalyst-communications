@@ -16,6 +16,7 @@ from .models import Project
 from ..invoice.models import Invoice
 from ..loan.models import Loan
 from ..transaction.models import Ledger
+from ...web.dashboard.utils import get_monthly_income_expense
 
 
 class ProjectView(TemplateView):
@@ -60,7 +61,13 @@ class ProjectDetailView(TemplateView):
     template_name = 'project/project_detail.html'
 
     def get_context_data(self, **kwargs):
+        income, expense = get_monthly_income_expense(project_id=kwargs['pk'])
+
+
+
         context = super().get_context_data(**kwargs)
+        context['income'] = income
+        context['expense'] = expense
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
         context['payable'] = Loan.calculate_total_unpaid_amount()
