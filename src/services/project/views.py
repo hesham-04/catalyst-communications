@@ -63,8 +63,6 @@ class ProjectDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         income, expense = get_monthly_income_expense(project_id=kwargs['pk'])
 
-
-
         context = super().get_context_data(**kwargs)
         context['income'] = income
         context['expense'] = expense

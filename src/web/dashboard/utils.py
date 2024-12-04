@@ -3,8 +3,11 @@ from django.db.models.functions import ExtractMonth
 from src.services.transaction.models import Ledger
 
 
-def get_monthly_income_expense(project_id):
-    transactions = Ledger.objects.filter(project_id=project_id)
+def get_monthly_income_expense(project_id=None):
+
+    transactions = Ledger.objects.all()
+    if project_id:
+        transactions = Ledger.objects.filter(project_id=project_id)
 
     monthly_income = (
         transactions.filter(transaction_type="INVOICE_PAYMENT")
