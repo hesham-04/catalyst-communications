@@ -9,10 +9,10 @@
                     <div class="col-sm-12">
                         <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                             <h4 class="page-title">
-                                <a class="btn btn-secondary btn-sm" href="{% url 'assets:accounts' %}"><i
+                                <a class="btn btn-secondary btn-sm me-2" href="{% url 'project:detail' project.pk %}"><i
                                         class="fa fa-arrow-left-long me-1"></i> Go Back</a>
 
-                                Assets</h4>
+                                Invoices</h4>
                             <div class="">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item"><a href="#">Catalyst</a>
@@ -24,45 +24,6 @@
                     </div><!--end col-->
                 </div><!--end row-->
 
-                <div class="card shadow-lg h-100 bg-black border">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-between">
-                                <p class="text-white text-uppercase mb-0 fw-semibold fs-14 mt-2">{{ object.account_name }}</p>
-{#                                <a href="{% url 'assets:add-cash-in-hand' %}">#}
-{#                                    <div class="btn btn-primary float-end"> Add Cash in Hand</div>#}
-{#                                </a>#}
-                            </div>
-                            <!--end col-->
-                        </div><!--end row-->
-                        <div class="row mt-3 mb-1">
-                            <div class="col-9">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Balance</p>
-                                <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white">{{ object.balance }}<small>
-                                    PKR</small></h5>
-                            </div>
-                            <!--end col-->
-                            <div class="col-3 align-self-center text-end">
-                                <i class="iconoir-wifi fs-24 trans-90 text-muted"></i>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body-->
-                    <div class="card-body p-2 bg-light rounded-bottom">
-                        <div class="row">
-                            <div class="col-6">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">
-                                    Started: {{ object.created_at }}</p>
-                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Catalyst Communications </h5>
-                            </div>
-                            <!--end col-->
-                            <div class="col-6 align-self-center text-end">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Starting
-                                    Balance: {{ object.starting_balance }}</p>
-                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">**** **** **** TLOS</h5>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body-->
-                </div>
 
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -82,33 +43,42 @@
                                     <table class="table mb-0">
                                         <thead class="table-light">
                                         <tr>
-                                            <th class="border-top-0">Date</th>
-                                            <th class="border-top-0">Type</th>
-                                            <th class="border-top-0">Description</th>
-                                            <th class="border-top-0">Amount</th>
-                                            <th class="border-top-0">Source</th>
-                                            <th class="border-top-0">Destination</th>
+                                            <th class="border-top-0">Invoice Number</th>
+                                            <th class="border-top-0">Issue Date</th>
+                                            <th class="border-top-0">Total Amount</th>
+                                            <th class="border-top-0">Status</th>
+                                            <th class="border-top-0">Items</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for object in object_list %}
+                                        {% for invoice in object_list %}
                                             <tr>
-                                                <td>{{ object.created_at|date:"d M Y" }}
-                                                    <span>{{ object.created_at|time:"h:ia" }}</span></td>
                                                 <td>
-                                                    <span
-                                                            class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
-                                                    </span>
+                                                    <a href="{% url 'invoice:detail' invoice.pk %}">{{ invoice.invoice_number }}</a>
                                                 </td>
-                                                <td>{{ object.reason|slice:20 }}</td>
-                                                <td class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
-                                                <td>{{ object.source }}</td>
-                                                <td>{{ object.destination }}</td>
+                                                <td>{{ invoice.date|date:"d M Y" }}
+                                                <td>{{ invoice.total_amount }} PKR</td>
+                                                <td>
+                                                    {% if invoice.status == 'PAID' %}
 
+                                                        <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2 ms-1">
+                                                            {{ invoice.status }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">
+                                                            {{ invoice.status }}
+                                                        </span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {{ invoice.items.count }}
+                                                </td>
                                             </tr>
                                         {% empty %}
                                             <tr>
-                                                <td colspan="5">No objects available.</td>
+                                                <td colspan="5" class="text-center">No invoices recorded for this
+                                                    project.
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -160,7 +130,6 @@
                     </div>
 
                 </div>
-
 
             </div>
         </div>

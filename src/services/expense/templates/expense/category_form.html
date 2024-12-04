@@ -12,7 +12,9 @@
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        <a class="btn btn-secondary " href="{% url 'expense:expense-category-list' %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                                                <button class="btn btn-primary float-end" type="submit">Save</button>
+
                     </form>
                 </div>
 

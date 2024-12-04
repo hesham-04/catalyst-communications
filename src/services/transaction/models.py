@@ -4,17 +4,23 @@ from src.services.project.models import Project
 
 class Ledger(models.Model):
     TRANSACTION_TYPES = [
-        ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
+        ('BUDGET_ASSIGN', 'Budget Assigned to Project'), # From Main ACC to Project
         ('TRANSFER', 'Funds Transfer'), # Only from Project ACC to Project CASH
 
-        ('CREATE_LOAN', 'Loan Created'),
-        ('RETURN_LOAN', 'Loan Returned'),
+        ('CREATE_LOAN', 'Loan Created'), # Project Loan
+        ('RETURN_LOAN', 'Loan Returned'), # Return
+
+        ('MISC_LOAN_CREATE', "Miscellaneous Loan"),
+        ('MISC_LOAN_RETURN', "Miscellaneous Loan Return"),
 
         ('CREATE_EXPENSE', 'Expense Created'),
-        ('CREATE_JOURNAL_EXPENSE', 'Journal Expense Created'),
+        ('MISC_EXPENSE', ' Miscellaneous Expense Created'),
+
+
         ('ADD_CASH', 'Added Cash'), # Cash Added to The General Cash in Hand
 
-        ('INVOICE_PAYMENT', 'Invoice Paid')
+        ('INVOICE_PAYMENT', 'Invoice Paid'),
+        ('ADD_ACC_BALANCE', 'Balance Added')
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)

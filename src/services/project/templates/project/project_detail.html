@@ -14,8 +14,12 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a href="{% url 'project:index' %}"><div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left-long me-1"></i>Go Back</div></a>
-                        Project Detail</h4>
+                        <a href="{% url 'project:index' %}">
+                            <div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left-long me-1"></i>Go Back
+                            </div>
+                        </a>
+                        Project Detail
+                    </h4>
                     <div class="">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
@@ -34,46 +38,49 @@
                                         <h4 class="card-title">{{ project.project_name }}</h4>
                                     </div><!--end col-->
                                     <div class="col-auto">
-                                        <a href="{% url 'project:update' project.pk  %}"
+                                        <a href="{% url 'project:update' project.pk %}"
                                            class="float-end text-muted d-inline-flex text-decoration-underline"><i
                                                 class="iconoir-edit-pencil fs-18 me-1"></i>Edit</a>
                                     </div><!--end col-->
                                 </div>  <!--end row-->
                             </div><!--end card-header-->
                             <div class="card-body pt-0">
-                                <p class="text-muted fw-medium mb-3">{{ project.description|slice:150 }}...</p>
+                                <p class="text-muted fw-medium mb-3">{{ project.description|slice:100 }}...</p>
                                 <ul class="list-unstyled mb-0">
-                                    <li class="">
-                                        <i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
-                                        <b> Client Name </b>:
-                                            {{ project.customer.get_full_name }}
-                                    </li>
-                                    <li class="mt-2"><i
-                                            class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
-                                        <b> Project status </b> : <span
-                                                class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
-                                        {{ project.get_project_status_display }}</span>
-                                    </li>
-                                    <li class="mt-2"><i
-                                            class="las la-university me-2 text-secondary fs-22 align-middle"></i> <b>
-                                        Payment Status </b> : <span
-                                            class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Paid</span>
-                                    </li>
-                                    <li class="mt-2"><i
-                                            class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-                                        <b> Address </b> :{% if project.get_address %}
-                                            {{ project.get_address }} {% else %} No Address {% endif %}
-                                    </li>
-                                    <li class="mt-2"><i class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
-                                        <b>
-                                            Phone </b> : {{ project.customer.phone }}
-                                    </li>
-                                    <li class="mt-2"><i
-                                            class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
-                                        <b> Email </b> : {{ project.customer.email }}
-                                    </li>
 
+                                    <div class="row d-flex">
+
+                                        <div class="col-md-6">
+                                            <li class="mt-2">
+                                                <i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
+                                                <b> Client Name </b>:
+                                                {{ project.customer.get_full_name }}
+                                            </li>
+                                            <li class="mt-2"><i
+                                                    class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
+                                                <b> Project status </b> : <span
+                                                        class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
+                                        {{ project.get_project_status_display }}</span>
+                                            </li>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <li class="mt-2"><i
+                                                    class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
+                                                <b>
+                                                    Phone </b> : {{ project.customer.phone }}
+                                            </li>
+                                            <li class="mt-2"><i
+                                                    class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                                <b> Email </b> : {{ project.customer.email }}
+                                            </li>
+                                        </div>
+
+                                    </div>
                                 </ul>
+
+                                <div id="chart" class="row mt-3">
+                                    <canvas id="projectChart" style="max-height: 190px; max-width: 750px;"></canvas>
+                                </div>
 
                             </div><!--end card-body-->
                         </div>
@@ -83,10 +90,11 @@
                             <div class="card bg-globe-img">
                                 <div class="card-body">
                                     <div>
-                                        <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }}<small
+                                        <h4 class="my-2 fs-24 fw-semibold mb-3">{{ project.get_total_budget }}<small
                                                 class="font-14"> PKR </small></h4>
 
-                                        <a class=" btn btn-soft-secondary" href="{% url 'project:finances' project.pk %}">Manage Finances</a>
+                                        <a class=" btn btn-soft-secondary"
+                                           href="{% url 'project:finances' project.pk %}">Manage Finances</a>
 
                                         <a href="{% url 'project:add_budget' pk=project.id %}"
                                            class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Create
@@ -102,35 +110,35 @@
                                             Expense</a>
 
                                     </div>
-                                    <div class="row mt-3">
+                                    <div class="row mt-3  mb-2">
                                         <span class="fs-16 fw-semibold mb-3 ">Project Assets</span>
 
                                         <div class="col-3">
                                             <div class="p-2 border-dashed border-primary rounded">
-                                                <h5 class="mt-1 mb-0 fw-medium">{{ project.project_account_balance }}
+                                                <h5 class="mt-1 mb-0 fw-medium text-primary">{{ project.project_account_balance }}
                                                     PKR</h5>
-                                                <small class="text-dark">Account Balance</small>
+                                                <small class="text-primary">Account Balance</small>
                                             </div>
                                         </div><!--end col-->
 
                                         <div class="col-3">
-                                            <div class="p-2 border-dashed border-danger rounded">
+                                            <div class="p-2 border-dashed border-dark rounded">
                                                 <h5 class="mt-1 mb-0 fw-medium">{{ project.project_cash }} PKR</h5>
                                                 <small class="text-dark">Cash In Hand</small>
                                             </div>
                                         </div><!--end col-->
 
                                         <div class="col-3">
-                                            <div class="p-2 border-dashed border-warning rounded">
-                                                <h5 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h5>
+                                            <div class="p-2 border-dashed border-danger rounded">
+                                                <h5 class="mt-1 mb-0 fw-medium text-danger ">{{ payable }} PKR</h5>
                                                 <small class="text-danger">Payables</small>
                                             </div>
                                         </div>
                                         <div class="col-3">
-                                            <div class="p-2 border-dashed border-warning rounded ">
-                                                <h5 class="mt-1 mb-0 fw-medium">{{ receivables }}
+                                            <div class="p-2 border-dashed border-success rounded ">
+                                                <h5 class="mt-1 mb-0 fw-medium text-success">{{ receivables }}
                                                     PKR</h5>
-                                                <small class="text-dark">Received (Invoiced)</small>
+                                                <small class="text-success">Received (Invoiced)</small>
                                             </div>
                                         </div><!--end col-->
                                     </div>
@@ -142,7 +150,7 @@
                                                 Invoice</a>
                                             {% if project.quotation %}
                                                 <a href="{% url 'quotation:print' pk=project.quotation.quotation_id %}"
-                                                   class="btn btn-soft-primary ms-3" >View Quotation</a>
+                                                   class="btn btn-soft-primary ms-3">View Quotation</a>
                                             {% else %}
                                                 <a href="{% url 'quotation:create_quotation' pk=project.id %}"
                                                    class="btn  btn-danger ms-3">Create Quote</a>
@@ -180,10 +188,10 @@
                                                 </div>
                                             {% else %}
                                             {% endif %}
-                                            {% if project.project_status == 'IP' %}
-                                                <a href="{% url 'loan:lend_loan' pk=project.id %}"
-                                                   class="btn btn-success ms-3 ms-auto {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>
-                                            {% endif %}
+{#                                            {% if project.project_status == 'IP' %}#}
+{#                                                <a href="{% url 'loan:lend_loan' pk=project.id %}"#}
+{#                                                   class="btn btn-success ms-3 ms-auto {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>#}
+{#                                            {% endif %}#}
 
                                         </div>
                                     </div>
@@ -206,7 +214,14 @@
                         <div class="col-md-12">
                             <div class="card shadow-lg">
                                 <div class="card-body">
-                                    <h4 class="card-title">Expense Summary</h4>
+                                    <div class="row d-flex">
+                                        <div class="col-md-6">
+                                            <h4 class="card-title mt-1">Expense Summary</h4>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <a href="{% url 'project:expenses' project.pk %}" class="btn btn-soft-warning float-end mb-1">All Expenses</a>
+                                        </div>
+                                    </div>
                                     <table class="table mb-0">
                                         <thead class="table-light">
                                         <tr>
@@ -257,7 +272,14 @@
                             <div class="col-md-12">
                                 <div class="card shadow-lg">
                                     <div class="card-body">
-                                        <h4 class="card-title">Invoice Summary</h4>
+                                        <div class="row d-flex">
+                                            <div class="col-md-6">
+                                                <h4 class="card-title mt-1">Invoice Summary</h4>
+                                            </div>
+                                            <div class="col-md-6 ">
+                                                <a href="{% url 'project:invoices' project.pk %}" class="btn btn-soft-danger float-end mb-1">All Invoices</a>
+                                            </div>
+                                        </div>
                                         <table class="table mb-0">
                                             <thead class="table-light">
                                             <tr>
@@ -312,5 +334,59 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get the context of the canvas element
+        var ctx = document.getElementById('projectChart').getContext('2d');
+
+        // Sample data for 12 months
+        var months = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+
+        // Randomized expense and profit data for each month (replace this with actual data)
+        var expenses = [500, 600, 400, 700, 800, 650, 900, 750, 300, 500, 450, 700];
+        var profits = [200, 300, 150, 250, 300, 200, 400, 350, 100, 200, 150, 300];
+
+        // Create the chart
+        var projectChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Expense (PKR)',
+                        data: expenses,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Income (PKR)',
+                        data: profits,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (PKR)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
 
 {% endblock %}

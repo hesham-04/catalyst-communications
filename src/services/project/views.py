@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -12,10 +14,8 @@ from .forms import AddBudgetForm, CreateProjectCashForm
 from .forms import ProjectForm
 from .models import Project
 from ..invoice.models import Invoice
+from ..loan.models import Loan
 from ..transaction.models import Ledger
-
-from django.core.paginator import Paginator
-from django.db.models import Q
 
 
 class ProjectView(TemplateView):
@@ -46,7 +46,6 @@ class ProjectUpdateView(UpdateView):
     fields = ['project_name', 'description']
 
 
-
 class ProjecCreateView(CreateView):
     template_name = 'project/project_form.html'
     form_class = ProjectForm
@@ -64,7 +63,7 @@ class ProjectDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
-        context['payable'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
+        context['payable'] = Loan.calculate_total_unpaid_amount()
         context['receivables'] = Invoice.calculate_total_receieved(project_id=kwargs['pk'])
         return context
 
@@ -158,8 +157,9 @@ class ProjectFinances(View):
         visible_transaction_types = [
             ('BUDGET_ASSIGN', 'Budget Assigned to Project'),
             ('CREATE_EXPENSE', 'Expense Created'),
-            ('PAY_EXPENSE', 'Expense Paid'),
             ('INVOICE_PAYMENT', 'Invoice Paid'),
+            ('TRANSFER', 'Funds Transfer'),  # Only from Project ACC to Project CASH
+
             ('CREATE_LOAN', 'Loan Created'),
             ('RETURN_LOAN', 'Loan Returned'),
         ]
@@ -169,7 +169,6 @@ class ProjectFinances(View):
             transaction_type='BUDGET_ASSIGN'
         )
 
-        budget_from_invoice = Invoice.objects.filter(status='PAID')
         total_budget_assigned = budget_assign_transactions.aggregate(Sum('amount'))['amount__sum'] or 0
 
         Expense.calculate_total_expenses(project_id=project.pk)
@@ -181,7 +180,9 @@ class ProjectFinances(View):
             "selected_transaction_type": transaction_filter,
             'budget_assigned': total_budget_assigned,
             'money_form_invoice': Invoice.calculate_total_receieved(project_id=project.pk),
-            'Project_expenditure': Expense.calculate_total_expenses(project_id=project.pk)
+            'invoice_receivables': Invoice.calculate_total_receivables(project_id=project.pk),
+            'project_expenditure': Expense.calculate_total_expenses(project_id=project.pk),
+            'loans': Loan.calculate_total_unpaid_amount(pk=project.pk),
         }
         return render(request, self.template_name, context)
 
@@ -225,3 +226,42 @@ class CreateProjectCash(FormView):
 
     def get_success_url(self):
         return reverse_lazy('project:detail', kwargs={'pk': self.kwargs.pk})
+
+
+class ProjectExpensesView(TemplateView):
+    template_name = 'project/project_expenses.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        object_list = Ledger.objects.filter(
+            Q(transaction_type='CREATE_EXPENSE') | Q(transaction_type='RETURN_LOAN'),
+            project_id=self.kwargs['pk'],
+        )
+        project = Project.objects.get(pk=self.kwargs['pk'])
+
+        paginator = Paginator(object_list, 20)
+        page = self.request.GET.get('page')
+        paginated_object_list = paginator.get_page(page)
+
+        context['object_list'] = paginated_object_list
+        context['project'] = project
+        return context
+
+
+class ProjectInvoiceView(TemplateView):
+    template_name = 'project/project_invoice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        object_list = Invoice.objects.filter(project=self.kwargs['pk'])
+        _project = Project.objects.get(pk=self.kwargs['pk'])
+
+        paginator = Paginator(object_list, 20)
+        page = self.request.GET.get('page')
+        paginated_object_list = paginator.get_page(page)
+
+        context['object_list'] = paginated_object_list
+        context['project'] = _project
+        return context

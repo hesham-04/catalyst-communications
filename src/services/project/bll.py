@@ -1,4 +1,5 @@
 from django.db import transaction
+
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
@@ -20,7 +21,6 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
 
     """
 
-
     # Handle destination addition
     project = Project.objects.select_for_update().get(pk=project_id)
     project.project_account_balance += amount
@@ -33,8 +33,6 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         raise ValueError("Insufficient account balance.")
     account.balance -= amount
     account.save()
-
-
 
     # Record the transaction in the ledger
     Ledger.objects.create(
@@ -54,6 +52,7 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         "destination": destination,
     }
 
+
 @transaction.atomic
 def add_loan_to_project(project_id, amount, source, reason, destination=None):
     project = Project.objects.select_for_update().get(pk=project_id)
@@ -64,8 +63,6 @@ def add_loan_to_project(project_id, amount, source, reason, destination=None):
 
     lender = Lender.objects.get(pk=source.pk)
 
-
-
     Ledger.objects.create(
         transaction_type="CREATE_LOAN",
         project=project,
@@ -74,6 +71,7 @@ def add_loan_to_project(project_id, amount, source, reason, destination=None):
         destination=f"Project: {project.project_name} ACC ({project.pk})",
         reason=reason
     )
+
 
 @transaction.atomic
 def return_loan_to_lender(loan_id, project_id, amount, source, destination, reason):
@@ -90,14 +88,13 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
 
     project.save()
 
-
     Expense.objects.create(
         project=project,
         description="Loan return",
         amount=amount,
         budget_source='Project ACC',
         category=None,
-        vendor=None, #destination
+        vendor=None,  # destination
         payment_status=Expense.PaymentStatus.PAID
     )
 
@@ -110,6 +107,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         reason=reason
     )
 
+
 @transaction.atomic
 def create_expense_calculations(project_id, amount, budget_source, destination, reason=None):
     project = Project.objects.select_for_update().get(pk=project_id)
@@ -121,7 +119,9 @@ def create_expense_calculations(project_id, amount, budget_source, destination, 
         project.project_account_balance -= amount
 
     project.save()
-    vendor=Vendor.objects.get(pk=destination)
+    vendor = Vendor.objects.get(pk=destination)
+    vendor.total_expense += amount
+    vendor.save()
 
     Ledger.objects.create(
         transaction_type="CREATE_EXPENSE",
@@ -131,6 +131,7 @@ def create_expense_calculations(project_id, amount, budget_source, destination, 
         destination=f"Vendor: {vendor.name} ({vendor.pk})",
         reason=reason,
     )
+
 
 @transaction.atomic
 def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None):
@@ -154,6 +155,7 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
         reason=reason,
     )
 
+
 @transaction.atomic
 def process_invoice_payment(invoice_id, destination, amount, account_id=None):
     try:
@@ -169,8 +171,6 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
             account.balance += amount
             account.save(update_fields=['balance'])
 
-
-
         Ledger.objects.create(
             transaction_type="INVOICE_PAYMENT",
             project=invoice.project,
@@ -180,14 +180,11 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
             reason=ledger_reason
         )
 
-
-
         return True, "Invoice successfully paid and funds transferred."
 
     except Exception as e:
         # Handle unexpected errors
         return False, f"An error occurred while processing the payment: {str(e)}"
-
 
 
 @transaction.atomic
@@ -203,20 +200,42 @@ def create_journal_expense_calculations(category, reason, destination, amount, s
             cashinhand.save(update_fields=['balance'])
 
         vendor = Vendor.objects.get(pk=destination) if destination else None
+        if vendor:
+            vendor.total_expense += amount
+            vendor.save(update_fields=['total_expense'])
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(
-            transaction_type="CREATE_JOURNAL_EXPENSE",
+            transaction_type="MISC_EXPENSE",
             amount=amount,
             source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else f"Wallet: Cash In Hand ({cashinhand.pk})",
             destination=f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"Category: {category.name}",
-            reason=reason + " " +category.name
+            reason=reason + " " + category.name
         )
         return True, "Journal Entry Successfully created"
 
 
     except Exception as e:
-        # Catch any unexpected exceptions
         return False, f"An error occurred while processing the payment: {str(e)}"
 
-    return True, "Transaction successful"
+
+def create_misc_loan(destination_account, source, reason, amount):
+    try:
+        var = destination_account.balance + amount
+        destination_account.save()
+
+        lender = Lender.objects.get(pk=source)
+
+        Ledger.objects.create(
+            transaction_type="MISC_LOAN_CREATE",
+            project=None,
+            amount=amount,
+            source=f"Loan: {lender.name} ({lender.pk})",
+            destination_account=f"Wallet: {destination_account.account_name} ({destination_account.pk})",
+            reason=reason,
+        )
+
+        return True, "Transaction successful"
+
+    except Exception as e:
+        return False, f"An error occurred while processing the payment: {str(e)}"

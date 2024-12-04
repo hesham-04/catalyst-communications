@@ -2,403 +2,370 @@
 {% load static %}
 
 {% block content %}
-<div class="page-wrapper">
 
-    <!-- Page Content-->
-    <div class="page-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                        <h4 class="page-title">Dashboard</h4>
-                        <div class="">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="#">Catalyst</a>
-                                </li><!--end nav-item-->
-                                <li class="breadcrumb-item active">Dashboard</li>
-                            </ol>
-                        </div>
-                    </div><!--end page-title-box-->
-                </div><!--end col-->
-            </div><!--end row-->
-            <div class="row ">
-                <div class="col-md-6">
-                            <div class="card bg-globe-img">
-                                <div class="card-body">
-                                    <div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fs-16 fw-semibold">Total Balance</span>
-                                            <form class="">
-                                                <select id="dynamic-select" name="example-select"
-                                                        data-placeholder="Select an option" data-dynamic-select>
-                                                    <option value="1" data-img="{% static 'website/images/logos/m-card.png' %}">CASH
-                                                    </option>
-                                                    <option value="2" data-img="{% static 'website/images/logos/ame-bank.png' %}">ACC
-                                                    </option>
-                                                </select>
-                                            </form>
-                                        </div>
 
-                                        <h4 class="my-2 fs-24 fw-semibold">{{ total_balance }} <small
-                                                class="font-14">PKR</small></h4>
-                                        <p class="mb-3 text-muted fw-semibold">
-                                            <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
-                                            Outstanding balance boost
-                                        </p>
-                                        <button type="submit" class="btn btn-soft-primary"><a href="{% url 'assets:index' %}">All Wallets</a></button>
-                                        <a href="{% url 'expense:index' %}"><button type="button" class="btn btn-soft-danger">Transactions</button></a>
-                                    </div>
-                                </div><!--end card-body-->
-                            </div><!--end card-->
-                        </div>
-                <div class="col-lg-6">
-                    <div class="row justify-content-center">
-                        <div class="col-md-6 col-lg-6">
-                            <div class="card bg-corner-img">
-                                <div class="card-body">
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-9">
-                                            <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Cash IN HAND</p>
-                                            <h4 class="mt-1 mb-0 fw-medium">{{ cash_in_hand }} PKR</h4>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-3 align-self-center">
-                                            <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-primary rounded mx-auto">
-                                                <i class="iconoir-dollar-circle fs-22 align-self-center mb-0 text-primary"></i>
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                    </div>
-                                    <!--end row-->
-                                </div>
-                                <!--end card-body-->
-                            </div>
-                            <!--end card-->
-                        </div>
-                        <!--end col-->
-                        <div class="col-md-6 col-lg-6">
-                            <div class="card bg-corner-img">
-                                <div class="card-body">
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-9">
-                                            <p class="text-muted text-uppercase mb-0 fw-normal fs-13">ACCOUNT BALANCE</p>
-                                            <h4 class="mt-1 mb-0 fw-medium">{{ account_balance }} PKR</h4>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-3 align-self-center">
-                                            <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-info rounded mx-auto">
-                                                <i class="iconoir-cart fs-22 align-self-center mb-0 text-info"></i>
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                    </div>
-                                    <!--end row-->
-                                </div>
-                                <!--end card-body-->
-                            </div>
-                            <!--end card-->
-                        </div>
-                        <!--end col-->
-                        <div class="col-md-6 col-lg-6">
-                            <div class="card bg-corner-img">
-                                <div class="card-body">
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-9">
-                                            <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Accounts Payables</p>
-                                            <h4 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h4>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-3 align-self-center">
-                                            <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-warning rounded mx-auto">
-                                                <i class="iconoir-percentage-circle fs-22 align-self-center mb-0 text-warning"></i>
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                    </div>
-                                    <!--end row-->
-                                </div>
-                                <!--end card-body-->
-                            </div>
-                            <!--end card-->
-                        </div>
-                        <!--end col-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.1.0/apexcharts.min.js"
+            integrity="sha512-pX8wly6uaNHjO2Idm8xpq7Fu52iU/F3IK2rS8vTUlw7138ZsDCgfljwotyOpQxycTqK4MryB4Pv7ArDmzx7sPQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <div class="page-wrapper">
 
-                        <div class="col-md-6 col-lg-6">
-                            <div class="card bg-corner-img">
-                                <div class="card-body">
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-9">
-                                            <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Receivables</p>
-                                            <h4 class="mt-1 mb-0 fw-medium">{{ receivables }} PKR</h4>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-3 align-self-center">
-                                            <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-danger rounded mx-auto">
-                                                <i class="iconoir-hexagon-dice fs-22 align-self-center mb-0 text-danger"></i>
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                    </div>
-                                    <!--end row-->
-                                </div>
-                                <!--end card-body-->
-                            </div>
-                            <!--end card-->
-                        </div><!--end col-->
-                    </div>
-                    <!--end row-->
-                </div>
-                <!--end col-->
-                <!--end col-->
-
-            </div><!--end row-->
-
-            <div class="row justify-content-center">
-
-                <div class="col-md-12 col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title">Monthly Income & Expense Report</h4>
-                                </div><!--end col-->
-                                <div class="col-auto">
-{#                                    <div class="dropdown">#}
-{#                                        <a href="#" class="btn bt btn-light dropdown-toggle" data-bs-toggle="dropdown"#}
-{#                                           aria-haspopup="true" aria-expanded="false">#}
-{#                                            <i class="icofont-calendar fs-5 me-1"></i> This Month<i#}
-{#                                                class="las la-angle-down ms-1"></i>#}
-{#                                        </a>#}
-{#                                        <div class="dropdown-menu dropdown-menu-end">#}
-{#                                            <a class="dropdown-item" href="#">Today</a>#}
-{#                                            <a class="dropdown-item" href="#">Last Week</a>#}
-{#                                            <a class="dropdown-item" href="#">Last Month</a>#}
-{#                                            <a class="dropdown-item" href="#">This Year</a>#}
-{#                                        </div>#}
-{#                                    </div>#}
-                                </div><!--end col-->
-                            </div>  <!--end row-->
-                        </div><!--end card-header-->
-                        <div class="card-body pt-0">
-                            <div id="reports" class="apex-charts pill-bar"></div>
-                        </div>
-                        <!--end card-body-->
-                    </div>
-                    <!--end card-->
-                </div>
-                <!--end col-->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title">Top Vendors:</h4>
-                                </div><!--end col-->
-                            </div>  <!--end row-->
-                        </div><!--end card-header-->
-                        <div class="card-body pt-0">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <tbody>
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    </tbody>
-                                </table> <!--end table-->
-                            </div><!--end /div-->
-                            <hr class="hr-dashed">
-                            <div class="row">
-                                <div class="col-lg-6 text-center">
-                                    <div class="p-2 border-dashed border-theme-color rounded">
-                                        <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Higher Rate</p>
-                                        <h5 class="mt-1 mb-0 fw-medium text-success">0.833658</h5>
-                                        <small>05 Sep 2024</small>
-                                    </div>
-                                </div><!--end col-->
-                                <div class="col-lg-6 text-center">
-                                    <div class="p-2 border-dashed border-theme-color rounded">
-                                        <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Lower Rate</p>
-                                        <h5 class="mt-1 mb-0 fw-medium text-danger">0.812547</h5>
-                                        <small>05 Sep 2024</small>
-                                    </div>
-                                </div><!--end col-->
-                            </div><!--end row-->
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title">Top Vendors:</h4>
-                                </div><!--end col-->
-                            </div>  <!--end row-->
-                        </div><!--end card-header-->
-                        <div class="card-body pt-0">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <tbody>
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    <tr class="">
-                                        <td class="px-0">
-                                            <div class="d-flex align-items-center">
-                                                <h6 class="m-0 text-truncate">National Bank</h6>
-                                            </div><!--end media-->
-                                        </td>
-                                        <td class="px-0 text-end"><span
-                                                class="text-body ps-2 align-self-center text-end fw-medium">0.835230 <span
-                                                class="badge rounded text-success bg-success-subtle">1.10%</span></span>
-                                        </td>
-                                    </tr><!--end tr-->
-                                    </tbody>
-                                </table> <!--end table-->
-                            </div><!--end /div-->
-                            <hr class="hr-dashed">
-                            <div class="row">
-                                <div class="col-lg-6 text-center">
-                                    <div class="p-2 border-dashed border-theme-color rounded">
-                                        <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Higher Rate</p>
-                                        <h5 class="mt-1 mb-0 fw-medium text-success">0.833658</h5>
-                                        <small>05 Sep 2024</small>
-                                    </div>
-                                </div><!--end col-->
-                                <div class="col-lg-6 text-center">
-                                    <div class="p-2 border-dashed border-theme-color rounded">
-                                        <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Lower Rate</p>
-                                        <h5 class="mt-1 mb-0 fw-medium text-danger">0.812547</h5>
-                                        <small>05 Sep 2024</small>
-                                    </div>
-                                </div><!--end col-->
-                            </div><!--end row-->
-                        </div><!--end card-body-->
-                    </div><!--end card-->
-                </div> <!--end col-->
-            </div><!--end row-->
-
-        </div><!-- container -->
-
-        <!--Start Footer-->
-
-        <footer class="footer text-center text-sm-start d-print-none">
+        <!-- Page Content-->
+        <div class="page-content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="card mb-0 rounded-bottom-0">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">Dashboard</h4>
+                            <div class="">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="#">Catalyst</a>
+                                    </li><!--end nav-item-->
+                                    <li class="breadcrumb-item active">Dashboard</li>
+                                </ol>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
+                <div class="row ">
+                    <div class="col-md-6">
+                        <div class="card bg-globe-img">
                             <div class="card-body">
-                                <p class="text-muted mb-0">
-                                    © 2024
-                                    Exarth
-                                    <span
-                                            class="text-muted d-none d-sm-inline-block float-end">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fs-16 fw-semibold">Total Balance</span>
+                                        <form class="">
+                                            <select id="dynamic-select" name="example-select"
+                                                    data-placeholder="Select an option" data-dynamic-select>
+                                                <option value="1"
+                                                        data-img="{% static 'website/images/logos/m-card.png' %}">CASH
+                                                </option>
+                                                <option value="2"
+                                                        data-img="{% static 'website/images/logos/ame-bank.png' %}">ACC
+                                                </option>
+                                            </select>
+                                        </form>
+                                    </div>
+
+                                    <h4 class="my-2 fs-24 fw-semibold">{{ total_balance }} <small
+                                            class="font-14">PKR</small></h4>
+                                    <p class="mb-3 text-muted fw-semibold">
+                                        <span class="text-success"><i class="fas fa-arrow-up me-1"></i>11.1%</span>
+                                        Outstanding balance boost
+                                    </p>
+                                    <button type="submit" class="btn btn-soft-primary"><a
+                                            href="{% url 'assets:index' %}">All Wallets</a></button>
+                                    <a href="{% url 'expense:index' %}">
+                                        <button type="button" class="btn btn-soft-danger">Transactions</button>
+                                    </a>
+                                </div>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="card bg-corner-img">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-9">
+                                                <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Cash IN
+                                                    HAND</p>
+                                                <h4 class="mt-1 mb-0 fw-medium">{{ cash_in_hand }} PKR</h4>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-3 align-self-center">
+                                                <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-primary rounded mx-auto">
+                                                    <i class="iconoir-dollar-circle fs-22 align-self-center mb-0 text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    <!--end card-body-->
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <!--end col-->
+                            <div class="col-md-6 col-lg-6">
+                                <div class="card bg-corner-img">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-9">
+                                                <p class="text-muted text-uppercase mb-0 fw-normal fs-13">ACCOUNT
+                                                    BALANCE</p>
+                                                <h4 class="mt-1 mb-0 fw-medium">{{ account_balance }} PKR</h4>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-3 align-self-center">
+                                                <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-info rounded mx-auto">
+                                                    <i class="iconoir-cart fs-22 align-self-center mb-0 text-info"></i>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    <!--end card-body-->
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <!--end col-->
+                            <div class="col-md-6 col-lg-6">
+                                <div class="card bg-corner-img">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-9">
+                                                <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Accounts
+                                                    Payables (Loans)</p>
+                                                <h4 class="mt-1 mb-0 fw-medium">{{ payable }} PKR</h4>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-3 align-self-center">
+                                                <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-warning rounded mx-auto">
+                                                    <i class="iconoir-percentage-circle fs-22 align-self-center mb-0 text-warning"></i>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    <!--end card-body-->
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <!--end col-->
+
+                            <div class="col-md-6 col-lg-6">
+                                <div class="card bg-corner-img">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-9">
+                                                <p class="text-muted text-uppercase mb-0 fw-normal fs-13">
+                                                    Receivables (Unpaid Invoices)</p>
+                                                <h4 class="mt-1 mb-0 fw-medium">{{ receivables }} PKR</h4>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-3 align-self-center">
+                                                <div class="d-flex justify-content-center align-items-center thumb-md border-dashed border-danger rounded mx-auto">
+                                                    <i class="iconoir-hexagon-dice fs-22 align-self-center mb-0 text-danger"></i>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    <!--end card-body-->
+                                </div>
+                                <!--end card-->
+                            </div><!--end col-->
+                        </div>
+                        <!--end row-->
+                    </div>
+                    <!--end col-->
+                    <!--end col-->
+
+                </div><!--end row-->
+
+                <div class="row justify-content-center">
+
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Monthly Income & Expense Report</h4>
+                                    </div><!--end col-->
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div id="newChart"></div>
+                            </div>
+                            <!--end card-body-->
+                        </div>
+                        <!--end card-->
+                    </div>
+                    <!--end col-->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Top Vendors:</h4>
+                                    </div><!--end col-->
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <tbody>
+                                        {% for object in top_vendors %}
+                                            <tr class="">
+                                                <td class="px-0">
+                                                    <div class="d-flex align-items-center">
+                                                        <h6 class="m-0 text-truncate">{{ object.name }}</h6>
+                                                    </div><!--end media-->
+                                                </td>
+                                                <td class="px-0 text-end"><span
+                                                        class="badge rounded text-danger bg-danger-subtle">{{ object.total_expense }} PKR</span>
+                                                </td>
+                                            </tr><!--end tr-->
+                                        {% empty %}
+                                            <tr>
+                                                <p>
+                                                    No Top vendors found
+                                                </p>
+                                            </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table> <!--end table-->
+                                </div><!--end /div-->
+                                <hr class="hr-dashed">
+                                {#                            <div class="row">#}
+                                {#                                <div class="col-lg-6 text-center">#}
+                                {#                                    <div class="p-2 border-dashed border-theme-color rounded">#}
+                                {#                                        <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Higher Rate</p>#}
+                                {#                                        <h5 class="mt-1 mb-0 fw-medium text-success">0.833658</h5>#}
+                                {#                                        <small>05 Sep 2024</small>#}
+                                {#                                    </div>#}
+                                {#                                </div><!--end col-->#}
+                                {#                                <div class="col-lg-6 text-center">#}
+                                {#                                    <div class="p-2 border-dashed border-theme-color rounded">#}
+                                {#                                        <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Lower Rate</p>#}
+                                {#                                        <h5 class="mt-1 mb-0 fw-medium text-danger">0.812547</h5>#}
+                                {#                                        <small>05 Sep 2024</small>#}
+                                {#                                    </div>#}
+                                {#                                </div><!--end col-->#}
+                                {#                            </div><!--end row-->#}
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Recent Transactions:</h4>
+                                    </div><!--end col-->
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <tbody>
+                                        {% for object in transactions %}
+                                            <tr class="">
+                                                <td class="px-0">
+                                                    <div class="d-flex align-items-center">
+                                                <span
+                                                        class="badge rounded text-success bg-success-subtle">{{ object.transaction_type }}</span>
+                                                    </div><!--end media-->
+                                                </td>
+                                                <td class="px-0 text-end"><span
+                                                        class="text-body ps-2 align-self-center text-end fw-medium">{{ object.amount }} PKR</span>
+                                                </td>
+                                            </tr><!--end tr-->
+                                        {% empty %}
+                                            <tr>
+                                                <p>
+                                                    No Transactions found
+                                                </p>
+                                            </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table> <!--end table-->
+                                </div><!--end /div-->
+                                <hr class="hr-dashed">
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
+                </div><!--end row-->
+
+            </div><!-- container -->
+
+            <!--Start Footer-->
+
+            <footer class="footer text-center text-sm-start d-print-none">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card mb-0 rounded-bottom-0">
+                                <div class="card-body">
+                                    <p class="text-muted mb-0">
+                                        © 2024
+                                        Exarth
+                                        <span
+                                                class="text-muted d-none d-sm-inline-block float-end">
                                             Design with
                                             💀
                                             by TLS</span>
-                                </p>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
 
-        <!--end footer-->
+            <!--end footer-->
+        </div>
+        <!-- end page content -->
     </div>
-    <!-- end page content -->
-</div>
+
+
+    <script>
+        // Sample data for 12 months (replace with actual data)
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var expenses = [500, 600, 400, 700, 800, 650, 900, 750, 300, 500, 450, 700];
+        var profits = [200, 300, 150, 250, 300, 200, 400, 350, 100, 200, 150, 300];
+
+        // Create the chart using ApexCharts
+        var options = {
+            chart: {
+                type: 'bar',
+                height: 400 // Adjust height as needed
+            },
+            series: [
+                {
+                    name: 'Expense (PKR)',
+                    data: expenses
+                },
+                {
+                    name: 'Income (PKR)',
+                    data: profits
+                }
+            ],
+            xaxis: {
+                categories: months,
+                title: {
+                    text: 'Month'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Amount (PKR)'
+                }
+            },
+            title: {
+                text: 'Yearly Report',
+                align: 'center',
+                style: {
+                    fontSize: '18px'
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return 'PKR ' + val;
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#newChart"), options);
+        chart.render();
+    </script>
+
 {% endblock %}

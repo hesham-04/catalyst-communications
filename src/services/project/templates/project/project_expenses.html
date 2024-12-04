@@ -9,10 +9,10 @@
                     <div class="col-sm-12">
                         <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                             <h4 class="page-title">
-                                <a class="btn btn-secondary btn-sm" href="{% url 'assets:accounts' %}"><i
+                                <a class="btn btn-secondary btn-sm me-2" href="{% url 'project:detail' project.pk %}"><i
                                         class="fa fa-arrow-left-long me-1"></i> Go Back</a>
 
-                                Assets</h4>
+                                Expenses</h4>
                             <div class="">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item"><a href="#">Catalyst</a>
@@ -24,45 +24,7 @@
                     </div><!--end col-->
                 </div><!--end row-->
 
-                <div class="card shadow-lg h-100 bg-black border">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-between">
-                                <p class="text-white text-uppercase mb-0 fw-semibold fs-14 mt-2">{{ object.account_name }}</p>
-{#                                <a href="{% url 'assets:add-cash-in-hand' %}">#}
-{#                                    <div class="btn btn-primary float-end"> Add Cash in Hand</div>#}
-{#                                </a>#}
-                            </div>
-                            <!--end col-->
-                        </div><!--end row-->
-                        <div class="row mt-3 mb-1">
-                            <div class="col-9">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Balance</p>
-                                <h5 class="mt-1 mb-0 fw-semibold fs-20 text-white">{{ object.balance }}<small>
-                                    PKR</small></h5>
-                            </div>
-                            <!--end col-->
-                            <div class="col-3 align-self-center text-end">
-                                <i class="iconoir-wifi fs-24 trans-90 text-muted"></i>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body-->
-                    <div class="card-body p-2 bg-light rounded-bottom">
-                        <div class="row">
-                            <div class="col-6">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">
-                                    Started: {{ object.created_at }}</p>
-                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Catalyst Communications </h5>
-                            </div>
-                            <!--end col-->
-                            <div class="col-6 align-self-center text-end">
-                                <p class="text-muted text-uppercase mb-0 fw-normal fs-12">Starting
-                                    Balance: {{ object.starting_balance }}</p>
-                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">**** **** **** TLOS</h5>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end card-body-->
-                </div>
+
 
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -160,7 +122,6 @@
                     </div>
 
                 </div>
-
 
             </div>
         </div>

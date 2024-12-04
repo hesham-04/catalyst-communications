@@ -96,10 +96,10 @@
                                                 <td>{{ object.created_at|date:"d M Y" }}
                                                     <span>{{ object.created_at|time:"h:ia" }}</span></td>
                                                 <td><span
-                                                        class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" %}badge bg-danger-subtle  text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}</span>
+                                                        class="{% if object.transaction_type == "MISC_EXPENSE" %}badge bg-danger-subtle  text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}</span>
                                                 </td>
                                                 <td>{{ object.reason|slice:20 }}</td>
-                                                <td class="{% if object.transaction_type == "CREATE_JOURNAL_EXPENSE" %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
+                                                <td class="{% if object.transaction_type == "MISC_EXPENSE" %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
                                                 <td>{{ object.source }}</td>
                                                 <td>{{ object.destination }}</td>
 

@@ -3,7 +3,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.db.models import Sum, Q
 from django.shortcuts import render
-from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
@@ -112,8 +111,9 @@ class CashInHandDeleteView(DeleteView):
     success_url = reverse_lazy('cashinhand_list')
 
 
-
 """ Account Balance"""
+
+
 class AccountBalanceCreateView(CreateView):
     model = AccountBalance
     fields = ['account_name', 'balance']
@@ -144,7 +144,8 @@ class AccountBalanceDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         object_list = Ledger.objects.filter(
-            Q(source__icontains=f"Wallet: {self.object.account_name}") | Q(destination__icontains=f"Wallet: {self.object.account_name}")
+            Q(source__icontains=f"Wallet: {self.object.account_name}") | Q(
+                destination__icontains=f"Wallet: {self.object.account_name}")
         )
 
         paginator = Paginator(object_list, 20)
@@ -154,5 +155,3 @@ class AccountBalanceDetailView(DetailView):
         context['object_list'] = paginated_object_list
 
         return context
-
-

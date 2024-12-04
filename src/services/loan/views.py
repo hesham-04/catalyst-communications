@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, FormView
 
-from src.services.project.bll import add_loan_to_project
+from src.services.project.bll import add_loan_to_project, create_misc_loan
 from src.services.project.bll import return_loan_to_lender
 from src.services.project.models import Project
 from .forms import LoanForm, MiscLoanForm
@@ -113,6 +113,7 @@ class ReturnLoanView(CreateView):
 
 class LenderListView(ListView):
     model = Lender
+    paginate_by = 25
 
 
 class LenderDetailView(DetailView):
@@ -120,7 +121,13 @@ class LenderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['loans'] = self.object.loans.all()
+
+        loans = self.object.loans.all()
+        misc_loans = self.object.misc_loans.all()
+
+        combined_loans = list(loans) + list(misc_loans)
+
+        context['loans'] = combined_loans
         return context
 
 
@@ -130,17 +137,11 @@ class LenderCreateView(CreateView):
     success_url = reverse_lazy("loan:lenders")
 
 
-
 class MiscLoanCreateView(CreateView):
     model = MiscLoan
     form_class = MiscLoanForm
     success_url = reverse_lazy('loan:lenders')
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['lender']  = Lender.objects.filter(pk=self.kwargs['pk'])
-        return context
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -153,9 +154,16 @@ class MiscLoanCreateView(CreateView):
 
             destination_account = form.cleaned_data['destination']
 
-            destination_account.balance += misc_loan.loan_amount
-            destination_account.save()
+            success, message = create_misc_loan(
+                destination_account=destination_account,
+                source=misc_loan.lender.pk,
+                reason=form.cleaned_data['reason'],
+                amount=form.cleaned_data['amount'],
+            )
 
             misc_loan.save()
 
         return super().form_valid(form)
+
+class MiscLoanReturnView(FormView):
+    form_class = MiscLoanForm

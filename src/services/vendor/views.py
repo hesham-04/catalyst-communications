@@ -18,10 +18,20 @@ class VendorCreateView(CreateView):
     form_class = VendorForm
     success_url = reverse_lazy('vendor:vendors')  # Redirect after creation
 
+
 class VendorListView(ListView):
     model = Vendor
-    paginate_by = 100
+    paginate_by = 25
+    context_object_name = 'vendors'
 
+    def get_queryset(self):
+        queryset = Vendor.objects.all().order_by('-created_at')
+
+        order = self.request.GET.get('order', None)
+        if order == 'desc':
+            queryset = queryset.order_by('-total_expense')
+
+        return queryset
 
 class VendorDetailView(DetailView):
     model = Vendor
