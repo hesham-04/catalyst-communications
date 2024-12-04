@@ -128,9 +128,17 @@
                                                     <span><i
                                                             class="fa-solid {% if object.is_repaid %}fa-circle-check {% else %}fa-circle-xmark{% endif %}"></i></span>
                                                 </td>
-                                                <td class="text-center text-success"><a
-                                                        href="{% url 'loan:return_loan' object.pk %}"> <i
-                                                        class="fa-solid fa-pen-to-square"></i></a></td>
+                                                <td class="text-center text-success">
+                                                    {% if object.project %}
+                                                    <a href="{% url 'loan:return_loan' object.pk %}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    {% else %}
+                                                        <a href="{% url 'loan:return-misc-loan' object.pk %}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>

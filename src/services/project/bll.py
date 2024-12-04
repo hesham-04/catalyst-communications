@@ -1,5 +1,4 @@
 from django.db import transaction
-
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
@@ -103,7 +102,7 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         project=project,
         amount=amount,
         source=f"Project: {project.project_name} ACC ({project.pk})",
-        destination=f"Lender: {loan.lender.name} ({loan.id})",
+        destination=f"Lender: {loan.lender.name} ({loan.pk})",
         reason=reason
     )
 
@@ -218,7 +217,7 @@ def create_journal_expense_calculations(category, reason, destination, amount, s
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"
 
-
+@transaction.atomic
 def create_misc_loan(destination_account, source, reason, amount):
     try:
         var = destination_account.balance + amount
@@ -231,11 +230,36 @@ def create_misc_loan(destination_account, source, reason, amount):
             project=None,
             amount=amount,
             source=f"Loan: {lender.name} ({lender.pk})",
-            destination_account=f"Wallet: {destination_account.account_name} ({destination_account.pk})",
+            destination=f"Wallet: {destination_account.account_name} ({destination_account.pk})",
             reason=reason,
         )
 
         return True, "Transaction successful"
+
+    except Exception as e:
+        return False, f"An error occurred while processing the payment: {str(e)}"
+
+
+@transaction.atomic
+def return_misc_loan(destination_account, source, reason, amount):
+    try:
+        source.balance -= amount
+        source.save()
+
+        destination_account.update_remaining_amount(amount)
+        destination_account.save()
+
+        Ledger.objects.create(
+            transaction_type="MISC_LOAN_RETURN",
+            project=None,
+            amount=amount,
+            source=f"Wallet: {source.account_name} ({source.pk})",
+            destination=f"Lender: {destination_account.lender.name} ({destination_account.pk})",
+            reason=reason,
+        )
+
+        return True, "Transaction successful"
+
 
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"

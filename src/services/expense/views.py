@@ -134,6 +134,7 @@ class ExpenseCategoryCreateView(CreateView):
 
 class ExpenseCategoryDeleteView(DeleteView):
     model = ExpenseCategory
+    success_url = reverse_lazy('expense:expense-category-list')
 
 
 class ExpenseCategoryListView(ListView):

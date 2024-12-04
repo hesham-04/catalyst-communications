@@ -123,14 +123,6 @@ class MiscLoanReturnForm(forms.Form):
         max_digits=10,
         decimal_places=2,
     )
-    return_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={
-            'type': 'datetime-local',
-            'class': 'form-control',
-            'placeholder': 'Select date and time',
-        }),
-        label="Return Date",
-    )
 
     source = forms.ModelChoiceField(
         queryset=AccountBalance.objects.all(),

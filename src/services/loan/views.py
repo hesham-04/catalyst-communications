@@ -1,15 +1,17 @@
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, FormView
 
-from src.services.project.bll import add_loan_to_project, create_misc_loan
+from src.services.project.bll import add_loan_to_project, create_misc_loan, return_misc_loan
 from src.services.project.bll import return_loan_to_lender
 from src.services.project.models import Project
-from .forms import LoanForm, MiscLoanForm
+from .forms import LoanForm, MiscLoanForm, MiscLoanReturnForm
 from .forms import LoanReturnForm
 from .models import Loan, LoanReturn, Lender, MiscLoan
+from ..transaction.models import Ledger
 
 
 class LendLoanView(CreateView):
@@ -87,7 +89,6 @@ class ReturnLoanView(CreateView):
             form.add_error('return_amount', "The amount is more than Project account balance.")
             return self.form_invalid(form)
 
-
         return_loan_to_lender(
             loan_id=loan.pk,
             project_id=loan.project.id,
@@ -142,7 +143,6 @@ class MiscLoanCreateView(CreateView):
     form_class = MiscLoanForm
     success_url = reverse_lazy('loan:lenders')
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['lender'] = get_object_or_404(Lender, pk=self.kwargs['pk'])
@@ -158,12 +158,49 @@ class MiscLoanCreateView(CreateView):
                 destination_account=destination_account,
                 source=misc_loan.lender.pk,
                 reason=form.cleaned_data['reason'],
-                amount=form.cleaned_data['amount'],
+                amount=form.cleaned_data['loan_amount'],
             )
 
             misc_loan.save()
-
+        messages.success(self.request, "Misc loan successfully created.")
         return super().form_valid(form)
 
+
 class MiscLoanReturnView(FormView):
-    form_class = MiscLoanForm
+    form_class = MiscLoanReturnForm
+    template_name = "loan/miscloan_return.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = get_object_or_404(MiscLoan, id=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        return_amount = form.cleaned_data['return_amount']
+        return_source = form.cleaned_data['source']
+        remarks = form.cleaned_data['remarks']
+        loan = self.object
+
+        if return_amount > loan.remaining_amount:
+            form.add_error('return_amount', "The amount is more than the project loan amount.")
+            return self.form_invalid(form)
+
+        if return_amount > return_source.balance:
+            form.add_error('return_amount', "The amount is more than Project account balance.")
+            return self.form_invalid(form)
+
+        success, message = return_misc_loan(
+            destination_account=self.object,
+            source=return_source,
+            reason=remarks,
+            amount=return_amount,
+        )
+
+        messages.success(self.request, "Loan Return successfully recorded.")
+        return redirect('loan:lender-detail', pk=loan.lender.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['loan'] = self.object
+        entries=Ledger.objects.filter(transaction_type='MISC_LOAN_RETURN')
+        context['return_logs'] = entries.filter(Q(destination__icontains=f"({self.object.pk})"))
+        return context
