@@ -24,8 +24,8 @@ class Customer(models.Model):
     company_name = models.CharField(max_length=100, blank=True)
     customer_type = models.CharField(max_length=10, choices=CUSTOMER_TYPE_CHOICES, default='business')
     email = models.EmailField()
-    phone = models.CharField(max_length=15, blank=True)
-    work_phone = models.CharField(max_length=15, blank=True)
+    phone = models.IntegerField(max_length=15, blank=True)
+    work_phone = models.IntegerField(max_length=15, blank=True)
     mobile = models.CharField(max_length=15, blank=True)
     other_details = models.TextField(blank=True)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='PKR')
@@ -50,7 +50,7 @@ class ContactPerson(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
-    work_phone = models.CharField(max_length=15, blank=True)
+    work_phone = models.IntegerField(max_length=15, blank=True)
     mobile = models.CharField(max_length=15, blank=True)
 
     def __str__(self):

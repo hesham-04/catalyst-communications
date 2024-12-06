@@ -10,7 +10,7 @@ from src.services.project.models import Project
 class Lender(models.Model):
     name = models.CharField(max_length=255, help_text="Name of the lender")
     email = models.EmailField(help_text="Email address of the lender", blank=True, null=True)
-    phone = models.CharField(max_length=20, help_text="Phone number of the lender", blank=True, null=True)
+    phone = models.IntegerField(max_length=20, help_text="Phone number of the lender", blank=True, null=True)
     bic = models.CharField(max_length=11, help_text="BIC of the lender", blank=True, null=True)
     account_number = models.CharField(max_length=20, help_text="Account number of the lender", blank=True, null=True)
     iban = models.CharField(max_length=34, help_text="IBAN of the lender", blank=True, null=True)
