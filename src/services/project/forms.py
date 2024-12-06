@@ -54,8 +54,8 @@ class AddBudgetForm(forms.Form):
     amount = forms.DecimalField(max_digits=12, decimal_places=2, label="Amount")
     source = forms.ModelChoiceField(
         queryset=AccountBalance.objects.all(),
-        required=False,
-        label="Bank Account (if selected)",
+        required=True,
+        label="Bank Account (Source)",
         initial=AccountBalance.objects.first()
     )
     reason = forms.CharField(label="Reason for Transaction", required=True, max_length=255)

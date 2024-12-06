@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from num2words import num2words
@@ -17,7 +18,13 @@ class Quotation(models.Model):
     quotation_number = models.CharField(max_length=100, unique=True, null=True)
     subject = models.CharField(max_length=255)
     notes = models.TextField()
-    percent_tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+
+    percent_tax = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0.00,
+        validators=[MinValueValidator(0.00)]
+    )
 
 
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)

@@ -1,4 +1,5 @@
 # Create your models here.
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
@@ -81,7 +82,12 @@ class InvoiceItem(models.Model):
     quantity = models.IntegerField(default=1)
     rate = models.DecimalField(max_digits=15, decimal_places=2)
     amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
-    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True, blank=True)
+    percent_tax = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0.00,
+        validators=[MinValueValidator(0.00)]
+    )
 
     def save(self, *args, **kwargs):
         # Calculate the total amount including tax

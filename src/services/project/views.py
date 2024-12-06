@@ -69,7 +69,7 @@ class ProjectDetailView(LoginRequiredMixin, TemplateView):
         context['expense'] = expense
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
-        context['payable'] = Loan.calculate_total_unpaid_amount()
+        context['payable'] = Loan.calculate_total_unpaid_amount(pk=kwargs['pk'])
         context['receivables'] = Invoice.calculate_total_receieved(project_id=kwargs['pk'])
         return context
 
