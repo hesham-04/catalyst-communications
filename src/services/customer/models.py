@@ -31,8 +31,6 @@ class Customer(models.Model):
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='PKR')
     payment_due_period = models.CharField(max_length=15, choices=PAYMENT_DUE_CHOICES, default='due_eom')
     company_id = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    tax = models.OneToOneField('core.Tax', on_delete=models.SET_NULL, null=True, blank=True,
-                               related_name='customer')
 
 
     def get_full_name(self):
@@ -42,16 +40,3 @@ class Customer(models.Model):
         return f"{self.salutation} {self.first_name} {self.last_name}"
 
 
-
-
-class ContactPerson(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='contact_persons')
-    salutation = models.CharField(max_length=10, choices=[('Mr.', 'Mr.'), ('Ms.', 'Ms.'), ('Mrs.', 'Mrs.')])
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
-    work_phone = models.IntegerField(blank=True)
-    mobile = models.CharField(max_length=15, blank=True)
-
-    def __str__(self):
-        return f"{self.salutation} {self.first_name} {self.last_name}"

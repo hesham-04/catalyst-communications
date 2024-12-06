@@ -191,7 +191,7 @@ class ProjectFinances(LoginRequiredMixin, View):
             'money_form_invoice': Invoice.calculate_total_receieved(project_id=project.pk),
             'invoice_receivables': Invoice.calculate_total_receivables(project_id=project.pk),
             'project_expenditure': Expense.calculate_total_expenses(project_id=project.pk),
-            'loans': Loan.calculate_total_unpaid_amount(pk=project.pk),
+            'loans': Loan.calculate_total_unpaid_amount(project_pk=project.pk),
         }
         return render(request, self.template_name, context)
 
@@ -234,7 +234,12 @@ class CreateProjectCash(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('project:detail', kwargs={'pk': self.kwargs.pk})
+        return reverse_lazy('project:finances', kwargs={'pk': self.kwargs.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = Project.objects.get(pk=self.kwargs['pk'])
+        return context
 
 
 class ProjectExpensesView(LoginRequiredMixin, TemplateView):
