@@ -134,7 +134,7 @@
                                             </td>
                                             <td>{{ item.rate }} PKR</td>
                                             <td>{{ item.quantity }}</td>
-                                            <td>${{ item.rate|multiply:item.quantity }}</td>
+                                            <td>{{ item.rate|multiply:item.quantity }}</td>
                                         </tr>
                                         {% endfor %}
 

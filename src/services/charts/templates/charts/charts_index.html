@@ -83,7 +83,7 @@
                                                 </td>
                                                 <td>{{ project.customer.get_full_name }}</td>
                                                 <td>{{ project.description|slice:20 }}</td>
-                                                <td>${{ project.get_total_budget }}</td>
+                                                <td>{{ project.get_total_budget }}</td>
                                                 <td class="text-end">
                                                     <a href="{% url 'charts:generate' project.pk %}"
                                                        class="btn btn-warning"><i class="fa fa-address-book me-2"></i>Generate
