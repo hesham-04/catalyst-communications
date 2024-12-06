@@ -11,7 +11,7 @@ class BillingAddress(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
-    phone = models.IntegerField(max_length=15, blank=True)
+    phone = models.IntegerField(blank=True)
     fax = models.CharField(max_length=15, blank=True)
 
     def __str__(self):

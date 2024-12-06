@@ -16,7 +16,7 @@ class Vendor(models.Model):
     iban = models.CharField(max_length=34, blank=True, null=True)
 
     email = models.EmailField(max_length=255, blank=True, null=True)
-    phone = models.IntegerField(max_length=20, blank=True, null=True)
+    phone = models.IntegerField(blank=True, null=True)
 
     registration_number = models.CharField(max_length=50, blank=True, null=True)
     vat_number = models.CharField(max_length=50, blank=True, null=True)

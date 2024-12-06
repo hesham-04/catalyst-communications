@@ -18,7 +18,7 @@ class Invoice(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = models.IntegerField(max_length=20)
+    phone = models.IntegerField()
     address = models.CharField(max_length=255)
 
     invoice_number = models.CharField(max_length=100, unique=True, null=True)

@@ -47,6 +47,10 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     fields = ['project_name', 'description']
 
+    def get_success_url(self):
+        return reverse_lazy('project:detail', kwargs={'pk': self.object.pk})
+
+
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     template_name = 'project/project_form.html'
@@ -63,13 +67,12 @@ class ProjectDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         income, expense = get_monthly_income_expense(project_id=kwargs['pk'])
-
         context = super().get_context_data(**kwargs)
         context['income'] = income
         context['expense'] = expense
         context['project'] = Project.objects.get(pk=kwargs['pk'])
         context['total_expenses'] = Expense.calculate_total_expenses(project_id=kwargs['pk'])
-        context['payable'] = Loan.calculate_total_unpaid_amount(pk=kwargs['pk'])
+        context['payable'] = Loan.calculate_total_unpaid_amount(project_pk=kwargs['pk'])
         context['receivables'] = Invoice.calculate_total_receieved(project_id=kwargs['pk'])
         return context
 
