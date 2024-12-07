@@ -277,7 +277,7 @@ def generate_project_report(request, pk):
     for entry in ledger_entries:
         if entry.transaction_type == "BUDGET_ASSIGN" or entry.transaction_type == "CREATE_LOAN":
             budget_assigned_total += entry.amount
-        elif entry.transaction_type == "CREATE_EXPENSE" or 'RETURN_LOAN':
+        elif entry.transaction_type == "CREATE_EXPENSE":
             expenditure_total += entry.amount
 
     # Add row for trial balance totals

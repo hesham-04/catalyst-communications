@@ -93,11 +93,11 @@
                                         <h4 class="my-2 fs-24 fw-semibold mb-3">{{ project.get_total_budget }}<small
                                                 class="font-14"> PKR </small></h4>
 
-                                        <a class=" btn btn-soft-secondary"
+                                        <a class=" btn btn-soft-dark {% if project.project_status != 'IP' %}disabled{% endif %}"
                                            href="{% url 'project:finances' project.pk %}">Manage Finances</a>
 
                                         <a href="{% url 'project:add_budget' pk=project.id %}"
-                                           class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Create
+                                           class="btn btn-soft-success {% if project.project_status != 'IP' %}disabled{% endif %}">Add
                                             Budget</a>
 
 

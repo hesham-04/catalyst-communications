@@ -1,4 +1,5 @@
 # Create your models here.
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
@@ -17,7 +18,7 @@ class Invoice(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
+    phone = models.IntegerField()
     address = models.CharField(max_length=255)
 
     invoice_number = models.CharField(max_length=100, unique=True, null=True)
@@ -79,9 +80,14 @@ class InvoiceItem(models.Model):
     item_name = models.CharField(max_length=255)
     description = models.CharField(blank=True, null=True, max_length=500)
     quantity = models.IntegerField(default=1)
-    rate = models.DecimalField(max_digits=15, decimal_places=2)
-    amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
-    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True, blank=True)
+    rate = models.DecimalField(max_digits=15, decimal_places=2) # One Item
+    amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False) # For all the items (SUMS)
+    tax = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0.00,
+        validators=[MinValueValidator(0.00), MaxValueValidator(50.00)],
+    )
 
     def save(self, *args, **kwargs):
         # Calculate the total amount including tax

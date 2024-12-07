@@ -59,7 +59,7 @@
                                                 <span>{{ expense.created_at|time:"h:ia" }}</span></td>
                                             <td>{{ expense.get_budget_source_display }}</td>
                                             <td>{{ expense.description|slice:20 }}</td>
-                                            <td>${{ expense.amount }}</td>
+                                            <td>{{ expense.amount }}</td>
                                             <td>
                                                 {% if expense.budget_source == 'CASH' %}
                                                     <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2">Cash</span>

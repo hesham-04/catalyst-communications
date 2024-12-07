@@ -13,14 +13,16 @@
 
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                    <h4 class="page-title"> Project Finance Detail</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
+                    <h4 class="page-title">
+                        <a href="{% url 'project:finances' project.pk  %}"><div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left me-1"></i>Go Back</div></a>
+                        Project Finance Detail</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="{% url 'project:index' %}">Project</a></li>
+                            <li class="breadcrumb-item active">Finance</li>
                         </ol>
                     </div>
+
                 </div>
 
                 <div class="row justify-content-center">

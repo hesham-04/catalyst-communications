@@ -72,7 +72,7 @@ class AddCashInHandView(FormView):
             return self.form_invalid(form)
 
         if amount > account.balance:
-            form.add_error('amount', "The amount you entered is greater than your balance.")
+            form.add_error('balance', "The amount you entered is greater than your balance.")
             return self.form_invalid(form)
 
         with transaction.atomic():

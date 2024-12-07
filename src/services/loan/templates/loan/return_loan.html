@@ -100,7 +100,7 @@
                                         </div><!--end row-->
                                     </div>
 
-                                    <!--                                <p class="mb-0  mt-2 text-success fst-italic">The last transaction $2560.00 is-->
+                                    <!--                                <p class="mb-0  mt-2 text-success fst-italic">The last transaction 2560.00 is-->
                                     <!--                                    Successful!</p>-->
                                 </div><!--end card-body-->
                             </div><!--end card-->
@@ -115,7 +115,7 @@
                             <h4 class="text-center" style="margin-top: 18px">Return loan for <b>
                                 {{ project.project_name }}</b></h4>
                             <p class="text-danger text-sm-center">
-                                This amount will be deducted from the project account balance.
+                                This amount will be deducted from the project account balance: {{ project.project_account_balance }} PKR.
                             </p>
 
                             <div class="card-body">

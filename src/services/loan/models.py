@@ -10,7 +10,7 @@ from src.services.project.models import Project
 class Lender(models.Model):
     name = models.CharField(max_length=255, help_text="Name of the lender")
     email = models.EmailField(help_text="Email address of the lender", blank=True, null=True)
-    phone = models.CharField(max_length=20, help_text="Phone number of the lender", blank=True, null=True)
+    phone = models.IntegerField(help_text="Phone number of the lender", blank=True, null=True)
     bic = models.CharField(max_length=11, help_text="BIC of the lender", blank=True, null=True)
     account_number = models.CharField(max_length=20, help_text="Account number of the lender", blank=True, null=True)
     iban = models.CharField(max_length=34, help_text="IBAN of the lender", blank=True, null=True)
@@ -82,14 +82,16 @@ class Loan(models.Model):
         self.save()
 
     @classmethod
-    def calculate_total_unpaid_amount(cls, pk=None):
-        """Calculate the total unpaid amount for all loan objects or for a specific loan by pk."""
-        if pk is not None:
-            total_unpaid = cls.objects.filter(pk=pk).aggregate(total=Sum('remaining_amount'))
+    def calculate_total_unpaid_amount(cls, project_pk=None):
+        """
+        Calculate the total unpaid amount for all loans,
+        or for loans related to a specific project if project_pk is provided.
+        """
+        if project_pk is not None:
+            total_unpaid = cls.objects.filter(project__pk=project_pk).aggregate(total=Sum('remaining_amount'))['total']
         else:
-            total_unpaid = cls.objects.aggregate(total=Sum('remaining_amount'))
-
-        return round(total_unpaid['total'] or 0, 2)
+            total_unpaid = cls.objects.aggregate(total=Sum('remaining_amount'))['total']
+        return round(total_unpaid or 0, 2)
 
 
 class LoanReturn(models.Model):

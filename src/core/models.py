@@ -11,7 +11,7 @@ class BillingAddress(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
-    phone = models.CharField(max_length=15, blank=True)
+    phone = models.IntegerField(blank=True)
     fax = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
@@ -19,12 +19,4 @@ class BillingAddress(models.Model):
 
 
 
-
-class Tax(models.Model):
-    name = models.CharField(max_length=50)
-    rate = models.DecimalField(max_digits=5, decimal_places=2)
-    is_compound = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
 

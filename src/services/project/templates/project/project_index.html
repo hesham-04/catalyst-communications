@@ -69,7 +69,7 @@
                                                 </td>
                                                 <td>{{ project.customer.get_full_name }}</td>
                                                 <td>{{ project.description|slice:20 }}</td>
-                                                <td>${{ project.get_total_budget }}</td>
+                                                <td>{{ project.get_total_budget }}</td>
                                                 <td>
                 <span class="badge bg-{{ project.project_status|status_badge_color }} text-{{ project.project_status|status_text_color }} fs-11 fw-medium px-2 text-white">
                     {{ project.get_project_status_display }}

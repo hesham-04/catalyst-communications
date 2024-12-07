@@ -191,7 +191,7 @@ class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
             form.add_error('budget_source', message)
             return self.form_invalid(form)
 
-        messages.success(self.request, "Journal expense has been successfully created!")
+        messages.success(self.request, "General expense has been successfully created!")
         return super().form_valid(form)
 
     def get_expenses_today(self):
