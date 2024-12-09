@@ -42,6 +42,11 @@ class CustomerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Mark all fields as required
+        for field_name, field in self.fields.items():
+            field.required = True
+
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_class = 'row g-3'  # Bootstrap spacing for form rows

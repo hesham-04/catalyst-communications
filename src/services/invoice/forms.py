@@ -71,24 +71,7 @@ class InvoiceItemForm(forms.ModelForm):
             'tax': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Item Tax', 'required': False}),
         }
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.helper = FormHelper()
-    #     self.helper.form_method = 'post'
-    #     self.helper.form_class = 'row g-3'
-    #     self.helper.layout = Layout(
-    #         Row(
-    #             Column('item_name', css_class='form-group col-md-6 mb-3'),
-    #             Column('description', css_class='form-group col-md-6 mb-3'),
-    #             css_class='row'
-    #         ),
-    #         Row(
-    #             Column('quantity', css_class='form-group col-md-4 mb-3'),
-    #             Column('rate', css_class='form-group col-md-4 mb-3'),
-    #             Column('tax', css_class='form-group col-md-4 mb-3'),
-    #             css_class='row'
-    #         ),
-    #     )
+
 
 
 class TransferFundsForm(forms.Form):

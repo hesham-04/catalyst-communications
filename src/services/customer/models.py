@@ -24,7 +24,7 @@ class Customer(models.Model):
     company_name = models.CharField(max_length=100, blank=True)
     customer_type = models.CharField(max_length=10, choices=CUSTOMER_TYPE_CHOICES, default='business')
     email = models.EmailField()
-    phone = models.IntegerField(blank=True)
+    phone = models.IntegerField(blank=True, )
     work_phone = models.IntegerField(blank=True)
     mobile = models.CharField(max_length=15, blank=True)
     other_details = models.TextField(blank=True)
