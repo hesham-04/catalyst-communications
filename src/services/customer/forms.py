@@ -11,7 +11,7 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         fields = [
             'salutation', 'first_name', 'last_name', 'company_name',
-            'customer_type', 'email', 'phone', 'work_phone', 'mobile', 'other_details',
+            'customer_type', 'email', 'phone', 'other_details',
             'currency', 'payment_due_period', 'company_id'
         ]
 
@@ -20,8 +20,6 @@ class CustomerForm(forms.ModelForm):
             'company_name': 'Company Name:',
             'email': 'Email:',
             'phone': 'Phone:',
-            'work_phone': 'Work Phone:',
-            'mobile': 'Mobile:',
         }
 
         widgets = {
@@ -33,8 +31,6 @@ class CustomerForm(forms.ModelForm):
             'customer_type': forms.Select(attrs={'class': 'form-select'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
-            'work_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Work Phone'}),
-            'mobile': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Mobile'}),
             'company_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company ID'}),
             'other_details': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Other Details'}),
             'currency': forms.Select(attrs={'class': 'form-select'}),
@@ -73,9 +69,7 @@ class CustomerForm(forms.ModelForm):
                 css_class='row'
             ),
             Row(
-                Column('phone', css_class='form-group col-md-4 mb-3'),
-                Column('work_phone', css_class='form-group col-md-4 mb-3'),
-                Column('mobile', css_class='form-group col-md-4 mb-3'),
+                Column('phone', css_class='form-group col-md-12 mb-3'),
                 css_class='row'
             ),
             Row(
