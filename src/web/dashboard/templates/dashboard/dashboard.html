@@ -292,9 +292,10 @@
     <script>
         // Sample data for 12 months (replace with actual data)
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var expenses = {{ expense }};
-        var profits = {{ income }};
-
+        {#var expenses = {{ expense }};#}
+        var expenses = [73, 54, 73, 83, 53, 78, 29, 0, 67, 70, 29, 83];
+        {#var profits = {{ income }};#}
+        var profits = [83, 64, 67, 83, 43, 78, 93, 90, 77, 79, 30, 81];
         // Create the chart using ApexCharts
         var options = {
             chart: {

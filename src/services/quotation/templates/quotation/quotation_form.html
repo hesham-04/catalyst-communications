@@ -18,9 +18,9 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">
-                        <img style="width: 100%" src="{% static 'img/invoice.png' %}" alt="Invoice Preview" class="img-fluid">
-                </div>
+{#                <div class="col-md-12">#}
+{#                        <img style="width: 100%" src="{% static 'img/invoice.png' %}" alt="Invoice Preview" class="img-fluid">#}
+{#                </div>#}
                 <!-- Quotation Form Section -->
                 <div class="col-md-12">
                         <div class="card border shadow">
@@ -37,7 +37,7 @@
                                                 {{ formset.management_form }}
                                                 <div id="quotation-items">
                                                     {% for form in formset %}
-                                                    <div class="card mt-3 border-2 shadow-sm quotation-item">
+                                                    <div class="card mt-3 border-2 shadow-lg quotation-item">
                                                         <div class="card-body px-4 py-2">
                                                             {{ form|crispy }}
                                                         </div>
