@@ -10,10 +10,12 @@ from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, FormView, DeleteView
 
 from src.services.project.models import Project
-from .forms import ExpenseForm, ExpenseCategoryForm, ExpensePaymentForm, JournalExpenseForm
+from .forms import ExpenseForm, ExpenseCategoryForm, ExpensePaymentForm, JournalExpenseForm, DateRangeForm
 from .models import Expense, ExpenseCategory, JournalExpense
 from ..assets.models import CashInHand, AccountBalance
+from ..charts.views import generate_expense_report
 from ..project.bll import create_expense_calculations, pay_expense, create_journal_expense_calculations
+from ..transaction.models import Ledger
 
 
 class ExpenseIndexView(LoginRequiredMixin, TemplateView):
@@ -22,17 +24,34 @@ class ExpenseIndexView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        expenses_list = JournalExpense.objects.all().order_by('-created_at')
+        expenses_list = Ledger.objects.filter(transaction_type='MISC_EXPENSE').order_by('-created_at')
 
-        paginator = Paginator(expenses_list, 10)  # 10 items per page
+
+        paginator = Paginator(expenses_list, 20)
         page_number = self.request.GET.get('page', 1)
         try:
             expenses_page = paginator.page(page_number)
         except Exception as e:
             raise Http404("Invalid page number.")
+        form = DateRangeForm()
 
         context['expenses'] = expenses_page
+        context['form'] = form
+
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = DateRangeForm(request.POST)
+
+        if form.is_valid():
+            start_date = form.cleaned_data.get('start_date')
+            end_date = form.cleaned_data.get('end_date')
+
+            if start_date and end_date:
+                return generate_expense_report(request, start_date, end_date)
+            else:
+                print("Form is not valid")
+            return self.get(request, *args, **kwargs)
 
 
 class CreateExpenseView(LoginRequiredMixin, CreateView):

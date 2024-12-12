@@ -54,6 +54,7 @@ class ExpenseCategoryForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
 
+
 class ExpensePaymentForm(forms.Form):
     SOURCE_CHOICES = [
         ('CASH', 'Project Cash'),
@@ -65,8 +66,6 @@ class ExpensePaymentForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     remarks = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}))
-
-
 
 
 class JournalExpenseForm(forms.ModelForm):
@@ -110,3 +109,24 @@ class JournalExpenseForm(forms.ModelForm):
             cleaned_data['account_pk'] = account_pk
 
         return cleaned_data
+
+
+class DateRangeForm(forms.Form):
+    start_date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'id': 'startDate',
+            'type': 'date',
+            'required': True,
+        }),
+        label="Starting Date"
+    )
+    end_date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'id': 'endDate',
+            'type': 'date',
+            'required': True,
+        }),
+        label="Ending Date"
+    )

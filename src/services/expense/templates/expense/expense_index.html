@@ -26,6 +26,34 @@
                             Expense Categories</a>
                         <a href="{% url 'expense:journal-create' %}" class=" btn btn-soft-danger mb-3">Create General
                             Expense</a>
+                        <!-- Button to trigger modal -->
+                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalCenter">
+                            Generate Expense Sheet
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" data-bs-backdrop="false" tabindex="-1"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" role="dialog">
+                            <div class="modal-dialog " role="document">
+                                <div class="modal-content  shadow-lg">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title m-0" id="exampleModalCenterTitle">Generate Expense
+                                            Sheet</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div><!--end modal-header-->
+                                    <div class="modal-body">
+                                        <form method="post" action="">
+                                            {% csrf_token %}
+                                            {{ form|crispy }}
+                                            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                                        </form>
+                                    </div><!--end modal-body-->
+
+                                </div><!--end modal-content-->
+                            </div><!--end modal-dialog-->
+                        </div>
 
                     </div>
                 </div>
@@ -45,7 +73,7 @@
                                     <thead class="table-light">
                                     <tr>
                                         <th class="border-top-0">Date</th>
-                                        <th class="border-top-0">Type</th>
+                                        <th class="border-top-0">Category</th>
                                         <th class="border-top-0">Description</th>
                                         <th class="border-top-0">Amount</th>
                                         <th class="border-top-0">Source</th>
@@ -56,8 +84,9 @@
                                     {% for expense in expenses %}
                                         <tr>
                                             <td>{{ expense.created_at|date:"d M Y" }}
-                                                <span>{{ expense.created_at|time:"h:ia" }}</span></td>
-                                            <td>{{ expense.get_budget_source_display }}</td>
+                                                <span>{{ expense.created_at|time:"h:ia" }}</span>
+                                            </td>
+                                            <td>{{ expense.category }}</td>
                                             <td>{{ expense.description|slice:20 }}</td>
                                             <td>{{ expense.amount }}</td>
                                             <td>
@@ -121,4 +150,13 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        // Set today's date as the default for the ending date
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('endDate').value = today;
+        });
+    </script>
 {% endblock %}

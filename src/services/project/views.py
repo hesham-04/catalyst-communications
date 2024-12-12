@@ -58,6 +58,15 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project
     success_url = reverse_lazy('project:index')
 
+    def form_valid(self, form):
+        name = form.cleaned_data.get('project_name')
+
+        if name.isdigit():
+            form.add_error('project_name', 'This field cannot be a purely numeric value.')
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('project:detail', kwargs={'pk': self.object.pk})
 

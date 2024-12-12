@@ -46,7 +46,7 @@
                                 <span class="fs-16 fw-semibold">Project Expenditure: <small>(Expenses Created)</small> <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2 ms-1 mb-1">{{ project_expenditure }} PKR </span></span>
                                 <br>
                                 <span class="fs-16 fw-semibold">Loan Payable: <small>(Loans Lended)</small> <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ loans }} PKR </span></span>
-                                <a href="{%  url 'charts:download' project.pk %}"><span class="btn btn-warning float-end">Download</span></a>
+                                <a href="{%  url 'charts:project-expense-journal' project.pk %}"><span class="btn btn-warning float-end">Download</span></a>
 
                             </div>
                         </div><!--end card-body-->
