@@ -91,6 +91,24 @@ class CustomerForm(forms.ModelForm):
             )
         return phone
 
+    def clean(self):
+        cleaned_data = super().clean()
+        fields_to_validate = [
+            "first_name",
+            "last_name",
+            "company_name",
+        ]
+
+        for field in fields_to_validate:
+            value = cleaned_data.get(field)
+            if value and not value.isalnum():
+                self.add_error(
+                    field,
+                    f"{field.replace('_', ' ').capitalize()} should only contain alphanumeric characters.",
+                )
+
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
