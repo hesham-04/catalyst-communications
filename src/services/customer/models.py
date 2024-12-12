@@ -1,4 +1,5 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Customer(models.Model):
@@ -23,18 +24,17 @@ class Customer(models.Model):
         choices=[("Mr.", "Mr."), ("Ms.", "Ms."), ("Mrs.", "Mrs.")],
         default="Mr.",
     )
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    company_name = models.CharField(max_length=100, blank=True)
+    first_name = models.CharField(max_length=18)
+    last_name = models.CharField(max_length=18, blank=True)
+    company_name = models.CharField(max_length=20, blank=True)
     customer_type = models.CharField(
         max_length=10, choices=CUSTOMER_TYPE_CHOICES, default="business"
     )
     email = models.EmailField()
-    phone = models.IntegerField(blank=True, null=True)
-    mobile = models.CharField(
+    phone = PhoneNumberField(blank=True, null=True, max_length=15)
+    mobile = PhoneNumberField(
         max_length=15,
     )
-    other_details = models.TextField(blank=True)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default="PKR")
     payment_due_period = models.CharField(
         max_length=15, choices=PAYMENT_DUE_CHOICES, default="due_eom"

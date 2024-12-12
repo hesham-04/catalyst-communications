@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     # YOUR APPS
+    "phonenumber_field",
     "src.web.accounts",
     "src.web.dashboard",
     "src.services.invoice",
@@ -72,6 +73,11 @@ EMAIL_HOST = "smtp.gmail.com"
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+
+# PHONE NUMBER SETTINGS
+PHONENUMBER_DEFAULT_REGION = "PK"
+PHONENUMBER_DEFAULT_FORMAT = "NATIONAL"
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

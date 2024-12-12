@@ -1,12 +1,26 @@
 from crispy_forms.bootstrap import FormActions
-from django import forms
-from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Div, Submit
+from crispy_forms.layout import HTML
+from crispy_forms.layout import Layout, Row, Column, Submit
+from django import forms
+from phonenumber_field.formfields import PhoneNumberField
+
 from .models import Customer
 
 
 class CustomerForm(forms.ModelForm):
+    mobile = PhoneNumberField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Mobile"}
+        ),
+        error_messages={"invalid": "Enter a valid mobile phone number."},
+    )
+    phone = PhoneNumberField(
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Phone"}),
+        error_messages={"invalid": "Enter a valid phone number."},
+        required=False,
+    )
+
     class Meta:
         model = Customer
         fields = [
@@ -18,7 +32,6 @@ class CustomerForm(forms.ModelForm):
             "email",
             "mobile",
             "phone",
-            "other_details",
             "currency",
             "payment_due_period",
             "company_id",
@@ -47,12 +60,6 @@ class CustomerForm(forms.ModelForm):
             "email": forms.EmailInput(
                 attrs={"class": "form-control", "placeholder": "Email"}
             ),
-            "mobile": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Mobile"}
-            ),
-            "phone": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Phone"}
-            ),
             "company_id": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Company ID"}
             ),
@@ -66,12 +73,26 @@ class CustomerForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "form-select"}),
         }
 
+    def clean_mobile(self):
+        mobile = self.cleaned_data.get("mobile")
+        if not str(mobile).startswith(("+92", "03")):
+            raise forms.ValidationError(
+                "Mobile number must start with +92 or 03 (for Pakistan)."
+            )
+        return mobile
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        if str(phone) == "":
+            return None
+        elif not str(phone).startswith(("+92", "03")):
+            raise forms.ValidationError(
+                "Phone number must start with +92 or 03 (for Pakistan)."
+            )
+        return phone
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # Mark all fields as required
-        for field_name, field in self.fields.items():
-            field.required = True
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -92,10 +113,8 @@ class CustomerForm(forms.ModelForm):
                 Column("email", css_class="form-group col-md-12 mb-3"), css_class="row"
             ),
             Row(
-                Column("phone", css_class="form-group col-md-12 mb-3"), css_class="row"
-            ),
-            Row(
-                Column("other_details", css_class="form-group col-md-12 mb-3"),
+                Column("mobile", css_class="form-group col-md-6 mb-3"),
+                Column("phone", css_class="form-group col-md-6 mb-3"),
                 css_class="row",
             ),
             Row(

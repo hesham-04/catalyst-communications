@@ -91,8 +91,7 @@
                                 {% if request.user.image %}
                                     <img src="{{ request.user.image.url }}" alt="" class="thumb-md rounded-circle">
                                 {% else %}
-                                    <img src="https://avatar.iran.liara.run/public" alt=""
-                                         class="thumb-md rounded-circle">
+                                    <img src="https://avatar.iran.liara.run/public" alt="" class="thumb-md rounded-circle">
                                 {% endif %}
                             </div>
                             <div class="flex-grow-1 ms-2 text-truncate align-self-center">

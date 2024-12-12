@@ -52,8 +52,7 @@
                                         <th>Name</th>
                                         <th>Company</th>
                                         <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Receivables</th>
+                                        <th>Mobile</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -75,18 +74,19 @@
                                             </td>
                                             <td>{{ customer.company_name }}</td>
                                             <td>{{ customer.email }}</td>
-                                            <td>{{ customer.phone }}</td>
-                                            <td>{{ customer.currency }}</td>
+                                            <td>{{ customer.mobile }}</td>
                                             <td>
                                                 <div class="row">
-                                                        <div class="col-md-4 text-center">
-                                                            <a class="text-warning" href="{% url 'customer:update' customer.pk %}">
-                                                                <i class="fa fa-edit"></i><br>
-                                                                Edit
-                                                            </a>
-                                                        </div>
+                                                    <div class="col-md-4 text-center">
+                                                        <a class="text-warning"
+                                                           href="{% url 'customer:update' customer.pk %}">
+                                                            <i class="fa fa-edit"></i><br>
+                                                            Edit
+                                                        </a>
+                                                    </div>
                                                     <div class="col-md-4 text-danger text-center">
-                                                        <a class="text-danger" href="{% url 'customer:delete' customer.pk %}">
+                                                        <a class="text-danger"
+                                                           href="{% url 'customer:delete' customer.pk %}">
                                                             <i class="fa fa-trash text-danger"></i><br>
                                                             Delete
                                                         </a>
