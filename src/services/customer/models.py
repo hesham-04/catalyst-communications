@@ -45,4 +45,4 @@ class Customer(models.Model):
         return f"{self.salutation} {self.first_name} {self.last_name}"
 
     def __str__(self):
-        return f"{self.salutation} {self.first_name} {self.last_name}"
+        return f"{self.company_name} - {self.salutation} {self.first_name} {self.last_name}"

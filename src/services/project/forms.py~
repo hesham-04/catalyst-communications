@@ -45,7 +45,7 @@ class ProjectForm(forms.ModelForm):
                 Column("customer", css_class="form-group col-md-9 mb-3"),
                 Column(
                     HTML(
-                        '<button type="button" class="btn btn-outline-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add Customer</button>'
+                        '<button type="button" class="btn btn-outline-primary btn-smmt-3" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add Customer</button>'
                     ),
                     css_class="form-group col-md-3 mb-3",
                 ),

@@ -1,0 +1,8 @@
+{% block head %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+{% load crispy_forms_tags %}
+<form method="post" id="addCustomerForm">
+    {% csrf_token %}
+    {% crispy form %}
+</form>
