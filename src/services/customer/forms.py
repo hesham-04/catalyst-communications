@@ -10,30 +10,60 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = [
-            'salutation', 'first_name', 'last_name', 'company_name',
-            'customer_type', 'email', 'phone', 'other_details',
-            'currency', 'payment_due_period', 'company_id'
+            "salutation",
+            "first_name",
+            "last_name",
+            "company_name",
+            "customer_type",
+            "email",
+            "mobile",
+            "phone",
+            "other_details",
+            "currency",
+            "payment_due_period",
+            "company_id",
         ]
 
         labels = {
-            'customer_type': 'Customer Type:',
-            'company_name': 'Company Name:',
-            'email': 'Email:',
-            'phone': 'Phone:',
+            "customer_type": "Customer Type:",
+            "company_name": "Company Name:",
+            "email": "Email:",
+            "phone": "Phone:",
         }
 
         widgets = {
-            'salutation': forms.Select(attrs={'class': 'form-select'}),
-            'payment_due_period': forms.Select(attrs={'class': 'form-select'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
-            'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Name'}),
-            'customer_type': forms.Select(attrs={'class': 'form-select'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
-            'company_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company ID'}),
-            'other_details': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Other Details'}),
-            'currency': forms.Select(attrs={'class': 'form-select'}),
+            "salutation": forms.Select(attrs={"class": "form-select"}),
+            "payment_due_period": forms.Select(attrs={"class": "form-select"}),
+            "first_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "First Name"}
+            ),
+            "last_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Last Name"}
+            ),
+            "company_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Company Name"}
+            ),
+            "customer_type": forms.Select(attrs={"class": "form-select"}),
+            "email": forms.EmailInput(
+                attrs={"class": "form-control", "placeholder": "Email"}
+            ),
+            "mobile": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Mobile"}
+            ),
+            "phone": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Phone"}
+            ),
+            "company_id": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Company ID"}
+            ),
+            "other_details": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "Other Details",
+                }
+            ),
+            "currency": forms.Select(attrs={"class": "form-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -44,48 +74,38 @@ class CustomerForm(forms.ModelForm):
             field.required = True
 
         self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.form_class = 'row g-3'  # Bootstrap spacing for form rows
+        self.helper.form_method = "post"
+        self.helper.form_class = "row g-3"  # Bootstrap spacing for form rows
         self.helper.layout = Layout(
             Row(
-                Column('customer_type', css_class='form-group mb-3'),
+                Column("customer_type", css_class="form-group mb-3"),
+            ),
+            Row(Column("company_name", css_class="col-md-12 mb-3"), css_class="row"),
+            Row(HTML('<h4 class="m-2 ms-0">Primary Contact</h4>'), css_class="col-12"),
+            Row(
+                Column("salutation", css_class="form-group col-md-4 mb-3"),
+                Column("first_name", css_class="form-group col-md-4 mb-3"),
+                Column("last_name", css_class="form-group col-md-4 mb-3"),
+                css_class="row",
             ),
             Row(
-                Column('company_name', css_class='col-md-12 mb-3'),
-                css_class='row'
+                Column("email", css_class="form-group col-md-12 mb-3"), css_class="row"
             ),
             Row(
-                HTML('<h4 class="m-2 ms-0">Primary Contact</h4>'),
-                css_class='col-12'
+                Column("phone", css_class="form-group col-md-12 mb-3"), css_class="row"
             ),
             Row(
-                Column('salutation', css_class='form-group col-md-4 mb-3'),
-                Column('first_name', css_class='form-group col-md-4 mb-3'),
-                Column('last_name', css_class='form-group col-md-4 mb-3'),
-                css_class='row'
+                Column("other_details", css_class="form-group col-md-12 mb-3"),
+                css_class="row",
             ),
             Row(
-                Column('email', css_class='form-group col-md-12 mb-3'),
-                css_class='row'
+                Column("currency", css_class="form-group col-md-6 mb-3"),
+                Column("company_id", css_class="form-group col-md-6 mb-3"),
+                css_class="row",
             ),
             Row(
-                Column('phone', css_class='form-group col-md-12 mb-3'),
-                css_class='row'
+                Column("payment_due_period", css_class="form-group col-md-12 mb-3"),
+                css_class="row",
             ),
-            Row(
-                Column('other_details', css_class='form-group col-md-12 mb-3'),
-                css_class='row'
-            ),
-            Row(
-                Column('currency', css_class='form-group col-md-6 mb-3'),
-                Column('company_id', css_class='form-group col-md-6 mb-3'),
-                css_class='row'
-            ),
-            Row(
-                Column('payment_due_period', css_class='form-group col-md-12 mb-3'),
-                css_class='row'
-            ),
-            FormActions(
-                Submit('submit', 'Submit', css_class='btn btn-primary')
-            )
+            FormActions(Submit("submit", "Submit", css_class="btn btn-primary")),
         )
