@@ -11,6 +11,7 @@ from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
 from src.services.assets.models import AccountBalance
+from src.services.expense.models import JournalExpense
 from src.services.invoice.models import Invoice
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
@@ -341,7 +342,7 @@ def generate_project_report(request, pk):
     return response
 
 
-def download_journal(request, pk):
+def project_expenses(request, pk):
     # Retrieve the project by primary key
     project = Project.objects.get(pk=pk)
 
@@ -515,13 +516,16 @@ def generate_bank_statements_view(request):
 
     return response
 
+def generate_expense_report(request, start, end):
+    # Filter expenses within the date range
+    expenses = JournalExpense.objects.filter(created_at__date__range=(start, end))
 
-def generate_trial_balance_report(request):
     # Create a new workbook and select the active sheet
-    workbook = Workbook()
-    sheet = workbook.active
+    wb = Workbook()
+    sheet = wb.active
+    sheet.title = "Expense Report"
 
-    # Styles
+    # Define styles
     title_font = Font(size=14, bold=True, color="FFFFFF")
     header_font = Font(size=12, bold=True, color="FFFFFF")
     normal_font = Font(size=11)
@@ -546,64 +550,62 @@ def generate_trial_balance_report(request):
         if border:
             cell.border = border
 
-    current_row = 1  # Starting row for the report
+    # Add "Expense Report" Title
+    current_row = 1
     sheet.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=6)
-    sheet[f"A{current_row}"] = "Trial Balance Report for All Projects"
-    apply_cell_style(sheet[f"A{current_row}"], font=header_font, alignment=centered_alignment, fill=title_fill)
+    sheet[f"A{current_row}"] = f"Expense Report ({start} to {end})"
+    apply_cell_style(sheet[f"A{current_row}"], font=title_font, alignment=centered_alignment, fill=title_fill)
 
-    current_row += 2  # Spacing before trial balance section
-
-    # Add a header for all projects
-    trial_balance_headers = ["Project Name", "Budget Assigned", "Expenditure", "Client Funds (Paid)",
-                             "Client Funds (Unpaid)", "Net Total"]
-    for col, header in enumerate(trial_balance_headers, start=1):
+    # Add table headers
+    current_row += 1
+    expense_headers = ["Description", "Amount", "Source", "Category", "Vendor"]
+    for col, header in enumerate(expense_headers, start=1):
         cell = sheet.cell(row=current_row, column=col)
         cell.value = header
         apply_cell_style(cell, font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
 
-    # Iterate through all projects
-    projects = Project.objects.all()  # Fetch all projects
-    for project in projects:
-        current_row += 1
-        # Add project name
-        sheet.cell(row=current_row, column=1, value=project.name)
-        apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment,
-                         border=thin_border)
-
-        # Calculate budget assigned
-        ledger_entries = Ledger.objects.filter(project=project)
-        budget_assigned_total = sum(entry.amount for entry in ledger_entries
-                                    if entry.transaction_type in ["BUDGET_ASSIGN", "CREATE_LOAN"])
-
-        # Calculate expenditure
-        expenditure_total = sum(entry.amount for entry in ledger_entries
-                                if entry.transaction_type in ["CREATE_EXPENSE", "RETURN_LOAN"])
-
-        # Client Funds
-        client_funds_paid = Invoice.calculate_total_receieved(project_id=project.pk)
-        client_funds_unpaid = Invoice.calculate_total_receivables(project_id=project.pk)
-
-        # Net Total
-        net_total = client_funds_paid - expenditure_total
-
-        # Add data to columns
-        values = [budget_assigned_total, expenditure_total, client_funds_paid, client_funds_unpaid, net_total]
-        for col, value in enumerate(values, start=2):  # Start from column 2 (after Project Name)
-            cell = sheet.cell(row=current_row, column=col, value=value)
-            apply_cell_style(cell, font=normal_font, alignment=right_alignment, border=thin_border)
-
-    # Add report generation time and warning
-    current_row += 2
-    sheet.cell(row=current_row, column=1, value=f"Report Generated at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment)
+    # Populate data rows and calculate total
     current_row += 1
-    warning_message = "This is a computer-generated report and might be prone to errors. Please verify carefully."
-    sheet.cell(row=current_row, column=1, value=warning_message)
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=Font(color="FF0000"), alignment=left_alignment)
+    total_amount = 0
 
-    # Return the workbook as an HTTP response
-    from openpyxl.writer.excel import save_virtual_workbook
-    response = HttpResponse(content=save_virtual_workbook(workbook),
-                            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="trial_balance_report.xlsx"'
+    for expense in expenses:
+        row_data = [
+            expense.description,
+            expense.amount,
+            expense.budget_source,
+            expense.category.name if expense.category else 'N/A',
+            expense.vendor.name if expense.vendor else 'N/A'
+        ]
+        sheet.append(row_data)
+
+        # Apply the same border style to all cells in the row
+        for col in range(1, 7):
+            cell = sheet.cell(row=current_row, column=col)
+            apply_cell_style(cell, font=normal_font, alignment=centered_alignment, border=thin_border)
+
+        # Add to the total amount
+        total_amount += expense.amount
+
+        current_row += 1  # Move to the next row after each expense
+
+    # Add total row
+    sheet.append(["Total Expenses", total_amount, "", "", "", ""])
+    apply_cell_style(sheet[f"B{current_row}"], font=normal_font, alignment=right_alignment, border=thin_border)
+
+    # Adjust column widths to fit content
+    for col in sheet.columns:
+        max_length = 0
+        col_letter = get_column_letter(col[0].column)  # Get column letter from the first cell
+        for cell in col:
+            if cell.value and not isinstance(cell, MergedCell):  # Skip merged cells
+                max_length = max(max_length, len(str(cell.value)))
+        sheet.column_dimensions[col_letter].width = max(max_length + 2, 15)
+
+    # Save the workbook to a response object
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="expense_report.xlsx"'
+    wb.save(response)
+
     return response

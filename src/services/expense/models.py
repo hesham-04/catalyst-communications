@@ -56,18 +56,12 @@ class JournalExpense(models.Model):
     category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='journal_expenses')
     vendor = models.ForeignKey('vendor.Vendor', on_delete=models.SET_NULL, null=True, blank=True,
-                               related_name='journal_expenses')  # Link to Vendor model
+                               related_name='journal_expenses')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
-        return f"{self.project.project_name} - {self.amount} from {self.budget_source} ({self.category})"
-
-    @classmethod
-    def calculate_total_expenses(cls, project_id=None):
-        if project_id:
-            return cls.objects.filter(project_id=project_id).aggregate(total=Sum('amount'))['total'] or 0
-        return cls.objects.aggregate(total=Sum('amount'))['total'] or 0
+        return f"{self.description} - {self.amount}"
 
     class Meta:
         ordering = ['-created_at']

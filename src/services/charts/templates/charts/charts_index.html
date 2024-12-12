@@ -85,7 +85,7 @@
                                                 <td>{{ project.description|slice:20 }}</td>
                                                 <td>{{ project.get_total_budget }}</td>
                                                 <td class="text-end">
-                                                    <a href="{% url 'charts:generate' project.pk %}"
+                                                    <a href="{% url 'charts:project-report' project.pk %}"
                                                        class="btn btn-warning"><i class="fa fa-address-book me-2"></i>Generate
                                                         Report </a>
                                                 </td>
