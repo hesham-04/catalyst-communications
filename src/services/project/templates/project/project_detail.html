@@ -20,13 +20,7 @@
                         </a>
                         Project Detail
                     </h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
                 <div class="row">
@@ -188,10 +182,10 @@
                                                 </div>
                                             {% else %}
                                             {% endif %}
-{#                                            {% if project.project_status == 'IP' %}#}
-{#                                                <a href="{% url 'loan:lend_loan' pk=project.id %}"#}
-{#                                                   class="btn btn-success ms-3 ms-auto {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>#}
-{#                                            {% endif %}#}
+                                            {#                                            {% if project.project_status == 'IP' %}#}
+                                            {#                                                <a href="{% url 'loan:lend_loan' pk=project.id %}"#}
+                                            {#                                                   class="btn btn-success ms-3 ms-auto {% if project.project_status != 'IP' %}disabled{% endif %}">Completed</a>#}
+                                            {#                                            {% endif %}#}
 
                                         </div>
                                     </div>
@@ -219,7 +213,8 @@
                                             <h4 class="card-title mt-1">Expense Summary</h4>
                                         </div>
                                         <div class="col-md-6 ">
-                                            <a href="{% url 'project:expenses' project.pk %}" class="btn btn-soft-warning float-end mb-1">All Expenses</a>
+                                            <a href="{% url 'project:expenses' project.pk %}"
+                                               class="btn btn-soft-warning float-end mb-1">All Expenses</a>
                                         </div>
                                     </div>
                                     <table class="table mb-0">
@@ -277,7 +272,8 @@
                                                 <h4 class="card-title mt-1">Invoice Summary</h4>
                                             </div>
                                             <div class="col-md-6 ">
-                                                <a href="{% url 'project:invoices' project.pk %}" class="btn btn-soft-danger float-end mb-1">All Invoices</a>
+                                                <a href="{% url 'project:invoices' project.pk %}"
+                                                   class="btn btn-soft-danger float-end mb-1">All Invoices</a>
                                             </div>
                                         </div>
                                         <table class="table mb-0">

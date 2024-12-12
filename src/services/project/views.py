@@ -3,9 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import Sum
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views import View
 from django.views.generic import (
     TemplateView,
     CreateView,
@@ -13,6 +12,11 @@ from django.views.generic import (
     FormView,
     UpdateView,
 )
+
+from django.shortcuts import render
+from django.views import View
+from django.template.loader import render_to_string
+
 
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.views import Expense
@@ -22,7 +26,6 @@ from .forms import ProjectForm
 from .models import Project
 from django.http import JsonResponse
 from ..customer.forms import CustomerForm
-from ..customer.models import Customer
 from ..invoice.models import Invoice
 from ..loan.models import Loan
 from ..transaction.models import Ledger
@@ -79,14 +82,6 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy("project:detail", kwargs={"pk": self.object.pk})
 
 
-# views.py
-
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.views import View
-from django.template.loader import render_to_string
-
-
 class ModalCustomerCreateView(View):
     def get(self, request):
         form = CustomerForm()
@@ -102,15 +97,6 @@ class ModalCustomerCreateView(View):
     def post(self, request):
         form = CustomerForm(request.POST)
         if form.is_valid():
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
-            print("-=====================================")
             customer = form.save()
             return JsonResponse(
                 {
@@ -122,46 +108,7 @@ class ModalCustomerCreateView(View):
                     },
                 }
             )
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
-        print("NO")
+
         return JsonResponse({"success": False, "errors": form.errors})
 
 

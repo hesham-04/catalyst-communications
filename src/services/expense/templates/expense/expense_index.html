@@ -11,13 +11,7 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">All Expenses</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Expenses</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
                 <div class="row">
@@ -81,13 +75,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for expense in expenses %}
+                                    {% for expense in entries %}
                                         <tr>
                                             <td>{{ expense.created_at|date:"d M Y" }}
                                                 <span>{{ expense.created_at|time:"h:ia" }}</span>
                                             </td>
                                             <td>{{ expense.category }}</td>
-                                            <td>{{ expense.description|slice:20 }}</td>
+                                            <td>{{ expense.reason|slice:20 }}</td>
                                             <td>{{ expense.amount }}</td>
                                             <td>
                                                 {% if expense.budget_source == 'CASH' %}
@@ -100,8 +94,7 @@
                                                     <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2">Account</span>
                                                 {% endif %}
                                             </td>
-                                            <td>{% if expense.vendor %}{{ expense.vendor.name }}{% else %} &nbsp;&nbsp;
-                                                &nbsp;&nbsp;&nbsp;&nbsp;-{% endif %}</td>
+                                            <td>{{ expense.destination }}</td>
                                         </tr>
                                     {% empty %}
                                         <tr>

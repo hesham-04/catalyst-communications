@@ -14,13 +14,7 @@
                     <div class="col-sm-12">
                         <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                             <h4 class="page-title">Charts of Accounts</h4>
-                            <div class="">
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="#">Catalyst</a>
-                                    </li><!--end nav-item-->
-                                    <li class="breadcrumb-item active">Projects</li>
-                                </ol>
-                            </div>
+
                         </div><!--end page-title-box-->
                     </div><!--end col-->
                 </div><!--end row-->
@@ -35,18 +29,19 @@
                                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                                         <!-- Added ms-auto for right alignment -->
                                         <li class="nav-item m-1">
-{#                                            <a class="btn btn-primary" aria-current="page"#}
-{#                                               href="{% url 'charts:report'  %}"><i#}
-{#                                                    class="fa fa-envelope me-1"></i>Generate Monthly Report</a>#}
+                                            {#                                            <a class="btn btn-primary" aria-current="page"#}
+                                            {#                                               href="{% url 'charts:report'  %}"><i#}
+                                            {#                                                    class="fa fa-envelope me-1"></i>Generate Monthly Report</a>#}
 
                                             {#                                            <a href="{% url 'generate_monthly_report' month=11 year=2024 %}">Download November Report</a>#}
                                         </li>
-{#                                        <li class="nav-item m-1">#}
-{#                                            <a class="btn btn-warning" aria-current="page" href="#"><i#}
-{#                                                    class="fa fa-envelope me-1"></i>Generate Yearly Report</a>#}
-{#                                        </li>#}
+                                        {#                                        <li class="nav-item m-1">#}
+                                        {#                                            <a class="btn btn-warning" aria-current="page" href="#"><i#}
+                                        {#                                                    class="fa fa-envelope me-1"></i>Generate Yearly Report</a>#}
+                                        {#                                        </li>#}
                                         <li class="nav-item m-1">
-                                            <a class="btn btn-warning" aria-current="page" href="{% url 'charts:generate_bank_statements' %}"><i
+                                            <a class="btn btn-warning" aria-current="page"
+                                               href="{% url 'charts:generate_bank_statements' %}"><i
                                                     class="fa fa-bank me-2"></i>Generate Bank Report</a>
                                         </li>
                                     </ul>

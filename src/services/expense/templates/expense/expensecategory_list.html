@@ -11,14 +11,10 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'expense:index' %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                        Customers</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="#">Customers</a>
-                            </li><!--end nav-item-->
-                        </ol>
-                    </div>
+                        <a class="btn btn-secondary btn-sm" href="{% url 'expense:index' %}"><i
+                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        Expense Categories</h4>
+
                 </div>
 
 
@@ -28,11 +24,12 @@
                             <div class="card-header">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h4 class="card-title">Transaction History</h4>
+                                        <h4 class="card-title">All Categories</h4>
                                     </div><!--end col-->
 
                                     <div class="col ms-auto">
-                                        <a href="{% url 'expense:expense-category-create' %}" class="btn btn-soft-primary float-end">
+                                        <a href="{% url 'expense:expense-category-create' %}"
+                                           class="btn btn-soft-primary float-end">
                                             Create
                                         </a>
                                     </div>
@@ -50,20 +47,21 @@
                                         </thead>
                                         <tbody>
                                         {% for object in object_list %}
-                                        <tr>
-                                            <td><a href="#" class="fs-12 text-primary">{{ object.id }}</a></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <h6 class="m-0">{{ object.name }}</h6>
-                                                </div>
-                                            </td>
-                                            <td class="text-end">
-                                                <a href="{% url 'expense:expense-category-delete' object.pk %}"><i class="las la-trash-alt text-secondary fs-18"></i></a>
-                                            </td>
-                                        </tr><!--end tr-->
+                                            <tr>
+                                                <td><a href="#" class="fs-12 text-primary">{{ object.id }}</a></td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <h6 class="m-0">{{ object.name }}</h6>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end">
+                                                    <a href="{% url 'expense:expense-category-delete' object.pk %}"><i
+                                                            class="las la-trash-alt text-secondary fs-18"></i></a>
+                                                </td>
+                                            </tr><!--end tr-->
                                         {% empty %}
                                             <tr>
-                                            <p> No Categories Found</p>
+                                                <p> No Categories Found</p>
                                             </tr>
                                         {% endfor %}
 

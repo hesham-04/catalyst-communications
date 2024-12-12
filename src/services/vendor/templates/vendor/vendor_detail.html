@@ -9,15 +9,10 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'vendor:vendors' %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        <a class="btn btn-secondary btn-sm" href="{% url 'vendor:vendors' %}"><i
+                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Vendor Detail</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Vendors</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
 
@@ -120,23 +115,26 @@
                                                 </select>
                                             </div>
 
-{#                                            <!-- Status Filter -->#}
-{#                                            <div class="col-md-3">#}
-{#                                                <select name="status" id="status" class="form-select">#}
-{#                                                    <option value="">All Statuses</option>#}
-{#                                                    {% for status, label in statuses %}#}
-{#                                                        <option value="{{ status }}"#}
-{#                                                                {% if status == request.GET.status %}selected{% endif %}>#}
-{#                                                            {{ label }}#}
-{#                                                        </option>#}
-{#                                                    {% endfor %}#}
-{#                                                </select>#}
-{#                                            </div>#}
+                                            {#                                            <!-- Status Filter -->#}
+                                            {#                                            <div class="col-md-3">#}
+                                            {#                                                <select name="status" id="status" class="form-select">#}
+                                            {#                                                    <option value="">All Statuses</option>#}
+                                            {#                                                    {% for status, label in statuses %}#}
+                                            {#                                                        <option value="{{ status }}"#}
+                                            {#                                                                {% if status == request.GET.status %}selected{% endif %}>#}
+                                            {#                                                            {{ label }}#}
+                                            {#                                                        </option>#}
+                                            {#                                                    {% endfor %}#}
+                                            {#                                                </select>#}
+                                            {#                                            </div>#}
 
                                             <!-- Submit Button -->
                                             <div class="col-md-3 d-flex align-items-end">
-                                                <button type="submit" class="btn btn-primary me-1"><i class="fa-solid fa-filter"></i> Filter</button>
-                                                <a href="{% url 'vendor:detail' object.id %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <button type="submit" class="btn btn-primary me-1"><i
+                                                        class="fa-solid fa-filter"></i> Filter
+                                                </button>
+                                                <a href="{% url 'vendor:detail' object.id %}" class="btn btn-danger"><i
+                                                        class="fa-solid fa-trash"></i></a>
                                             </div>
                                         </form>
                                     </div>
@@ -174,11 +172,11 @@
                                                     <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2"> PAID </span>
                                                 </td>
                                             {% endif %}
-{#                                            <td>#}
-{#                                                <a href="{% url 'expense:pay-expense' pk=expense.pk %}" class="btn btn-soft-success"><i class="fa fa-money-bill-wave"></i>#}
-{#                                                    Pay Now#}
-{#                                                </a>#}
-{#                                            </td>#}
+                                            {#                                            <td>#}
+                                            {#                                                <a href="{% url 'expense:pay-expense' pk=expense.pk %}" class="btn btn-soft-success"><i class="fa fa-money-bill-wave"></i>#}
+                                            {#                                                    Pay Now#}
+                                            {#                                                </a>#}
+                                            {#                                            </td>#}
                                         </tr>
                                     {% empty %}
                                         <tr>
