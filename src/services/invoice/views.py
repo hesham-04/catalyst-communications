@@ -15,24 +15,26 @@ from ..project.models import Project
 class CreateInvoiceView(LoginRequiredMixin, CreateView):
     model = Invoice
     form_class = InvoiceForm
-    template_name = 'invoice/invoice_form.html'
+    template_name = "invoice/invoice_form.html"
 
     def get_initial(self):
         initial = super().get_initial()
-        project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        initial['project'] = project
+        project = get_object_or_404(Project, pk=self.kwargs["pk"])
+        initial["project"] = project
         return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['project'] = Project.objects.get(pk=self.kwargs['pk'])
-        InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm, extra=1)
-        context['formset'] = InvoiceItemFormSet(queryset=InvoiceItem.objects.none())
+        context["project"] = Project.objects.get(pk=self.kwargs["pk"])
+        InvoiceItemFormSet = modelformset_factory(
+            InvoiceItem, form=InvoiceItemForm, extra=1
+        )
+        context["formset"] = InvoiceItemFormSet(queryset=InvoiceItem.objects.none())
 
         return context
 
     def form_valid(self, form):
-        project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        project = get_object_or_404(Project, pk=self.kwargs["pk"])
         form.instance.project = project
         invoice = form.save()
 
@@ -49,55 +51,54 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('invoice:detail', kwargs={'pk': self.object.pk})
-
-
-class PrintInvoiceView(LoginRequiredMixin, TemplateView):
-    template_name = 'invoice/invoice_print.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['invoice'] = get_object_or_404(Invoice, pk=self.kwargs['pk'])
-        return context
+        return reverse("invoice:detail", kwargs={"pk": self.object.pk})
 
 
 class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
-    template_name = 'invoice/invoice_detail.html'
+    template_name = "invoice/invoice_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['invoice'] = get_object_or_404(Invoice, pk=self.kwargs['pk'])
+        context["invoice"] = get_object_or_404(Invoice, pk=self.kwargs["pk"])
         return context
 
 
 class InvoicePaidView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
+        invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
         form = TransferFundsForm()
-        return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
+        return render(
+            request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
+        )
 
     def post(self, request, *args, **kwargs):
-        invoice = get_object_or_404(Invoice, pk=kwargs['pk'])
+        invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
         form = TransferFundsForm(request.POST)
 
         if form.is_valid():
-            account = form.cleaned_data['account']
+            account = form.cleaned_data["account"]
             amount = invoice.total_amount
 
             # Processing the invoice payment
             success, message = process_invoice_payment(
                 invoice_id=invoice.pk,
-                destination='account',
+                destination="account",
                 account_id=account.pk,
-                amount=amount
+                amount=amount,
             )
 
             if success:
-                messages.success(request, 'Funds Successfully Transferred')
-                return redirect(reverse('project:detail', args=[invoice.project.pk]))
+                messages.success(request, "Funds Successfully Transferred")
+                return redirect(reverse("project:detail", args=[invoice.project.pk]))
             else:
                 messages.error(request, message)
-                return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
+                return render(
+                    request,
+                    "invoice/invoice_paid.html",
+                    {"form": form, "invoice": invoice},
+                )
 
-        return render(request, 'invoice/invoice_paid.html', {'form': form, 'invoice': invoice})
+        return render(
+            request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
+        )

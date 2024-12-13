@@ -61,15 +61,7 @@
                                    href="{% url 'project:detail' quotation.project.pk %}"><i
                                         class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                                 Quotation</h4>
-                            <div class="">
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="#">CATALYST</a>
-                                    </li><!--end nav-item-->
-                                    <li class="breadcrumb-item"><a href="#">{{ quotation.project }}</a>
-                                    </li><!--end nav-item-->
-                                    <li class="breadcrumb-item active">Quotation</li>
-                                </ol>
-                            </div>
+
                         </div><!--end page-title-box-->
                     </div><!--end col-->
                 </div><!--end row-->
@@ -196,7 +188,7 @@
                                 <div class="col-lg-12 col-xl-4">
                                     <div class="float-end d-print-none mt-2 mt-md-0">
                                         <a href="javascript:void(0)" onclick="printSection()"
-                                                   class="btn btn-info">Print</a>
+                                           class="btn btn-info">Print</a>
                                         <a href="{% url 'project:detail' pk=quotation.project.id %}"
                                            class="btn btn-secondar"><i class="fa fa-arrow-left-long me-2"></i>Go
                                             Back</a>

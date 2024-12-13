@@ -12,10 +12,7 @@
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">Customers</h4>
                     <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                            </li><!--end nav-item-->
-                        </ol>
+
                     </div>
                 </div>
 
@@ -52,8 +49,7 @@
                                         <th>Name</th>
                                         <th>Company</th>
                                         <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Receivables</th>
+                                        <th>Mobile</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -75,18 +71,19 @@
                                             </td>
                                             <td>{{ customer.company_name }}</td>
                                             <td>{{ customer.email }}</td>
-                                            <td>{{ customer.phone }}</td>
-                                            <td>{{ customer.currency }}</td>
+                                            <td>{{ customer.mobile }}</td>
                                             <td>
                                                 <div class="row">
-                                                        <div class="col-md-4 text-center">
-                                                            <a class="text-warning" href="{% url 'customer:update' customer.pk %}">
-                                                                <i class="fa fa-edit"></i><br>
-                                                                Edit
-                                                            </a>
-                                                        </div>
+                                                    <div class="col-md-4 text-center">
+                                                        <a class="text-warning"
+                                                           href="{% url 'customer:update' customer.pk %}">
+                                                            <i class="fa fa-edit"></i><br>
+                                                            Edit
+                                                        </a>
+                                                    </div>
                                                     <div class="col-md-4 text-danger text-center">
-                                                        <a class="text-danger" href="{% url 'customer:delete' customer.pk %}">
+                                                        <a class="text-danger"
+                                                           href="{% url 'customer:delete' customer.pk %}">
                                                             <i class="fa fa-trash text-danger"></i><br>
                                                             Delete
                                                         </a>
@@ -99,7 +96,7 @@
                                         </tr>
                                     {% empty %}
                                         <tr>
-                                            <td colspan="6">No Customers found.</td>
+                                            <td class="text-danger" colspan="6">No related customers found.</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

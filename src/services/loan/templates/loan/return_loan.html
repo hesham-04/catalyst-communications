@@ -11,15 +11,10 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'project:detail' loan.project.pk %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        <a class="btn btn-secondary btn-sm" href="{% url 'project:detail' loan.project.pk %}"><i
+                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Loan Management</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Loan</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
                 <div class="row">
@@ -44,7 +39,8 @@
                                                 class="font-14">PKR</small>
                                         </h4>
                                         <p class="mb-3 text-dark fw-semibold">
-                                            <span class="text-success"><i class="fas fa-calendar me-1"></i>Created on: {{ loan.date_issued }}: </span>
+                                            <span class="text-success"><i
+                                                    class="fas fa-calendar me-1"></i>Created on: {{ loan.date_issued }}: </span>
                                             {{ loan.reason }}
                                         </p>
                                         <p class="mb-3 text-dark fw-semibold">
@@ -110,25 +106,26 @@
                     {% if loan.is_repaid %}
                         {% include 'loan/include/loan_installments.html' %}
                     {% else %}
-                    <div class="col-md-6">
-                        <div class="card border-2">
-                            <h4 class="text-center" style="margin-top: 18px">Return loan for <b>
-                                {{ project.project_name }}</b></h4>
-                            <p class="text-danger text-sm-center">
-                                This amount will be deducted from the project account balance: {{ project.project_account_balance }} PKR.
-                            </p>
+                        <div class="col-md-6">
+                            <div class="card border-2">
+                                <h4 class="text-center" style="margin-top: 18px">Return loan for <b>
+                                    {{ project.project_name }}</b></h4>
+                                <p class="text-danger text-sm-center">
+                                    This amount will be deducted from the project account
+                                    balance: {{ project.project_account_balance }} PKR.
+                                </p>
 
-                            <div class="card-body">
-                                <form method="post">
-                                    {% csrf_token %}
-                                    {{ form|crispy }}
-                                    <button type="submit" class="btn btn-primary mt-3 float-end">Return Amount
-                                    </button>
-                                </form>
+                                <div class="card-body">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {{ form|crispy }}
+                                        <button type="submit" class="btn btn-primary mt-3 float-end">Return Amount
+                                        </button>
+                                    </form>
 
-                            </div><!--end card-body-->
-                        </div><!--end card-->
-                    </div>
+                                </div><!--end card-body-->
+                            </div><!--end card-->
+                        </div>
                     {% endif %}
 
                 </div>
@@ -136,9 +133,9 @@
                 {% if loan.is_repaid %}
 
                 {% else %}
-                <div class="row">
-                    {% include 'loan/include/loan_installments.html' %}
-                </div>
+                    <div class="row">
+                        {% include 'loan/include/loan_installments.html' %}
+                    </div>
                 {% endif %}
 
 

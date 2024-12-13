@@ -13,30 +13,24 @@
             {% if object %}
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a href="{% url 'customer:index' %}"><div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left me-1"></i>Go Back</div></a>
-                        Edit Customer
+                        <a href="{% url 'customer:index' %}">
+                            <div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left me-1"></i>Go Back
+                            </div>
+                        </a>
+                        Update Customer
                     </h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
             {% else %}
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center pb-1">
                     <h4 class="page-title">
-                        <a href="{% url 'customer:index' %}"><div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left me-1"></i>Go Back</div></a>
+                        <a href="{% url 'customer:index' %}">
+                            <div class="btn btn-secondary btn-sm me-2"><i class="fa fa-arrow-left me-1"></i>Go Back
+                            </div>
+                        </a>
                         Add Customer
                     </h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Add</li>
-                        </ol>
-                    </div>
+
                 </div>
 
             {% endif %}

@@ -10,13 +10,7 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">All Vendors</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Vendors</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
 
@@ -76,7 +70,9 @@
                                                 <td><a href="{% url 'vendor:detail' object.pk %}">{{ object.name }}</a>
                                                 </td>
                                                 <td>{{ object.email }}</td>
-                                                <td><span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">{{ object.total_expense }} PKR</span></td>
+                                                <td><span
+                                                        class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">{{ object.total_expense }} PKR</span>
+                                                </td>
 
                                                 <td class="text-center">{{ object.phone }}</td>
                                             </tr>

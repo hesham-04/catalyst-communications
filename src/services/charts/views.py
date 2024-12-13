@@ -20,7 +20,7 @@ from src.services.transaction.models import Ledger
 class ChartsIndex(View):
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
-        return render(request, 'charts/charts_index.html', {'projects': projects})
+        return render(request, "charts/charts_index.html", {"projects": projects})
 
 
 # project
@@ -45,8 +45,10 @@ def generate_project_report(request, pk):
     title_fill = PatternFill("solid", fgColor="4F81BD")  # Blue background
     header_fill = PatternFill("solid", fgColor="A9C6E8")  # Light blue background
     thin_border = Border(
-        left=Side(style="thin"), right=Side(style="thin"),
-        top=Side(style="thin"), bottom=Side(style="thin")
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
     )
 
     # Helper function to style a cell
@@ -63,30 +65,46 @@ def generate_project_report(request, pk):
     # Add Project Title
     sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=6)
     sheet["A1"] = f"{project.project_name} Financial Overview"
-    apply_cell_style(sheet["A1"], font=title_font, alignment=centered_alignment, fill=title_fill)
+    apply_cell_style(
+        sheet["A1"], font=title_font, alignment=centered_alignment, fill=title_fill
+    )
 
     # Add Project Information
     current_row = 3
-    sheet.append(['Project Name', 'Description', 'Customer', 'Status', 'Current Budget', '-'])
-    sheet.append([
-        project.project_name,
-        project.description or "N/A",
-        str(project.customer),
-        project.project_status,
-        project.get_total_budget() or 'N/A',
-
-    ])
+    sheet.append(
+        ["Project Name", "Description", "Customer", "Status", "Current Budget", "-"]
+    )
+    sheet.append(
+        [
+            project.project_name,
+            project.description or "N/A",
+            str(project.customer),
+            project.project_status,
+            project.get_total_budget() or "N/A",
+        ]
+    )
 
     # Style the project details
-    for row in sheet.iter_rows(min_row=current_row, max_row=current_row + 1, min_col=1, max_col=5):
+    for row in sheet.iter_rows(
+        min_row=current_row, max_row=current_row + 1, min_col=1, max_col=5
+    ):
         for cell in row:
-            apply_cell_style(cell, font=normal_font, alignment=left_alignment, border=thin_border)
+            apply_cell_style(
+                cell, font=normal_font, alignment=left_alignment, border=thin_border
+            )
 
     # Add "Total Budget Assigned" table
     current_row += 3  # Move down after project details
-    sheet.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=2)
+    sheet.merge_cells(
+        start_row=current_row, start_column=1, end_row=current_row, end_column=2
+    )
     sheet[f"A{current_row}"] = "Total Budget Assigned"
-    apply_cell_style(sheet[f"A{current_row}"], font=header_font, alignment=centered_alignment, fill=title_fill)
+    apply_cell_style(
+        sheet[f"A{current_row}"],
+        font=header_font,
+        alignment=centered_alignment,
+        fill=title_fill,
+    )
 
     # Table headers
     current_row += 1
@@ -94,14 +112,27 @@ def generate_project_report(request, pk):
     for col, header in enumerate(headers, start=1):
         cell = sheet.cell(row=current_row, column=col)
         cell.value = header
-        apply_cell_style(cell, font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+        apply_cell_style(
+            cell,
+            font=header_font,
+            alignment=centered_alignment,
+            fill=header_fill,
+            border=thin_border,
+        )
 
     # Budget inflow data
-    budget_assigned_total = \
-        Ledger.objects.filter(project_id=pk, transaction_type="BUDGET_ASSIGN").aggregate(Sum("amount"))[
-            "amount__sum"] or 0
-    loan_created_total = Ledger.objects.filter(project_id=pk, transaction_type="CREATE_LOAN").aggregate(Sum("amount"))[
-                             "amount__sum"] or 0
+    budget_assigned_total = (
+        Ledger.objects.filter(
+            project_id=pk, transaction_type="BUDGET_ASSIGN"
+        ).aggregate(Sum("amount"))["amount__sum"]
+        or 0
+    )
+    loan_created_total = (
+        Ledger.objects.filter(project_id=pk, transaction_type="CREATE_LOAN").aggregate(
+            Sum("amount")
+        )["amount__sum"]
+        or 0
+    )
     total_inflow = budget_assigned_total + loan_created_total
 
     data_rows = [
@@ -116,22 +147,48 @@ def generate_project_report(request, pk):
         source_cell = sheet.cell(row=current_row, column=1)
         amount_cell = sheet.cell(row=current_row, column=2)
         source_cell.value, amount_cell.value = row_data
-        apply_cell_style(source_cell, font=normal_font, alignment=left_alignment, border=thin_border)
-        apply_cell_style(amount_cell, font=normal_font, alignment=centered_alignment, border=thin_border)
+        apply_cell_style(
+            source_cell, font=normal_font, alignment=left_alignment, border=thin_border
+        )
+        apply_cell_style(
+            amount_cell,
+            font=normal_font,
+            alignment=centered_alignment,
+            border=thin_border,
+        )
 
     # Add Invoices Section
     current_row += 2  # Add spacing
-    sheet.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=5)
+    sheet.merge_cells(
+        start_row=current_row, start_column=1, end_row=current_row, end_column=5
+    )
     sheet[f"A{current_row}"] = "Invoices"
-    apply_cell_style(sheet[f"A{current_row}"], font=header_font, alignment=centered_alignment, fill=title_fill)
+    apply_cell_style(
+        sheet[f"A{current_row}"],
+        font=header_font,
+        alignment=centered_alignment,
+        fill=title_fill,
+    )
 
     # Table headers for invoices
     current_row += 1
-    invoice_headers = ["Invoice Number", "Client Name", "Total Amount", "Status", "Date"]
+    invoice_headers = [
+        "Invoice Number",
+        "Client Name",
+        "Total Amount",
+        "Status",
+        "Date",
+    ]
     for col, header in enumerate(invoice_headers, start=1):
         cell = sheet.cell(row=current_row, column=col)
         cell.value = header
-        apply_cell_style(cell, font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+        apply_cell_style(
+            cell,
+            font=header_font,
+            alignment=centered_alignment,
+            fill=header_fill,
+            border=thin_border,
+        )
 
     # Data rows for invoices
     paid_invoices_total = 0
@@ -139,13 +196,15 @@ def generate_project_report(request, pk):
 
     for invoice in invoices:
         current_row += 1
-        sheet.append([
-            invoice.invoice_number,
-            invoice.client_name,
-            invoice.total_amount,
-            invoice.status,
-            invoice.date.strftime('%Y-%m-%d') if invoice.date else '',
-        ])
+        sheet.append(
+            [
+                invoice.invoice_number,
+                invoice.client_name,
+                invoice.total_amount,
+                invoice.status,
+                invoice.date.strftime("%Y-%m-%d") if invoice.date else "",
+            ]
+        )
         # Calculate total amounts based on the status
         if invoice.status.lower() == "paid":
             paid_invoices_total += invoice.total_amount
@@ -156,44 +215,104 @@ def generate_project_report(request, pk):
     current_row += 1  # Move to the next row for totals
     # Total Paid Invoices
     sheet.append(["", "Total Paid Invoices", paid_invoices_total, "", ""])
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=2), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=3), font=normal_font, alignment=centered_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=4), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=5), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=2),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=3),
+        font=normal_font,
+        alignment=centered_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=4),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=5),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
 
     # Total Unpaid Invoices
     current_row += 1  # Move to the next row for totals
     sheet.append(["", "Total Unpaid Invoices", unpaid_invoices_total, "", ""])
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=2), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=3), font=normal_font, alignment=centered_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=4), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=5), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=2),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=3),
+        font=normal_font,
+        alignment=centered_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=4),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=5),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
 
     # Add Expenses Section
     current_row += 2  # Add spacing
-    sheet.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=6)
+    sheet.merge_cells(
+        start_row=current_row, start_column=1, end_row=current_row, end_column=6
+    )
     sheet[f"A{current_row}"] = "Expenses"
-    apply_cell_style(sheet[f"A{current_row}"], font=header_font, alignment=centered_alignment, fill=title_fill)
+    apply_cell_style(
+        sheet[f"A{current_row}"],
+        font=header_font,
+        alignment=centered_alignment,
+        fill=title_fill,
+    )
 
     # Table headers for expenses
     current_row += 1
-    expense_headers = ["Description", "Amount", "Source", "Category", "Payment Status", "Vendor"]
+    expense_headers = [
+        "Description",
+        "Amount",
+        "Source",
+        "Category",
+        "Payment Status",
+        "Vendor",
+    ]
     for col, header in enumerate(expense_headers, start=1):
         cell = sheet.cell(row=current_row, column=col)
         cell.value = header
-        apply_cell_style(cell, font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+        apply_cell_style(
+            cell,
+            font=header_font,
+            alignment=centered_alignment,
+            fill=header_fill,
+            border=thin_border,
+        )
 
     # Data rows for expenses
     paid_expenses_total = 0
@@ -201,14 +320,16 @@ def generate_project_report(request, pk):
 
     for expense in expenses:
         current_row += 1
-        sheet.append([
-            expense.description,
-            expense.amount,
-            expense.budget_source,
-            expense.category.name if expense.category else 'N/A',
-            expense.payment_status,
-            expense.vendor.name if expense.vendor else 'N/A'
-        ])
+        sheet.append(
+            [
+                expense.description,
+                expense.amount,
+                expense.budget_source,
+                expense.category.name if expense.category else "N/A",
+                expense.payment_status,
+                expense.vendor.name if expense.vendor else "N/A",
+            ]
+        )
         # Calculate total amounts based on the payment status
         if expense.payment_status.lower() == "paid":
             paid_expenses_total += expense.amount
@@ -219,50 +340,115 @@ def generate_project_report(request, pk):
     current_row += 1  # Move to the next row for totals
     # Total Paid Expenses
     sheet.append(["", "Total Paid Expenses", paid_expenses_total, "", "", ""])
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=2), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=3), font=normal_font, alignment=centered_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=4), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=5), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=6), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=2),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=3),
+        font=normal_font,
+        alignment=centered_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=4),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=5),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=6),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
 
     # Total Unpaid Expenses
     current_row += 1  # Move to the next row for totals
     sheet.append(["", "Total Unpaid Expenses", unpaid_expenses_total, "", "", ""])
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=2), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=3), font=normal_font, alignment=centered_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=4), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=5), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
-    apply_cell_style(sheet.cell(row=current_row, column=6), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=2),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=3),
+        font=normal_font,
+        alignment=centered_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=4),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=5),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=6),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
 
     # Add Trial Balance Section
     current_row += 2  # Add spacing before the new section
-    sheet.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=5)
+    sheet.merge_cells(
+        start_row=current_row, start_column=1, end_row=current_row, end_column=5
+    )
     sheet[f"A{current_row}"] = "Trial Balance"
-    apply_cell_style(sheet[f"A{current_row}"], font=header_font, alignment=centered_alignment, fill=title_fill)
+    apply_cell_style(
+        sheet[f"A{current_row}"],
+        font=header_font,
+        alignment=centered_alignment,
+        fill=title_fill,
+    )
 
     # Table headers for trial balance
     current_row += 1
-    trial_balance_headers = ["Budget Assigned (Loan + Wallet)", "Expenditure (Loans + Expenses)", "Client Funds (Paid)",
-                             "Client Funds (Unpaid)",
-                             "Net Total"]
+    trial_balance_headers = [
+        "Budget Assigned (Loan + Wallet)",
+        "Expenditure (Loans + Expenses)",
+        "Client Funds (Paid)",
+        "Client Funds (Unpaid)",
+        "Net Total",
+    ]
     for col, header in enumerate(trial_balance_headers, start=1):
         cell = sheet.cell(row=current_row, column=col)
         cell.value = header
-        apply_cell_style(cell, font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+        apply_cell_style(
+            cell,
+            font=header_font,
+            alignment=centered_alignment,
+            fill=header_fill,
+            border=thin_border,
+        )
 
     # Initialize totals
     budget_assigned_total = 0
@@ -276,7 +462,10 @@ def generate_project_report(request, pk):
 
     # Categorize transactions
     for entry in ledger_entries:
-        if entry.transaction_type == "BUDGET_ASSIGN" or entry.transaction_type == "CREATE_LOAN":
+        if (
+            entry.transaction_type == "BUDGET_ASSIGN"
+            or entry.transaction_type == "CREATE_LOAN"
+        ):
             budget_assigned_total += entry.amount
         elif entry.transaction_type == "CREATE_EXPENSE":
             expenditure_total += entry.amount
@@ -285,48 +474,80 @@ def generate_project_report(request, pk):
     current_row += 1
     # Budget Assigned column
     sheet.cell(row=current_row, column=1, value=budget_assigned_total)
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=right_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=normal_font,
+        alignment=right_alignment,
+        border=thin_border,
+    )
 
     # Expenditure column
     sheet.cell(row=current_row, column=2, value=expenditure_total)
-    apply_cell_style(sheet.cell(row=current_row, column=2), font=normal_font, alignment=right_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=2),
+        font=normal_font,
+        alignment=right_alignment,
+        border=thin_border,
+    )
 
     # Client Funds (Paid) column
     sheet.cell(row=current_row, column=3, value=client_funds_paid)
-    apply_cell_style(sheet.cell(row=current_row, column=3), font=normal_font, alignment=right_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=3),
+        font=normal_font,
+        alignment=right_alignment,
+        border=thin_border,
+    )
 
     # Client Funds (Unpaid) column
     sheet.cell(row=current_row, column=4, value=f"({client_funds_unpaid})")
-    apply_cell_style(sheet.cell(row=current_row, column=4), font=normal_font, alignment=right_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=4),
+        font=normal_font,
+        alignment=right_alignment,
+        border=thin_border,
+    )
 
     # Net Total column (Client Funds - Expenditure)
     net_total = client_funds_paid - expenditure_total
     sheet.cell(row=current_row, column=5, value=net_total)
-    apply_cell_style(sheet.cell(row=current_row, column=5), font=normal_font, alignment=right_alignment,
-                     border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=5),
+        font=normal_font,
+        alignment=right_alignment,
+        border=thin_border,
+    )
 
     # Add today's date and time after the trial balance
     current_row += 7  # Add some spacing
     today_date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sheet.cell(row=current_row, column=1, value=f"Report Generated at: {today_date_time}")
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=normal_font, alignment=left_alignment,
-                     border=thin_border)
+    sheet.cell(
+        row=current_row, column=1, value=f"Report Generated at: {today_date_time}"
+    )
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=normal_font,
+        alignment=left_alignment,
+        border=thin_border,
+    )
 
     # Add the computer-generated report warning
     current_row += 1
     warning_message = "This is a computer-generated report and might be prone to errors or inaccuracies. Please verify the data carefully."
     sheet.cell(row=current_row, column=1, value=warning_message)
-    apply_cell_style(sheet.cell(row=current_row, column=1), font=Font(color="FF0000"),
-                     alignment=left_alignment, border=thin_border)
+    apply_cell_style(
+        sheet.cell(row=current_row, column=1),
+        font=Font(color="FF0000"),
+        alignment=left_alignment,
+        border=thin_border,
+    )
 
     # Adjust column widths to fit content
     for col in sheet.columns:
         max_length = 0
-        col_letter = get_column_letter(col[0].column)  # Get column letter from the first cell
+        col_letter = get_column_letter(
+            col[0].column
+        )  # Get column letter from the first cell
         for cell in col:
             if cell.value and not isinstance(cell, MergedCell):  # Skip merged cells
                 max_length = max(max_length, len(str(cell.value)))
@@ -334,9 +555,11 @@ def generate_project_report(request, pk):
 
     # Save workbook to response
     response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    response['Content-Disposition'] = f'attachment; filename="{project.project_name}_records.xlsx"'
+    response["Content-Disposition"] = (
+        f'attachment; filename="{project.project_name}_records.xlsx"'
+    )
     workbook.save(response)
 
     return response
@@ -361,8 +584,10 @@ def project_expenses(request, pk):
     left_alignment = Alignment(horizontal="left", vertical="center")
     header_fill = PatternFill("solid", fgColor="4F81BD")  # Blue background for headers
     thin_border = Border(
-        left=Side(style="thin"), right=Side(style="thin"),
-        top=Side(style="thin"), bottom=Side(style="thin")
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
     )
 
     # Add a title row with project information
@@ -373,7 +598,9 @@ def project_expenses(request, pk):
     sheet["A1"].fill = header_fill
 
     # Add Column Headers
-    sheet.append(['Transaction Type', 'Amount', 'Source', 'Destination', 'Reason', 'Date'])
+    sheet.append(
+        ["Transaction Type", "Amount", "Source", "Destination", "Reason", "Date"]
+    )
 
     # Apply header styles
     for cell in sheet[2]:
@@ -384,20 +611,26 @@ def project_expenses(request, pk):
 
     # Add Ledger Entries
     for ledger in ledger_entries:
-        sheet.append([
-            ledger.get_transaction_type_display(),  # Human-readable transaction type
-            ledger.amount,
-            ledger.source,
-            ledger.destination,
-            ledger.reason if ledger.reason else 'N/A',  # Handle missing reason
-            ledger.created_at.strftime('%Y-%m-%d %H:%M:%S')  # Format the date
-        ])
+        sheet.append(
+            [
+                ledger.get_transaction_type_display(),  # Human-readable transaction type
+                ledger.amount,
+                ledger.source,
+                ledger.destination,
+                ledger.reason if ledger.reason else "N/A",  # Handle missing reason
+                ledger.created_at.strftime("%Y-%m-%d %H:%M:%S"),  # Format the date
+            ]
+        )
 
     # Apply normal cell styles for the data rows
-    for row in sheet.iter_rows(min_row=3, max_row=3 + len(ledger_entries), min_col=1, max_col=6):
+    for row in sheet.iter_rows(
+        min_row=3, max_row=3 + len(ledger_entries), min_col=1, max_col=6
+    ):
         for cell in row:
             cell.font = normal_font
-            cell.alignment = left_alignment if cell.column != 2 else centered_alignment  # Amount is centered
+            cell.alignment = (
+                left_alignment if cell.column != 2 else centered_alignment
+            )  # Amount is centered
             cell.border = thin_border
 
     # Adjust column widths
@@ -410,9 +643,11 @@ def project_expenses(request, pk):
 
     # Return the Excel file as a response
     response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    response['Content-Disposition'] = f'attachment; filename="{project.project_name}_ledger_journal.xlsx"'
+    response["Content-Disposition"] = (
+        f'attachment; filename="{project.project_name}_ledger_journal.xlsx"'
+    )
 
     # Save the workbook to the response object
     workbook.save(response)
@@ -433,7 +668,7 @@ def generate_bank_statements_view(request):
         left=Side(style="thin"),
         right=Side(style="thin"),
         top=Side(style="thin"),
-        bottom=Side(style="thin")
+        bottom=Side(style="thin"),
     )
 
     accounts = AccountBalance.objects.all()
@@ -443,14 +678,13 @@ def generate_bank_statements_view(request):
         # Adjust column widths dynamically for this account's section
         for col_offset in range(6):
             col_letter = openpyxl.utils.get_column_letter(start_col + col_offset)
-            sheet.column_dimensions[col_letter].width = 20  # Consistent width for all columns
+            sheet.column_dimensions[col_letter].width = (
+                20  # Consistent width for all columns
+            )
 
         # Add Account Header
         sheet.merge_cells(
-            start_row=1,
-            start_column=start_col,
-            end_row=1,
-            end_column=start_col + 5
+            start_row=1, start_column=start_col, end_row=1, end_column=start_col + 5
         )
         sheet.cell(row=1, column=start_col).value = account.account_name
         sheet.cell(row=1, column=start_col).font = header_font
@@ -493,7 +727,9 @@ def generate_bank_statements_view(request):
 
             # Add transaction details to the sheet
             sheet.cell(row=row, column=start_col).value = i
-            sheet.cell(row=row, column=start_col + 1).value = tx.created_at.strftime("%Y-%m-%d")
+            sheet.cell(row=row, column=start_col + 1).value = tx.created_at.strftime(
+                "%Y-%m-%d"
+            )
             sheet.cell(row=row, column=start_col + 2).value = tx.reason
             sheet.cell(row=row, column=start_col + 3).value = float(debit)
             sheet.cell(row=row, column=start_col + 4).value = float(credit)
@@ -516,9 +752,12 @@ def generate_bank_statements_view(request):
 
     return response
 
+
 def generate_expense_report(request, start, end):
     # Filter expenses within the date range
-    expenses = JournalExpense.objects.filter(created_at__date__range=(start, end))
+    expenses = Ledger.objects.filter(
+        transaction_type="MISC_EXPENSE", created_at__date__range=(start, end)
+    )
 
     # Create a new workbook and select the active sheet
     wb = Workbook()
@@ -529,14 +768,23 @@ def generate_expense_report(request, start, end):
     title_font = Font(size=14, bold=True, color="FFFFFF")
     header_font = Font(size=12, bold=True, color="FFFFFF")
     normal_font = Font(size=11)
+    bold_font = Font(size=11, bold=True)
     centered_alignment = Alignment(horizontal="center", vertical="center")
     left_alignment = Alignment(horizontal="left", vertical="center")
     right_alignment = Alignment(horizontal="right", vertical="center")
     title_fill = PatternFill("solid", fgColor="4F81BD")  # Blue background
     header_fill = PatternFill("solid", fgColor="A9C6E8")  # Light blue background
     thin_border = Border(
-        left=Side(style="thin"), right=Side(style="thin"),
-        top=Side(style="thin"), bottom=Side(style="thin")
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
+    )
+    bold_border = Border(
+        left=Side(style="thin", color="000000"),
+        right=Side(style="thin", color="000000"),
+        top=Side(style="thin", color="000000"),
+        bottom=Side(style="thin", color="000000"),
     )
 
     # Helper function to style a cell
@@ -552,17 +800,39 @@ def generate_expense_report(request, start, end):
 
     # Add "Expense Report" Title
     current_row = 1
-    sheet.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=6)
+    sheet.merge_cells(
+        start_row=current_row, start_column=1, end_row=current_row, end_column=8
+    )  # Adjust to 7 columns now
     sheet[f"A{current_row}"] = f"Expense Report ({start} to {end})"
-    apply_cell_style(sheet[f"A{current_row}"], font=title_font, alignment=centered_alignment, fill=title_fill)
+    apply_cell_style(
+        sheet[f"A{current_row}"],
+        font=title_font,
+        alignment=centered_alignment,
+        fill=title_fill,
+    )
 
     # Add table headers
     current_row += 1
-    expense_headers = ["Description", "Amount", "Source", "Category", "Vendor"]
+    expense_headers = [
+        "Description",
+        "Amount",
+        "Source",
+        "Category",
+        "Vendor",
+    ]
     for col, header in enumerate(expense_headers, start=1):
         cell = sheet.cell(row=current_row, column=col)
         cell.value = header
-        apply_cell_style(cell, font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+        apply_cell_style(
+            cell,
+            font=header_font,
+            alignment=centered_alignment,
+            fill=header_fill,
+            border=thin_border,
+        )
+
+    # Dictionary to hold category totals
+    category_totals = {}
 
     # Populate data rows and calculate total
     current_row += 1
@@ -570,32 +840,113 @@ def generate_expense_report(request, start, end):
 
     for expense in expenses:
         row_data = [
-            expense.description,
+            expense.reason,
             expense.amount,
-            expense.budget_source,
-            expense.category.name if expense.category else 'N/A',
-            expense.vendor.name if expense.vendor else 'N/A'
+            expense.source,
+            expense.category,
+            expense.destination,
         ]
         sheet.append(row_data)
 
-        # Apply the same border style to all cells in the row
-        for col in range(1, 7):
-            cell = sheet.cell(row=current_row, column=col)
-            apply_cell_style(cell, font=normal_font, alignment=centered_alignment, border=thin_border)
+        # Sum the expenses for each category
+        if expense.category not in category_totals:
+            category_totals[expense.category] = 0
+        category_totals[expense.category] += expense.amount
 
-        # Add to the total amount
+        # Apply styles to the row
+        for col in range(1, 6):
+            cell = sheet.cell(row=current_row, column=col)
+            apply_cell_style(
+                cell,
+                font=normal_font,
+                alignment=centered_alignment,
+                border=thin_border,
+            )
+
+        # Add to the overall total amount
         total_amount += expense.amount
 
-        current_row += 1  # Move to the next row after each expense
+        current_row += 1  # Move to the next row
 
-    # Add total row
-    sheet.append(["Total Expenses", total_amount, "", "", "", ""])
-    apply_cell_style(sheet[f"B{current_row}"], font=normal_font, alignment=right_alignment, border=thin_border)
+    # Add total row for all expenses
+    sheet.append(["Total Expenses", total_amount, "", "", ""])
+    apply_cell_style(
+        sheet[f"B{current_row}"],
+        font=bold_font,
+        alignment=right_alignment,
+        border=bold_border,
+    )
 
-    # Adjust column widths to fit content
+    # Now add the category totals in a separate column (side by side)
+    # Set starting row for Category Totals
+    category_totals_row = 2  # Adjust this value to control placement
+
+    # Add Category Totals Header (in column 7 and 8)
+    sheet[f"G{category_totals_row}"] = "Category"
+    sheet[f"H{category_totals_row}"] = "Total Amount"
+    apply_cell_style(
+        sheet[f"G{category_totals_row}"],
+        font=bold_font,
+        alignment=centered_alignment,
+        fill=header_fill,
+        border=bold_border,
+    )
+    apply_cell_style(
+        sheet[f"H{category_totals_row}"],
+        font=bold_font,
+        alignment=centered_alignment,
+        fill=header_fill,
+        border=bold_border,
+    )
+
+    category_totals_row += 1
+
+    # Add the category totals data on the right side (in columns G and H)
+    for category, total in category_totals.items():
+        sheet[f"G{category_totals_row}"] = category
+        sheet[f"H{category_totals_row}"] = total
+
+        apply_cell_style(
+            sheet[f"G{category_totals_row}"],
+            font=normal_font,
+            alignment=left_alignment,
+            border=thin_border,
+        )
+        apply_cell_style(
+            sheet[f"H{category_totals_row}"],
+            font=normal_font,
+            alignment=right_alignment,
+            border=thin_border,
+        )
+
+        category_totals_row += 1
+
+    # Add Grand Total to the right of category totals (in column H)
+    sheet.append(["", ""])
+    apply_cell_style(
+        sheet[f"G{category_totals_row}"],
+        font=bold_font,
+        alignment=centered_alignment,
+        border=thin_border,
+    )
+    apply_cell_style(
+        sheet[f"H{category_totals_row}"],
+        font=bold_font,
+        alignment=right_alignment,
+        fill=title_fill,
+        border=bold_border,
+    )
+
+    grand_total = sum(category_totals.values())
+    sheet[f"H{category_totals_row}"].value = grand_total
+
+    # Move to the next row
+    category_totals_row += 1
+
+    # Adjust column widths for both sides
     for col in sheet.columns:
         max_length = 0
-        col_letter = get_column_letter(col[0].column)  # Get column letter from the first cell
+        col_letter = get_column_letter(col[0].column)
         for cell in col:
             if cell.value and not isinstance(cell, MergedCell):  # Skip merged cells
                 max_length = max(max_length, len(str(cell.value)))

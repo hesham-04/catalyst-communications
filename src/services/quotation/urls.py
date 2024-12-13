@@ -1,9 +1,13 @@
 from django.urls import path
-from . views import CreateQuotationView, PrintQuotationView
+from .views import CreateQuotationView, PrintQuotationView, QuotationDetailView
 
-app_name = 'quotation'
+app_name = "quotation"
 
 urlpatterns = [
-    path('project/<int:pk>/create-quotation/', CreateQuotationView.as_view(), name='create_quotation'),
-    path('print/<int:pk>/', PrintQuotationView.as_view(), name='print'),
+    path(
+        "project/<int:pk>/create-quotation/",
+        CreateQuotationView.as_view(),
+        name="create_quotation",
+    ),
+    path("detail/<int:pk>/", QuotationDetailView.as_view(), name="detail"),
 ]

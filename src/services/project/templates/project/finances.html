@@ -14,15 +14,10 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'project:detail' project.pk %}"><i class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        <a class="btn btn-secondary btn-sm" href="{% url 'project:detail' project.pk %}"><i
+                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Project Finance Detail</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Customers</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
 
@@ -32,21 +27,29 @@
                             <div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="fs-16 fw-semibold">Project Balance</span>
-                                    <a href="{%  url 'project:transfer_to_cash' project.pk %}"><span class="btn btn-primary">Transfer to Project Cash</span></a>
+                                    <a href="{% url 'project:transfer_to_cash' project.pk %}"><span
+                                            class="btn btn-primary">Transfer to Project Cash</span></a>
                                 </div>
 
-                                <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small class="font-14">PKR</small></h4>
+                                <h4 class="my-2 fs-24 fw-semibold">{{ project.get_total_budget }} <small
+                                        class="font-14">PKR</small></h4>
 
-                                <span class="fs-16 fw-semibold">Money Spent from wallet:<span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ budget_assigned }} PKR</span></span>
+                                <span class="fs-16 fw-semibold">Money Spent from wallet:<span
+                                        class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ budget_assigned }} PKR</span></span>
                                 <br>
-                                <span class="fs-16 fw-semibold">Money From Client <small>(Paid Invoices)</small> <span class="badge bg-success-subtle text-success fs-11 fw-medium px-2 ms-1 mb-1">{{ money_form_invoice }} PKR </span></span>
+                                <span class="fs-16 fw-semibold">Money From Client <small>(Paid Invoices)</small> <span
+                                        class="badge bg-success-subtle text-success fs-11 fw-medium px-2 ms-1 mb-1">{{ money_form_invoice }} PKR </span></span>
                                 <br>
-                                <span class="fs-16 fw-semibold">Receivables <small>(UnpaidInvoices)</small> <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ invoice_receivables }} PKR </span></span>
+                                <span class="fs-16 fw-semibold">Receivables <small>(UnpaidInvoices)</small> <span
+                                        class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ invoice_receivables }} PKR </span></span>
                                 <br>
-                                <span class="fs-16 fw-semibold">Project Expenditure: <small>(Expenses Created)</small> <span class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2 ms-1 mb-1">{{ project_expenditure }} PKR </span></span>
+                                <span class="fs-16 fw-semibold">Project Expenditure: <small>(Expenses Created)</small> <span
+                                        class="badge bg-warning-subtle text-warning fs-11 fw-medium px-2 ms-1 mb-1">{{ project_expenditure }} PKR </span></span>
                                 <br>
-                                <span class="fs-16 fw-semibold">Loan Payable: <small>(Loans Lended)</small> <span class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ loans }} PKR </span></span>
-                                <a href="{%  url 'charts:project-expense-journal' project.pk %}"><span class="btn btn-warning float-end">Download</span></a>
+                                <span class="fs-16 fw-semibold">Loan Payable: <small>(Loans Lended)</small> <span
+                                        class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2 ms-1 mb-1">{{ loans }} PKR </span></span>
+                                <a href="{% url 'charts:project-expense-journal' project.pk %}"><span
+                                        class="btn btn-warning float-end">Download</span></a>
 
                             </div>
                         </div><!--end card-body-->

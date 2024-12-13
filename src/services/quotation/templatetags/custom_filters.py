@@ -3,12 +3,13 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter
 def multiply(value, arg):
     try:
         return float(value) * float(arg)
     except (ValueError, TypeError):
-        return ''
+        return ""
 
 
 @register.filter
@@ -18,6 +19,9 @@ def capitalize_and_replace(value):
 
     # Replace "euro, zero cents" with "rupees"
     value = value.replace("euro, zero cents", "rupees")
+    value = value.replace("euro, one cent", "rupee")
+    value = value.replace("euros, zero cents", "rupees")
+    value = value.replace("euros, one cent", "rupee")
 
     return value
 

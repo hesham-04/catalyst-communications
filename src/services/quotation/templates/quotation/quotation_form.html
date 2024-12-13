@@ -1,106 +1,149 @@
 {% extends 'dashboard/base.html' %}
+{% load crispy_forms_filters %}
 {% block title %}Create Quotation{% endblock %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
 
-<div class="page-wrapper">
-    <div class="page-content">
-        <div class="container-fluid">
-            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                <h4 class="page-title">Create Quotation</h4>
-                <div class="">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Quotation</a></li>
-                        <li class="breadcrumb-item active">Edit</li>
-                    </ol>
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">
+                        <a class="btn btn-secondary btn-sm me-2" href="{% url 'project:detail' project.pk %}"><i
+                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        Create Quotation</h4>
                 </div>
-            </div>
 
-            <div class="row">
-{#                <div class="col-md-12">#}
-{#                        <img style="width: 100%" src="{% static 'img/invoice.png' %}" alt="Invoice Preview" class="img-fluid">#}
-{#                </div>#}
-                <!-- Quotation Form Section -->
-                <div class="col-md-12">
-                        <div class="card border shadow">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card shadow">
                             <div class="card-body">
+                                {% for error in form.errors %}
+                                    <small><p class="text-danger">Error in {{ error }} field.</p></small>
+                                {% endfor %}
                                 <form method="POST">
+                                    {% csrf_token %}
                                     <div class="row mt-3">
-                                        {% csrf_token %}
                                         <div class="col-md-6">
-                                            {{ form|crispy }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <h5>Quotation Items</h5>
-                                                {{ formset.management_form }}
-                                                <div id="quotation-items">
-                                                    {% for form in formset %}
-                                                    <div class="card mt-3 border-2 shadow-lg quotation-item">
-                                                        <div class="card-body px-4 py-2">
-                                                            {{ form|crispy }}
-                                                        </div>
-                                                    </div>
-                                                    {% endfor %}
+                                            <div class="card p-3">
+                                                {% crispy form %}
+                                            </div>
+
+                                            <div class="row d-flex">
+                                                <div class="col-md-3">
+                                                    <button style="width:200px" type="submit"
+                                                            class="btn btn-success mt-3">
+                                                        Create Quotation
+                                                    </button>
                                                 </div>
-                                                <div class="col-md-12">
-                                                    <a href="javascript:void(0)" id="add-item" class="btn btn-primary w-100">Add
-                                                        Item</a>
+                                                <div class="col-md-9">
+                                                    <a style="width:200px" type="button" id="add-item"
+                                                       class="btn btn-soft-primary mt-3">
+                                                        <i class="fa fa-plus"></i>
+                                                        Add Item
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center">
+                                                <h5 class="mt-1">Quotation Items</h5>
+                                                <div class="form-check form-switch form-switch-dark ms-auto">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           id="customSwitchDark" checked>
+                                                    <label class="form-check-label" for="customSwitchDark">Tax</label>
+                                                </div>
+                                            </div>
+
+                                            {{ formset.management_form }}
+                                            <!-- Container for dynamically added items -->
+                                            <div id="quotation-items">
+                                                {% for form in formset %}
+                                                    <div class="card border-2 shadow-lg quotation-item">
+                                                        <div class="card-body px-4 py-2">
+                                                            <div class="row">
+                                                                {{ form|crispy }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                        </div>
                                     </div>
-
-
-                                    <button type="submit" class="btn btn-success mt-4">Create Quotation</button>
                                 </form>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let formCount = {{ formset.total_form_count }};
-        const formsetPrefix = '{{ formset.prefix }}';
-        const managementFormTotalForms = document.querySelector(`#id_${formsetPrefix}-TOTAL_FORMS`);
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let itemFormIndex = 1; // Start from the next available index, since the first item already exists in the HTML
 
-        // Add new item to formset
-        document.getElementById('add-item').addEventListener('click', function () {
-            const newItemHtml = `
-                <div class="card mt-3 border-2 shadow-sm quotation-item">
-                    <div class="card-body px-4 py-2">
-                        <div class="form-row">
-                            <div class="col-md-12 mb-2">
-                                <label for="id_${formsetPrefix}-${formCount}-item_name">Item Name:</label>
-                                <input type="text" name="${formsetPrefix}-${formCount}-item_name" required class="form-control" id="id_${formsetPrefix}-${formCount}-item_name">
-                            </div>
-                            <div class="col-md-6 mb-2">
-                                <label for="id_${formsetPrefix}-${formCount}-rate">Rate:</label>
-                                <input type="number" name="${formsetPrefix}-${formCount}-rate" class="form-control" required id="id_${formsetPrefix}-${formCount}-rate">
-                            </div>
-                            <div class="col-md-6 mb-2">
-                                <label for="id_${formsetPrefix}-${formCount}-quantity">Quantity:</label>
-                                <input type="number" name="${formsetPrefix}-${formCount}-quantity" class="form-control" required id="id_${formsetPrefix}-${formCount}-quantity">
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <label for="id_${formsetPrefix}-${formCount}-description">Description:</label>
-                                <textarea name="${formsetPrefix}-${formCount}-description" class="form-control" required id="id_${formsetPrefix}-${formCount}-description"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            document.getElementById('quotation-items').insertAdjacentHTML('beforeend', newItemHtml);
+            const addItemButton = document.getElementById('add-item');
+            const quotationItemsContainer = document.getElementById('quotation-items');
+            const totalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
+            const taxToggle = document.getElementById('customSwitchDark'); // Tax toggle checkbox
 
-            // Increment form count and update TOTAL_FORMS
-            formCount++;
-            managementFormTotalForms.value = formCount;
+            // Add click event listener to the "Add Item" button
+            addItemButton.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default link behavior
+
+                // Clone the last item form (the one with the highest index)
+                const lastItemForm = quotationItemsContainer.querySelector('.quotation-item:last-child');
+                const newItemForm = lastItemForm.cloneNode(true);
+
+                // Update the form field names and IDs for the new form
+                newItemForm.querySelectorAll('[name], [id]').forEach(function (input) {
+                    // Only attempt to replace if the input element has a name and id attribute
+                    if (input.name && input.id) {
+                        const newName = input.name.replace(/\d+/, itemFormIndex);  // Replace the number in the name
+                        const newId = input.id.replace(/\d+/, itemFormIndex);      // Replace the number in the ID
+
+                        input.name = newName;
+                        input.id = newId;
+
+                        // Clear the values of the input fields in the cloned form (if necessary)
+                        if (input.type !== 'hidden') {
+                            input.value = '';
+                        }
+                    }
+                });
+
+                // Append the new item form to the container
+                quotationItemsContainer.appendChild(newItemForm);
+
+                // Update the TOTAL_FORMS hidden input to reflect the new number of forms
+                totalFormsInput.value = itemFormIndex + 1;
+
+                // Increment the form index for the next item
+                itemFormIndex++;
+            });
+
+            // Function to toggle the tax field visibility and value
+            function toggleTaxFields() {
+                const taxFields = document.querySelectorAll('.quotation-item .form-group input[name*="-tax"]');
+                taxFields.forEach(function (taxField) {
+                    if (taxToggle.checked) {
+                        taxField.closest('.form-group').style.display = ''; // Show the tax field
+                    } else {
+                        taxField.closest('.form-group').style.display = 'none'; // Hide the tax field
+                        taxField.value = '0.0'; // Set the tax value to 0 when hidden
+                    }
+                });
+            }
+
+            // Initialize the tax field visibility on page load based on the initial state of the toggle
+            toggleTaxFields();
+
+            // Add event listener to toggle tax visibility when checkbox is changed
+            taxToggle.addEventListener('change', toggleTaxFields);
         });
-    });
-</script>
+    </script>
 
 {% endblock %}

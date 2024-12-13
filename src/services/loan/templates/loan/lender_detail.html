@@ -12,13 +12,7 @@
                         <a class="btn btn-secondary btn-sm" href="{% url 'loan:lenders' %}"><i
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Lender Detail</h4>
-                    <div class="">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{% url 'customer:index' %}">Lenders</a>
-                            </li><!--end nav-item-->
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
-                    </div>
+
                 </div>
 
 
@@ -130,13 +124,13 @@
                                                 </td>
                                                 <td class="text-center text-success">
                                                     {% if object.project %}
-                                                    <a href="{% url 'loan:return_loan' object.pk %}">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                    </a>
+                                                        <a href="{% url 'loan:return_loan' object.pk %}">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </a>
                                                     {% else %}
                                                         <a href="{% url 'loan:return-misc-loan' object.pk %}">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                    </a>
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </a>
                                                     {% endif %}
                                                 </td>
                                             </tr>

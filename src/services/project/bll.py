@@ -40,7 +40,7 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         amount=amount,
         source=f"Wallet: {source.account_name} ({source.pk})",
         destination=f"Project: {project.project_name} ACC ({project.pk})",
-        reason=reason
+        reason=reason,
     )
 
     return {
@@ -68,7 +68,7 @@ def add_loan_to_project(project_id, amount, source, reason, destination=None):
         amount=amount,
         source=f"Loan: {lender.name} ({lender.pk})",
         destination=f"Project: {project.project_name} ACC ({project.pk})",
-        reason=reason
+        reason=reason,
     )
 
 
@@ -91,10 +91,10 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         project=project,
         description="Loan return",
         amount=amount,
-        budget_source='Project ACC',
+        budget_source="Project ACC",
         category=None,
         vendor=None,  # destination
-        payment_status=Expense.PaymentStatus.PAID
+        payment_status=Expense.PaymentStatus.PAID,
     )
 
     Ledger.objects.create(
@@ -103,18 +103,20 @@ def return_loan_to_lender(loan_id, project_id, amount, source, destination, reas
         amount=amount,
         source=f"Project: {project.project_name} ACC ({project.pk})",
         destination=f"Lender: {loan.lender.name} ({loan.pk})",
-        reason=reason
+        reason=reason,
     )
 
 
 @transaction.atomic
-def create_expense_calculations(project_id, amount, budget_source, destination, reason=None):
+def create_expense_calculations(
+    project_id, amount, budget_source, destination, reason=None
+):
     project = Project.objects.select_for_update().get(pk=project_id)
 
-    if budget_source == 'CASH':
+    if budget_source == "CASH":
         project.project_cash -= amount
 
-    elif budget_source == 'ACC':
+    elif budget_source == "ACC":
         project.project_account_balance -= amount
 
     project.save()
@@ -137,10 +139,10 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
     project = Project.objects.select_for_update().get(pk=project_id)
     expense = Expense.objects.select_for_update().get(pk=expense_id)
     expense.payment_status = Expense.PaymentStatus.PAID
-    if budget_source == 'CASH':
+    if budget_source == "CASH":
         project.project_cash -= amount
 
-    elif budget_source == 'ACC':
+    elif budget_source == "ACC":
         project.project_account_balance -= amount
 
     project.save()
@@ -160,15 +162,16 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
     try:
         invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
         invoice.status = "PAID"
-        invoice.save(update_fields=['status'])
+        invoice.save(update_fields=["status"])
 
-        if account_id: account = AccountBalance.objects.select_for_update().get(pk=account_id)
+        if account_id:
+            account = AccountBalance.objects.select_for_update().get(pk=account_id)
 
         ledger_reason = f"Payment for Invoice"
 
-        if destination == 'account' and account:
+        if destination == "account" and account:
             account.balance += amount
-            account.save(update_fields=['balance'])
+            account.save(update_fields=["balance"])
 
         Ledger.objects.create(
             transaction_type="INVOICE_PAYMENT",
@@ -176,7 +179,7 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
             amount=amount,
             source=f"Invoice Paid: {invoice.client_name} ({invoice.pk})",
             destination=f"Wallet: {account.account_name} ({account.pk})",
-            reason=ledger_reason
+            reason=ledger_reason,
         )
 
         return True, "Invoice successfully paid and funds transferred."
@@ -187,35 +190,58 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
 
 
 @transaction.atomic
-def create_journal_expense_calculations(category, reason, destination, amount, source, account_pk=None):
+def create_journal_expense_calculations(
+    category, reason, destination, amount, source, account_pk=None
+):
+    """
+    Creates a ledger entry for a journal expense.
+
+    :param category: The category of the expense
+    :param reason: The reason for the expense
+    :param destination: The vendor id to which the expense is made
+    :param amount: The amount of the expense
+    :param source: The source of the expense (CASH or ACC)
+    :param account_pk: The account id from which the expense is made (if source is ACC)
+    :return: A tuple containing a boolean indicating success and a message
+    """
     try:
+        # Update the account/cash balance
         if source == "ACC":
             account = AccountBalance.objects.select_for_update().get(pk=account_pk)
             account.balance -= amount
-            account.save(update_fields=['balance'])
+            account.save(update_fields=["balance"])
         else:
             cashinhand = CashInHand.objects.first()
             cashinhand.balance -= amount
-            cashinhand.save(update_fields=['balance'])
+            cashinhand.save(update_fields=["balance"])
 
-        vendor = Vendor.objects.get(pk=destination) if destination else None
-        if vendor:
+        # Update the vendor's total expense
+        if destination:
+            vendor = Vendor.objects.get(pk=destination)
             vendor.total_expense += amount
-            vendor.save(update_fields=['total_expense'])
+            vendor.save(update_fields=["total_expense"])
+
+        else:
+            vendor = None
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(
             transaction_type="MISC_EXPENSE",
             amount=amount,
-            source=f"Wallet: {account.account_name} ({account.pk})" if source == "ACC" else f"Wallet: Cash In Hand ({cashinhand.pk})",
-            destination=f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"Category: {category.name}",
-            reason=reason + " " + category.name
+            source=(
+                f"Wallet: {account.account_name} ({account.pk})"
+                if source == "ACC"
+                else f"Wallet: Cash In Hand ({cashinhand.pk})"
+            ),
+            destination=(f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"None"),
+            reason=reason,
+            category=f"{category.name} ({category.pk})",
         )
         return True, "Journal Entry Successfully created"
 
-
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"
+
 
 @transaction.atomic
 def create_misc_loan(destination_account, source, reason, amount):
@@ -259,7 +285,6 @@ def return_misc_loan(destination_account, source, reason, amount):
         )
 
         return True, "Transaction successful"
-
 
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"
