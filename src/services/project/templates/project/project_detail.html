@@ -143,7 +143,7 @@
                                                class="btn  btn-danger {% if project.project_status != 'IP' %}disabled{% endif %}">Create
                                                 Invoice</a>
                                             {% if project.quotation %}
-                                                <a href="{% url 'quotation:print' pk=project.quotation.quotation_id %}"
+                                                <a href="{% url 'quotation:detail' pk=project.quotation.quotation_id %}"
                                                    class="btn btn-soft-primary ms-3">View Quotation</a>
                                             {% else %}
                                                 <a href="{% url 'quotation:create_quotation' pk=project.id %}"

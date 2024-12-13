@@ -40,7 +40,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 
         search_query = self.request.GET.get("q", "").strip()
 
-        projects = Project.objects.all()
+        projects = Project.objects.all().order_by("-created_at")
         if search_query:
             projects = projects.filter(Q(project_name__icontains=search_query))
 

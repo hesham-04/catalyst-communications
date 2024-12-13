@@ -31,15 +31,13 @@ class Invoice(models.Model):
 
     letterhead = models.BooleanField(default=True)
 
-    project = models.ForeignKey(
-        Project, related_name="invoices", on_delete=models.CASCADE
-    )
+    project = models.ForeignKey(Project, related_name="invoices", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     tax = models.BooleanField(default=True, null=True)
 
     def calculate_total_amount(self):
-        total = self.items.aggregate(total=Sum("amount"))["total"] or 0
+        total = self.items.aggregate(total=Sum('amount'))['total'] or 0
         self.total_amount = total
         self.total_in_words = num2words(total, to="currency", lang="en_IN")
         self.save(update_fields=["total_amount", "total_in_words"])
@@ -49,45 +47,40 @@ class Invoice(models.Model):
             super().save(*args, **kwargs)
 
         if not self.invoice_number:
-            self.invoice_number = "# INV-{:06d}".format(self.invoice_id)
+            self.invoice_number = '# INV-{:06d}'.format(self.invoice_id)
         super().save(*args, **kwargs)
 
     @classmethod
     def calculate_total_receieved(cls, project_id=None):
-        total_receivables = cls.objects.filter(
-            project_id=project_id, status="PAID"
-        ).aggregate(total=Sum("total_amount"))
-        return round(total_receivables["total"] or 0, 2)
+        total_receivables = cls.objects.filter(project_id=project_id, status="PAID").aggregate(
+            total=Sum('total_amount'))
+        return round(total_receivables['total'] or 0, 2)
 
     @classmethod
     def calculate_total_receivables(cls, project_id=None):
         if project_id:
-            total_receivables = cls.objects.filter(
-                project_id=project_id, status="PENDING"
-            ).aggregate(total=Sum("total_amount"))
-            return round(total_receivables["total"] or 0, 2)
+            total_receivables = cls.objects.filter(project_id=project_id, status="PENDING").aggregate(
+                total=Sum('total_amount'))
+            return round(total_receivables['total'] or 0, 2)
         else:
             total_receivables = cls.objects.filter(status="PENDING").aggregate(
-                total=Sum("total_amount")
-            )
-            return round(total_receivables["total"] or 0, 2)
+                total=Sum('total_amount'))
+            return round(total_receivables['total'] or 0, 2)
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.client_name} - {self.project.project_name}"
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ['-created_at']
 
 
 class InvoiceItem(models.Model):
-    invoice = models.ForeignKey(Invoice, related_name="items", on_delete=models.CASCADE)
+    invoice = models.ForeignKey(Invoice, related_name='items', on_delete=models.CASCADE)
     item_name = models.CharField(max_length=255)
     description = models.CharField(blank=True, null=True, max_length=500)
     quantity = models.IntegerField(default=1)
-    rate = models.DecimalField(max_digits=15, decimal_places=2)  # One Item
-    amount = models.DecimalField(
-        max_digits=15, decimal_places=2, editable=False
-    )  # For all the items (SUMS)
+    rate = models.DecimalField(max_digits=15, decimal_places=2) # One Item
+    amount = models.DecimalField(max_digits=15, decimal_places=2, editable=False) # For all the items (SUMS)
     tax = models.DecimalField(
         max_digits=5,
         decimal_places=2,
