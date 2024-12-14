@@ -452,7 +452,7 @@ def generate_project_report(request, pk):
     # Initialize totals
     budget_assigned_total = 0
     expenditure_total = 0
-    client_funds_paid = Invoice.calculate_total_receieved(project_id=project.pk)
+    client_funds_paid = Invoice.calculate_total_received(project_id=project.pk)
     # TODO: FUCKTHISSHIT CODE I forgot to create ledger instances for unpaid invoices so i'll need to query it.
     client_funds_unpaid = Invoice.calculate_total_receivables(project_id=project.pk)
 

@@ -1,18 +1,44 @@
 from django.contrib import admin
 from .models import Quotation, QuotationItem
 
-# Define the inline admin class for QuotationItem
-class QuotationItemInline(admin.TabularInline):  # Use TabularInline or StackedInline based on preference
+
+class QuotationItemInline(admin.TabularInline):
     model = QuotationItem
-    extra = 1  # Number of empty forms displayed for new items
-    fields = ['item_name', 'description', 'quantity', 'rate', 'amount']  # Customize fields shown
-    readonly_fields = ['amount']  # Make 'amount' read-only since it auto-calculates
+    extra = 1
+    fields = ("item_name", "description", "quantity", "rate", "tax", "amount")
+    readonly_fields = ("amount",)
+    show_change_link = True
 
-# Customize the Quotation admin to include QuotationItem inline
+
+@admin.register(Quotation)
 class QuotationAdmin(admin.ModelAdmin):
+    list_display = (
+        "quotation_number",
+        "client_name",
+        "company_name",
+        "total_amount",
+        "status",
+        "date",
+        "project",
+    )
+    search_fields = (
+        "quotation_number",
+        "client_name",
+        "company_name",
+        "project__project_name",
+    )
+    list_filter = ("date", "letterhead", "tax")
     inlines = [QuotationItemInline]
-    list_display = ['quotation_number', 'client_name', 'project', 'total_amount']  # Fields to show in list view
-    search_fields = ['quotation_number', 'client_name', 'project__project_name']  # Search fields
+    readonly_fields = ("quotation_number", "total_in_words", "total_amount")
+    ordering = ("-created_at",)
 
-# Register the models with the customized admin
-admin.site.register(Quotation, QuotationAdmin)
+    def status(self, obj):
+        return "Tax Included" if obj.tax else "Tax Excluded"
+
+
+@admin.register(QuotationItem)
+class QuotationItemAdmin(admin.ModelAdmin):
+    list_display = ("item_name", "quantity", "rate", "tax", "amount", "quotation")
+    search_fields = ("item_name", "description", "quotation__quotation_number")
+    readonly_fields = ("amount",)
+    list_filter = ("quotation__project",)

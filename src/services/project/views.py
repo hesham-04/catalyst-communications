@@ -123,7 +123,7 @@ class ProjectDetailView(LoginRequiredMixin, TemplateView):
             project_id=kwargs["pk"]
         )
         context["payable"] = Loan.calculate_total_unpaid_amount(project_pk=kwargs["pk"])
-        context["receivables"] = Invoice.calculate_total_receieved(
+        context["receivables"] = Invoice.calculate_total_received(
             project_id=kwargs["pk"]
         )
         return context
@@ -275,7 +275,7 @@ class ProjectFinances(LoginRequiredMixin, View):
             "transaction_types": visible_transaction_types,
             "selected_transaction_type": transaction_filter,
             "budget_assigned": total_budget_assigned,
-            "money_form_invoice": Invoice.calculate_total_receieved(
+            "money_form_invoice": Invoice.calculate_total_recieved(
                 project_id=project.pk
             ),
             "invoice_receivables": Invoice.calculate_total_receivables(

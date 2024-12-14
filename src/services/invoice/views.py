@@ -32,11 +32,10 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["project"] = Project.objects.get(pk=self.kwargs["pk"])
-        InvoiceItemFormSet = modelformset_factory(
+        invoiceitemformSet = modelformset_factory(
             InvoiceItem, form=InvoiceItemForm, extra=1
         )
-        context["formset"] = InvoiceItemFormSet(queryset=InvoiceItem.objects.none())
-
+        context["formset"] = invoiceitemformSet(queryset=InvoiceItem.objects.none())
         return context
 
     def form_valid(self, form):

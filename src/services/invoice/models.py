@@ -17,8 +17,9 @@ class Invoice(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = PhoneNumberField(max_length=15)
+    phone = PhoneNumberField(max_length=15, region="PK")
     address = models.CharField(max_length=255)
+    email = models.EmailField(max_length=50)
 
     invoice_number = models.CharField(max_length=100, unique=True, null=True)
     subject = models.CharField(max_length=255)

@@ -13,8 +13,8 @@ class Quotation(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = PhoneNumberField(max_length=15)
-    email = models.EmailField(max_length=15)
+    phone = PhoneNumberField(max_length=15, region="PK")
+    email = models.EmailField(max_length=50)
     address = models.CharField(max_length=255)
 
     quotation_number = models.CharField(max_length=100, unique=True, null=True)

@@ -74,7 +74,7 @@
                                                     <b>
                                                         Phone </b> : {{ quotation.phone }}
                                                 </li>
-                                                
+                                                x
                                             </div>
                                         </div>
 
