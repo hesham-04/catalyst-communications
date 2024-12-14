@@ -275,7 +275,7 @@ class ProjectFinances(LoginRequiredMixin, View):
             "transaction_types": visible_transaction_types,
             "selected_transaction_type": transaction_filter,
             "budget_assigned": total_budget_assigned,
-            "money_form_invoice": Invoice.calculate_total_recieved(
+            "money_form_invoice": Invoice.calculate_total_received(
                 project_id=project.pk
             ),
             "invoice_receivables": Invoice.calculate_total_receivables(

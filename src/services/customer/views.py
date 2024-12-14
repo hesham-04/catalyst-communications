@@ -23,7 +23,7 @@ class CustomerView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         search_query = self.request.GET.get("q", "")
-        customers = Customer.objects.all()
+        customers = Customer.objects.all().order_by("-created_at")
 
         if search_query:
             customers = customers.filter(

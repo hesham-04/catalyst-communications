@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.forms import modelformset_factory
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView
 from django.views.generic import TemplateView
@@ -30,30 +32,43 @@ class CreateQuotationView(LoginRequiredMixin, CreateView):
         context["formset"] = QuotationItemFormSet(queryset=QuotationItem.objects.none())
         return context
 
+    @transaction.atomic
     def form_valid(self, form):
         project = get_object_or_404(Project, pk=self.kwargs["pk"])
         form.instance.project = project
-        quotation = form.save()
 
         project.project_status = Project.ProjectStatus.AWAITING
-        project.save()
 
-        quotationitemformSet = modelformset_factory(
+        # Creating formset for QuotationItem
+        quotation_item_form_set = modelformset_factory(
             QuotationItem, form=QuotationItemForm
         )
-        formset = quotationitemformSet(self.request.POST)
+        formset = quotation_item_form_set(self.request.POST)
 
         if formset.is_valid():
+            # Only Save if the form and formset are valid
+            quotation = form.save()
+            project.save()
+
             for item_form in formset:
                 item_form.instance.quotation = quotation
                 item_form.save()
             return super().form_valid(form)
         else:
+            # Collect errors and display them as messages
+            error_list = []
             for form in formset:
-                errors = list(form.errors.values())
-                for error in errors:
-                    form.add_error(None, error)
-            return self.form_invalid(form)
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_list.append(f"{field}: {error}")
+
+            # Add the errors to the messages framework
+            for error in error_list:
+                messages.error(self.request, error)
+
+            # Redirect to the project detail page
+            project_id = self.get_initial()["project"].pk
+            return redirect("project:detail", pk=project_id)
 
     def get_success_url(self):
         return reverse("quotation:detail", kwargs={"pk": self.object.pk})

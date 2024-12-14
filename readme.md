@@ -1,6 +1,8 @@
 # Catalyst Communications
 
-Catalyst Communications is a modern Communication and Operations Automation (CoA) system designed to streamline workflows, enhance collaboration, and automate tasks. Built using **Django** and **Bootstrap**, it offers a seamless and responsive user experience for businesses aiming to optimize their communication and operational efficiency.
+Catalyst Communications is a modern Communication and Operations Automation (CoA) system designed to streamline
+workflows, enhance collaboration, and automate tasks. Built using **Django** and **Bootstrap**, it offers a seamless and
+responsive user experience for businesses aiming to optimize their communication and operational efficiency.
 
 ## Features
 
@@ -23,12 +25,14 @@ Catalyst Communications is a modern Communication and Operations Automation (CoA
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8+
 - PostgreSQL
 - Redis
 - Node.js (optional for additional frontend tools)
 
 ### Steps
+
 1. Clone the repository:
     ```bash
     git clone https://github.com/yourusername/catalyst-communications.git
@@ -46,6 +50,7 @@ Catalyst Communications is a modern Communication and Operations Automation (CoA
 4. Configure the `.env` file with your database and Redis settings.
 5. Apply migrations:
     ```bash
+    python manage.py makemigrations core  assets vendor loan invoice quotation expense loan customer project transaction
     python manage.py migrate
     ```
 6. Start the development server:
@@ -54,11 +59,14 @@ Catalyst Communications is a modern Communication and Operations Automation (CoA
     ```
 
 ## Usage
+
 - Access the application at `http://127.0.0.1:8000` in your browser.
 - Explore task management, collaboration tools, and other features.
 
 ## Contributing
+
 We welcome contributions! Follow these steps:
+
 1. Fork the repository.
 2. Create a new branch:
     ```bash
@@ -75,8 +83,11 @@ We welcome contributions! Follow these steps:
 5. Open a Pull Request.
 
 ## License
+
 This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
-For questions or feedback, please contact us at [support@catalystcommunications.com](mailto:support@catalystcommunications.com).
+
+For questions or feedback, please contact us
+at [support@catalystcommunications.com](mailto:support@catalystcommunications.com).
 

@@ -4,6 +4,38 @@ from django.db.models import Sum
 from .models import Project
 
 
+from django.contrib import admin
+
+from ..invoice.models import Invoice
+from ..quotation.models import Quotation
+
+
+class InvoiceInline(
+    admin.TabularInline
+):  # Or admin.StackedInline for a stacked display
+    model = Invoice
+    extra = 0  # Number of empty forms to display
+    fields = (
+        "invoice_number",
+        "date",
+        "client_name",
+        "total_amount",
+        "status",
+        "due_date",
+    )
+    readonly_fields = ("invoice_number", "total_amount", "status", "due_date")
+
+
+class QuotationInline(admin.TabularInline):  # If you have a Quotation model
+    model = Quotation
+    extra = 0
+    fields = (
+        "quotation_number",
+        "total_amount",
+    )  # Modify as per your Quotation model fields
+    readonly_fields = ("quotation_number", "total_amount")
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = (
@@ -70,3 +102,6 @@ class ProjectAdmin(admin.ModelAdmin):
         )
 
     export_trial_balance.short_description = "Export Trial Balance"
+
+    # Add inlines for Invoice and Quotation
+    inlines = [InvoiceInline, QuotationInline]

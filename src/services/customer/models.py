@@ -41,6 +41,9 @@ class Customer(models.Model):
     )
     company_id = models.CharField(max_length=50, unique=True, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def get_full_name(self):
         return f"{self.salutation} {self.first_name} {self.last_name}"
 

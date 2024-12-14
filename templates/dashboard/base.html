@@ -247,44 +247,43 @@
 <!-- end page-wrapper -->
 
 <!-- Javascript  -->
-<script>
-    $(document).ready(function () {
-        // Attach an event listener to the form submit event
-        $('form').on('submit', function (e) {
-            let isValid = true;
-
-            // Validate phone and mobile fields
-            const phone = $('#id_phone').val();
-            if (!phone.match(/^([0+])[0-9]*$/)) {
-                alert('Phone number must start with 0 or +.');
-                isValid = false;
-            }
-
-            // Validate name fields (first name, last name, company name) to only allow alphanumerics
-            const nameFields = ['#id_first_name', '#id_last_name', '#id_company_name'];
-            nameFields.forEach(function (selector) {
-                const value = $(selector).val();
-                if (!value.match(/^[a-zA-Z0-9 ]*$/)) {
-                    alert('Only alphanumeric characters are allowed in name fields.');
-                    isValid = false;
-                }
-            });
-
-            // Validate description field (other details) to only allow alphanumerics
-            const otherDetails = $('#id_other_details').val();
-            if (!otherDetails.match(/^[a-zA-Z0-9 ]*$/)) {
-                alert('Only alphanumeric characters are allowed in the Other Details field.');
-                isValid = false;
-            }
-
-            // If any validation fails, prevent form submission
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
-    });
-
-</script>
+{#<script>#}
+{#    $(document).ready(function () {#}
+{#        // Attach an event listener to the form submit event#}
+{#        $('form').on('submit', function (e) {#}
+{#            let isValid = true;#}
+{##}
+{#            // Validate phone and mobile fields#}
+{#            const phone = $('#id_phone').val();#}
+{#            if (!phone.match(/^([0+])[0-9]*$/)) {#}
+{#                alert('Phone number must start with 0 or +.');#}
+{#                isValid = false;#}
+{#            }#}
+{##}
+{#            // Validate name fields (first name, last name, company name) to only allow alphanumerics#}
+{#            const nameFields = ['#id_first_name', '#id_last_name', '#id_company_name'];#}
+{#            nameFields.forEach(function (selector) {#}
+{#                const value = $(selector).val();#}
+{#                if (!value.match(/^[a-zA-Z0-9 ]*$/)) {#}
+{#                    alert('Only alphanumeric characters are allowed in name fields.');#}
+{#                    isValid = false;#}
+{#                }#}
+{#            });#}
+{##}
+{#            // Validate description field (other details) to only allow alphanumerics#}
+{#            const otherDetails = $('#id_other_details').val();#}
+{#            if (!otherDetails.match(/^[a-zA-Z0-9 ]*$/)) {#}
+{#                alert('Only alphanumeric characters are allowed in the Other Details field.');#}
+{#                isValid = false;#}
+{#            }#}
+{##}
+{#            // If any validation fails, prevent form submission#}
+{#            if (!isValid) {#}
+{#                e.preventDefault();#}
+{#            }#}
+{#        });#}
+{#    });#}
+{#</script>#}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         {% if messages %}
@@ -302,7 +301,7 @@
                 alerts.forEach(function (alert) {
                     alert.classList.remove('show');
                 });
-            }, 2000); // Alert will fade out after 5 seconds
+            }, 5000); // Alert will fade out after 5 seconds
         {% endif %}
     });
 </script>

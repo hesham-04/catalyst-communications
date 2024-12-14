@@ -147,6 +147,8 @@ class QuotationItemForm(forms.ModelForm):
                     "class": "form-control",
                     "placeholder": "Tax (%)",
                     "required": False,
+                    "maxlength": 3,
+                    "step": "0.1",
                 }
             ),
         }
