@@ -23,7 +23,6 @@ class ChartsIndex(View):
         return render(request, "charts/charts_index.html", {"projects": projects})
 
 
-# project
 def generate_project_report(request, pk):
     # Retrieve the project by primary key
     project = Project.objects.get(pk=pk)

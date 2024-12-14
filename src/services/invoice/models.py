@@ -1,5 +1,5 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models import Sum
 from django.utils import timezone
 from num2words import num2words
@@ -48,12 +48,17 @@ class Invoice(models.Model):
         if not self.pk:
             super().save(*args, **kwargs)
 
-        if not self.invoice_number:
-            self.invoice_number = "# INV-{:06d}".format(self.invoice_id)
-        super().save(*args, **kwargs)
+            if not self.invoice_number:
+                self.invoice_number = f"INV-{self.pk:06d}"
+                try:
+                    super().save(update_fields=["invoice_number"])
+                except IntegrityError as e:
+                    raise IntegrityError(f"Error saving Invoice: {e}")
+        else:
+            super().save(*args, **kwargs)
 
     @classmethod
-    def calculate_total_receieved(cls, project_id=None):
+    def calculate_total_received(cls, project_id=None):
         total_receivables = cls.objects.filter(
             project_id=project_id, status="PAID"
         ).aggregate(total=Sum("total_amount"))

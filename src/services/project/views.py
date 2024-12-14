@@ -3,20 +3,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import Sum
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
+from django.views import View
 from django.views.generic import (
     TemplateView,
     CreateView,
-    RedirectView,
     FormView,
     UpdateView,
 )
-
-from django.shortcuts import render
-from django.views import View
-from django.template.loader import render_to_string
-
 
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.views import Expense
@@ -24,10 +22,10 @@ from .bll import add_budget_to_project
 from .forms import AddBudgetForm, CreateProjectCashForm
 from .forms import ProjectForm
 from .models import Project
-from django.http import JsonResponse
 from ..customer.forms import CustomerForm
-from ..invoice.models import Invoice
+from ..invoice.models import Invoice, InvoiceItem
 from ..loan.models import Loan
+from ..quotation.models import Quotation
 from ..transaction.models import Ledger
 from ...web.dashboard.utils import get_monthly_income_expense
 
@@ -194,14 +192,49 @@ class AddBudgetView(LoginRequiredMixin, FormView):
         return super().form_invalid(form)
 
 
-class StartProjectView(LoginRequiredMixin, RedirectView):
-    """A view that changes the project status to in progress and redirects to the project detail page"""
+class StartProjectView(LoginRequiredMixin, View):
+    """Automated view to create an invoice from a quotation."""
 
-    def get_redirect_url(self, *args, **kwargs):
-        project = get_object_or_404(Project, pk=kwargs["pk"])
+    def get(self, request, *args, **kwargs):
+        # Fetch the quotation based on the pk passed in the URL
+        quotation = get_object_or_404(Quotation, pk=self.kwargs["pk"])
+
+        # Create the invoice using the quotation details
+        invoice = Invoice.objects.create(
+            client_name=quotation.client_name,
+            company_name=quotation.company_name,
+            phone=quotation.phone,
+            address=quotation.address,
+            subject=quotation.subject,
+            notes=quotation.notes,
+            total_amount=quotation.total_amount,
+            total_in_words=quotation.total_in_words,
+            due_date=quotation.due_date,
+            project=quotation.project,
+            letterhead=quotation.letterhead,
+            status="PENDING",
+        )
+
+        # Copy quotation items to invoice items
+        for item in quotation.items.all():
+            InvoiceItem.objects.create(
+                invoice=invoice,
+                item_name=item.item_name,
+                description=item.description,
+                quantity=item.quantity,
+                rate=item.rate,
+                tax=item.tax,
+                amount=item.amount,
+            )
+
+        # After saving all invoice items, recalculate the total for the invoice
+        invoice.calculate_total_amount()
+        project = get_object_or_404(Project, pk=quotation.project.pk)
         project.project_status = Project.ProjectStatus.IN_PROGRESS
         project.save()
-        return reverse("project:detail", kwargs={"pk": project.pk})
+
+        # Redirect to the invoice detail page after creation
+        return redirect(reverse("project:detail", kwargs={"pk": project.pk}))
 
 
 class ProjectFinances(LoginRequiredMixin, View):

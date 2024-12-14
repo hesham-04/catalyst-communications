@@ -27,7 +27,9 @@ class Quotation(models.Model):
 
     letterhead = models.BooleanField(default=True)
 
-    project = models.OneToOneField(Project, on_delete=models.CASCADE)
+    project = models.OneToOneField(
+        Project, on_delete=models.CASCADE, related_name="quotation"
+    )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     tax = models.BooleanField(default=True, null=True)

@@ -1,5 +1,11 @@
 from django.urls import path
-from .views import CreateInvoiceView, InvoiceDetailView, InvoicePaidView
+from .views import (
+    CreateInvoiceView,
+    InvoiceDetailView,
+    InvoicePaidView,
+    InvoiceDeleteView,
+    InvoiceUpdateView,
+)
 
 app_name = "invoice"
 
@@ -8,5 +14,7 @@ urlpatterns = [
         "project/<str:pk>/create-invoice/", CreateInvoiceView.as_view(), name="create"
     ),
     path("detail/<str:pk>/", InvoiceDetailView.as_view(), name="detail"),
-    path("update/<str:pk>/", InvoicePaidView.as_view(), name="invoice-paid"),
+    path("paid/<str:pk>/", InvoicePaidView.as_view(), name="invoice-paid"),
+    path("delete/<str:pk>/", InvoiceDeleteView.as_view(), name="invoice-delete"),
+    path("update/<str:pk>/", InvoiceUpdateView.as_view(), name="invoice-update"),
 ]

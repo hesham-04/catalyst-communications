@@ -38,8 +38,11 @@
                                             <h4 class="card-title">{{ invoice.invoice_number }}</h4>
                                             <p class="text-muted mt-1">{{ invoice.subject }}</p>
                                         </div><!--end col-->
-                                        <div class="col-auto">
-
+                                        <div class="col-auto text-muted">
+                                            <a class="mb-2 text-muted"
+                                               href="{% url 'invoice:invoice-update' invoice.pk %}">
+                                                <i class="fa fa-edit mb-4"></i>Edit
+                                            </a>
                                         </div><!--end col-->
                                     </div>  <!--end row-->
                                 </div><!--end card-header-->
@@ -122,6 +125,11 @@
                                     <a href="{% url 'invoice:invoice-paid' object.pk %}">
                                         <div class="btn btn-danger">
                                             Mark as Paid
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'invoice:invoice-delete' object.pk %}">
+                                        <div class="float-end btn btn-outline-danger">
+                                            Delete
                                         </div>
                                     </a>
                                 {% else %}

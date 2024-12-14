@@ -13,18 +13,18 @@
 
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Create Invoice</h4>
-                    =
+
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card border shadow">
-                            <div class="card-body">
+                            <div class="card-body ">
                                 <form method="POST">
                                     {% csrf_token %}
                                     <div class="row mt-3">
                                         <div class="col-md-6">
-                                            <div class="card shadow-lg">
+                                            <div class="card shadow-lg p-2">
                                                 {% crispy form %}
                                             </div>
 
@@ -38,7 +38,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <a style="width:200px" type="button" id="add-item"
-                                                       class="btn btn-soft-primary mt-3">
+                                                       class="btn btn-soft-primary ms-3 mt-3">
                                                         <i class="fa fa-plus"></i>
                                                         Add Item
                                                     </a>
@@ -152,10 +152,5 @@
         });
 
     </script>
-
-
-
-
-
 
 {% endblock %}

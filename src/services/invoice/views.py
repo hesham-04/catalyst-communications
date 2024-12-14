@@ -2,9 +2,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView, DetailView
+from django.views.generic import (
+    CreateView,
+    TemplateView,
+    DetailView,
+    DeleteView,
+    UpdateView,
+)
 
 from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm
 from .models import Invoice, InvoiceItem
@@ -64,6 +70,14 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
+    model = Invoice
+
+    def get_success_url(self):
+        invoice = get_object_or_404(Invoice, pk=self.kwargs["pk"])
+        return reverse_lazy("project:detail", kwargs={"pk": invoice.project.pk})
+
+
 class InvoicePaidView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
@@ -102,3 +116,12 @@ class InvoicePaidView(LoginRequiredMixin, View):
         return render(
             request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
         )
+
+
+class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
+    model = Invoice
+    form_class = InvoiceForm
+    template_name = "invoice/invoice_edit.html"
+
+    def get_success_url(self):
+        return reverse("invoice:detail", kwargs={"pk": self.object.pk})
