@@ -13,7 +13,7 @@ from ..project.models import Project
 class CreateQuotationView(LoginRequiredMixin, CreateView):
     model = Quotation
     form_class = QuotationForm
-    template_name = "quotation/quotation_form.html"  # Update to the correct template
+    template_name = "quotation/quotation_form.html"
 
     def get_initial(self):
         initial = super().get_initial()
@@ -38,17 +38,22 @@ class CreateQuotationView(LoginRequiredMixin, CreateView):
         project.project_status = Project.ProjectStatus.AWAITING
         project.save()
 
-        QuotationItemFormSet = modelformset_factory(
+        quotationitemformSet = modelformset_factory(
             QuotationItem, form=QuotationItemForm
         )
-        formset = QuotationItemFormSet(self.request.POST)
+        formset = quotationitemformSet(self.request.POST)
 
         if formset.is_valid():
             for item_form in formset:
                 item_form.instance.quotation = quotation
                 item_form.save()
-
-        return super().form_valid(form)
+            return super().form_valid(form)
+        else:
+            for form in formset:
+                errors = list(form.errors.values())
+                for error in errors:
+                    form.add_error(None, error)
+            return self.form_invalid(form)
 
     def get_success_url(self):
         return reverse("quotation:detail", kwargs={"pk": self.object.pk})
