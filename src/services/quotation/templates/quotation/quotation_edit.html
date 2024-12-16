@@ -1,5 +1,5 @@
 {% extends 'dashboard/base.html' %}
-{% block title %}Update Invoice{% endblock %}
+{% block title %}Update Quotation{% endblock %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
@@ -12,9 +12,9 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'invoice:detail' object.pk %}"><i
+                        <a class="btn btn-secondary btn-sm" href="{% url 'quotation:detail' object.pk %}"><i
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                        Update Invoice</h4>
+                        Update Quotation</h4>
 
                 </div>
 
@@ -23,15 +23,15 @@
                     <div class="col-md-6">
                         <div class="card shadow-sm">
                             <div class="card-header bg-light text-dark text-center">
-                                <h5 class="mb-0">Update Inovice</h5>
+                                <h5 class="mb-0">Update Quotation</h5>
                             </div>
                             <div class="card-body">
                                 <form method="post">
                                     {% csrf_token %}
-                                    {{ form.as_p }}
+                                    {{ form|crispy }}
                                     <button style="width:200px" type="submit"
                                             class="btn btn-success mt-3">
-                                        Update View
+                                        Submit
                                     </button>
                                 </form>
                             </div>

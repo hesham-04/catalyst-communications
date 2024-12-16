@@ -167,3 +167,92 @@ class TransferFundsForm(forms.Form):
         required=True,
         label="Select Bank Account",
     )
+
+
+class InvoiceUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+
+        fields = [
+            "client_name",
+            "company_name",
+            "invoice_number",
+            "phone",
+            "date",
+            "email",
+            "address",
+            "due_date",
+            "subject",
+            "notes",
+            "letterhead",
+        ]
+
+        widgets = {
+            "client_name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Client Name",
+                    "required": True,
+                }
+            ),
+            "company_name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Company Name",
+                    "required": True,
+                }
+            ),
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Phone Number",
+                    "required": True,
+                }
+            ),
+            "invoice_number": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Invoice Number",
+                    "required": True,
+                    "max_length": 11,
+                }
+            ),
+            "date": forms.DateInput(
+                attrs={"class": "form-control", "type": "Date", "required": True}
+            ),
+            "address": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Address",
+                    "required": True,
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Email",
+                    "required": True,
+                }
+            ),
+            "due_date": forms.DateInput(
+                attrs={"class": "form-control", "type": "Date", "required": True}
+            ),
+            "subject": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Subject",
+                    "required": True,
+                }
+            ),
+            "notes": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Notes",
+                    "rows": 10,
+                    "required": True,
+                }
+            ),
+            "letterhead": forms.CheckboxInput(
+                attrs={"class": "form-check-input", "required": True}
+            ),
+        }

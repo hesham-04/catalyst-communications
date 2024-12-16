@@ -58,7 +58,7 @@
                                                 <h5 class="mt-1">Quotation Items</h5>
                                                 <div class="form-check form-switch form-switch-dark ms-auto">
                                                     <input class="form-check-input" type="checkbox"
-                                                           id="customSwitchDark" name="include_tax">
+                                                           id="customSwitchDark" name="include_tax" checked>
                                                     <label class="form-check-label" for="customSwitchDark">Tax</label>
                                                 </div>
                                             </div>
