@@ -4,6 +4,8 @@ from django.db.models import Sum
 from django.utils import timezone
 from num2words import num2words
 from phonenumber_field.modelfields import PhoneNumberField
+
+from src.core.utils import capitalize_and_replace_currency
 from src.services.project.models import Project
 
 
@@ -13,8 +15,8 @@ class Quotation(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = PhoneNumberField(max_length=15)
-    email = models.EmailField(max_length=15)
+    phone = PhoneNumberField(max_length=15, region="PK")
+    email = models.EmailField(max_length=50)
     address = models.CharField(max_length=255)
 
     quotation_number = models.CharField(max_length=100, unique=True, null=True)
@@ -27,7 +29,9 @@ class Quotation(models.Model):
 
     letterhead = models.BooleanField(default=True)
 
-    project = models.OneToOneField(Project, on_delete=models.CASCADE)
+    project = models.OneToOneField(
+        Project, on_delete=models.CASCADE, related_name="quotation"
+    )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     tax = models.BooleanField(default=True, null=True)
@@ -35,7 +39,9 @@ class Quotation(models.Model):
     def calculate_total_amount(self):
         total = self.items.aggregate(total=Sum("amount"))["total"] or 0
         self.total_amount = total
-        self.total_in_words = num2words(total, to="currency", lang="en_IN")
+        self.total_in_words = capitalize_and_replace_currency(
+            num2words(total, to="currency", lang="en_IN")
+        )
         self.save(update_fields=["total_amount", "total_in_words"])
 
     def save(self, *args, **kwargs):

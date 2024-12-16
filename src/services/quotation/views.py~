@@ -55,7 +55,7 @@ class CreateQuotationView(LoginRequiredMixin, CreateView):
                 item_form.save()
 
             # SET TAX TO FALSE IF TAX ON ALL ITEMS IS 0.0
-            for item in quotation.items.all():
+            for item in quotation.items:
                 if item.tax == 0.0:
                     quotation.tax = False
 

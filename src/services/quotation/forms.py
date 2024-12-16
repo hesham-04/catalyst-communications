@@ -1,7 +1,9 @@
-from django import forms
-from .models import Quotation
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column
+from django import forms
+
+from .models import Quotation
+from .models import QuotationItem
 
 
 class QuotationForm(forms.ModelForm):
@@ -21,29 +23,59 @@ class QuotationForm(forms.ModelForm):
 
         widgets = {
             "client_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Client Name"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Client Name",
+                    "required": True,
+                }
             ),
             "company_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Company Name"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Company Name",
+                    "required": True,
+                }
             ),
             "phone": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Phone Number"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Phone Number",
+                    "required": True,
+                }
             ),
             "email": forms.EmailInput(
-                attrs={"class": "form-control", "placeholder": "Email"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Email",
+                    "required": True,
+                }
             ),
             "address": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Address"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Address",
+                    "required": True,
+                }
             ),
             "subject": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Subject"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Subject",
+                    "required": True,
+                }
             ),
             "notes": forms.Textarea(
-                attrs={"class": "form-control", "placeholder": "Notes"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Notes",
+                    "required": True,
+                }
             ),
-            "letterhead": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "letterhead": forms.CheckboxInput(
+                attrs={"class": "form-check-input", "required": True}
+            ),
             "due_date": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
+                attrs={"class": "form-control", "type": "date", "required": True}
             ),
         }
 
@@ -80,10 +112,6 @@ class QuotationForm(forms.ModelForm):
         )
 
 
-from django import forms
-from .models import QuotationItem
-
-
 class QuotationItemForm(forms.ModelForm):
     class Meta:
         model = QuotationItem
@@ -91,26 +119,39 @@ class QuotationItemForm(forms.ModelForm):
 
         widgets = {
             "item_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Item Name"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Item Name",
+                    "required": True,
+                }
             ),
             "description": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Description"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Description",
+                    "required": True,
+                }
             ),
             "quantity": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Quantity"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Quantity",
+                    "required": True,
+                }
             ),
             "rate": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Rate"}
+                attrs={"class": "form-control", "placeholder": "Rate", "required": True}
             ),
             "tax": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Tax (%)"}
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Tax (%)",
+                    "required": False,
+                    "maxlength": 3,
+                    "step": "0.1",
+                }
             ),
         }
-
-    def clean(self):
-        cleaned_data = super().clean()
-        # Optionally, add custom validation if required
-        return cleaned_data
 
     def save(self, *args, **kwargs):
         instance = super().save(commit=False)

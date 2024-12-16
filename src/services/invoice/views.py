@@ -2,9 +2,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView, DetailView
+from django.views.generic import (
+    CreateView,
+    TemplateView,
+    DetailView,
+    DeleteView,
+    UpdateView,
+)
 
 from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm
 from .models import Invoice, InvoiceItem
@@ -26,11 +32,10 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["project"] = Project.objects.get(pk=self.kwargs["pk"])
-        InvoiceItemFormSet = modelformset_factory(
+        invoice_item_form_set = modelformset_factory(
             InvoiceItem, form=InvoiceItemForm, extra=1
         )
-        context["formset"] = InvoiceItemFormSet(queryset=InvoiceItem.objects.none())
-
+        context["formset"] = invoice_item_form_set(queryset=InvoiceItem.objects.none())
         return context
 
     def form_valid(self, form):
@@ -38,17 +43,33 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
         form.instance.project = project
         invoice = form.save()
 
-        InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm)
-        formset = InvoiceItemFormSet(self.request.POST)
+        invoice_item_formset = modelformset_factory(InvoiceItem, form=InvoiceItemForm)
+        formset = invoice_item_formset(self.request.POST)
 
         if formset.is_valid():
             for item_form in formset:
                 item_form.instance.invoice = invoice
                 item_form.save()
 
-        invoice.calculate_total_amount()
+            # SET TAX TO FALSE IF TAX ON ALL ITEMS IS 0.0
+            for item in invoice.items.all():
+                if item.tax == 0.0:
+                    invoice.tax = False
+        else:
+            # Collect errors and display them as messages
+            error_list = []
+            for form in formset:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_list.append(f"{field}: {error}")
 
-        return super().form_valid(form)
+            # Add the errors to the messages framework
+            for error in error_list:
+                messages.error(self.request, error)
+
+            # Redirect to the project detail page
+            project_id = self.get_initial()["project"].pk
+            return redirect("project:detail", pk=project_id)
 
     def get_success_url(self):
         return reverse("invoice:detail", kwargs={"pk": self.object.pk})
@@ -62,6 +83,14 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["invoice"] = get_object_or_404(Invoice, pk=self.kwargs["pk"])
         return context
+
+
+class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
+    model = Invoice
+
+    def get_success_url(self):
+        invoice = get_object_or_404(Invoice, pk=self.kwargs["pk"])
+        return reverse_lazy("project:detail", kwargs={"pk": invoice.project.pk})
 
 
 class InvoicePaidView(LoginRequiredMixin, View):
@@ -102,3 +131,12 @@ class InvoicePaidView(LoginRequiredMixin, View):
         return render(
             request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
         )
+
+
+class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
+    model = Invoice
+    form_class = InvoiceForm
+    template_name = "invoice/invoice_edit.html"
+
+    def get_success_url(self):
+        return reverse("invoice:detail", kwargs={"pk": self.object.pk})

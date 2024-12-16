@@ -13,18 +13,18 @@
 
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Create Invoice</h4>
-                    =
+
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card border shadow">
-                            <div class="card-body">
+                            <div class="card-body ">
                                 <form method="POST">
                                     {% csrf_token %}
                                     <div class="row mt-3">
                                         <div class="col-md-6">
-                                            <div class="card shadow-lg">
+                                            <div class="card  p-3">
                                                 {% crispy form %}
                                             </div>
 
@@ -38,7 +38,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <a style="width:200px" type="button" id="add-item"
-                                                       class="btn btn-soft-primary mt-3">
+                                                       class="btn btn-soft-primary ms-4 mt-3">
                                                         <i class="fa fa-plus"></i>
                                                         Add Item
                                                     </a>
@@ -62,7 +62,7 @@
                                                     <p class="error">{{ error }}</p>
                                                 {% endfor %}
                                                 {% for form in formset %}
-                                                    <div class="card mt-3 border-2 shadow-lg invoice-item">
+                                                    <div class="card border-2 shadow-lg invoice-item">
                                                         <div class="card-body px-4 py-2">
                                                             <div class="row">
                                                                 {{ form|crispy }}
@@ -151,6 +151,40 @@
             taxToggle.addEventListener('change', toggleTaxFields);
         });
 
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Use event delegation to handle dynamically incrementing input fields
+            $(document).on("keypress", "input[id^='id_form-'][id$='-tax']", function (e) {
+                const charCode = e.which;
+                const currentValue = $(this).val();
+                const isDecimal = currentValue.includes(".");
+
+                // Allow only digits and one decimal point
+                if (
+                    charCode !== 46 && // Decimal point
+                    (charCode < 48 || charCode > 57) // Not a number
+                ) {
+                    e.preventDefault();
+                }
+
+                // Prevent multiple decimals
+                if (charCode === 46 && isDecimal) {
+                    e.preventDefault();
+                }
+            });
+
+            $(document).on("input", "input[id^='id_form-'][id$='-tax']", function () {
+                const maxLength = 4; // Maximum 3 digits
+                const value = $(this).val();
+
+                // If length exceeds the maximum, trim the extra characters
+                if (value.length > maxLength) {
+                    $(this).val(value.substring(0, maxLength));
+                }
+            });
+        });
     </script>
 
 {% endblock %}

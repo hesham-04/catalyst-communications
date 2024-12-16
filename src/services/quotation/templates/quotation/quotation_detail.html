@@ -35,8 +35,9 @@
                                 <div class="card-header">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            <h3 class="card-title">{{ quotation.quotation_number }}</h3>
-                                            <p class="text-muted mt-1">{{ quotation.subject }}</p>
+                                            <h3 class="card-title mb-1">{{ quotation.quotation_number }}</h3>
+                                            <p class="text-muted m-0 p-0"><b>Subject: </b>{{ quotation.subject }}</p>
+                                            <p class="text-muted m-0 p-0"><b>Description: </b>{{ quotation.notes }}</p>
                                         </div><!--end col-->
                                         <div class="col-auto">
 
@@ -58,20 +59,10 @@
                                                     <b> Project </b> : {{ quotation.project.project_name }}
                                                 </li>
                                                 <li class="mt-2"><i
-                                                        class="las la-university me-2 text-secondary fs-22 align-middle"></i>
-                                                    <b> Payment Status </b>:
-                                                    {% if quotation.status == "PAID" %}
-                                                        <span class="badge bg-success-subtle text-success fs-11
-                                                    fw-medium px-2">
-                                                        {{ quotation.status }}
-                                                    </span>
-                                                    {% else %}
-                                                        <span class="badge bg-danger-subtle text-danger fs-11
-                                                            fw-medium px-2">
-                                                            {{ quotation.status }}
-                                                        </span>
-                                                    {% endif %}
+                                                        class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                                    <b> Amount </b> : {{ quotation.total_amount }} PKR
                                                 </li>
+
                                             </div>
                                             <div class="col-md-6">
                                                 <li class="mt-2"><i
@@ -83,15 +74,11 @@
                                                     <b>
                                                         Phone </b> : {{ quotation.phone }}
                                                 </li>
-                                                <li class="mt-2"><i
-                                                        class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
-                                                    <b> Amount </b> : {{ quotation.total_amount }} PKR
-                                                </li>
+
                                             </div>
                                         </div>
 
                                     </ul>
-                                    <p class="text-muted pt-0 fw-medium mt-3">{{ quotation.notes|slice:150 }}...</p>
 
 
                                 </div><!--end card-body-->
@@ -225,29 +212,55 @@
                                             <div class="table-responsive project-quotation bg-white">
                                                 <table class="table table-bordered mb-0">
                                                     <thead class="table-light">
-                                                    <tr>
-                                                        <th style="width: 60%;">Description</th>
-                                                        <!-- Larger width for Project Breakdown -->
-                                                        <th style="width: 10%;">Rate</th>
-                                                        <th style="width: 10%;">Quantity</th>
-                                                        <th style="width: 10%;">Exclusive</th>
-                                                        <th style="width: 10%;">Tax</th>
-                                                        <th style="width: 10%;">Subtotal</th>
-                                                    </tr>
+                                                    {% if quotation.tax %}
+                                                        <tr>
+                                                            <th style="width: 60%;">Description</th>
+                                                            <!-- Larger width for Project Breakdown -->
+                                                            <th style="width: 10%;">Rate</th>
+                                                            <th style="width: 10%;">Quantity</th>
+                                                            <th style="width: 10%;">Exclusive</th>
+                                                            <th style="width: 10%;">Tax</th>
+                                                            <th style="width: 10%;">Subtotal</th>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <th style="width: 60%;">Description</th>
+                                                            <!-- Larger width for Project Breakdown -->
+                                                            <th style="width: 10%;"></th>
+                                                            <th style="width: 10%;"></th>
+                                                            <th style="width: 10%;">Rate</th>
+                                                            <th style="width: 10%;">Quantity</th>
+                                                            <th style="width: 10%;">Subtotal</th>
+                                                        </tr>
+                                                    {% endif %}
                                                     </thead>
                                                     <tbody>
                                                     {% for item in quotation.items.all %}
-                                                        <tr>
-                                                            <td>
-                                                                <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
-                                                                <p class="mb-0 text-muted">{{ item.description }}</p>
-                                                            </td>
-                                                            <td>{{ item.rate }}</td>
-                                                            <td>{{ item.quantity }}</td>
-                                                            <td>{{ item.get_total_without_tax }}</td>
-                                                            <td>{{ item.tax }}%</td>
-                                                            <td>{{ item.amount }}</td>
-                                                        </tr>
+                                                        {% if quotation.tax %}
+                                                            <tr>
+                                                                <td>
+                                                                    <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
+                                                                    <p class="mb-0 text-muted">{{ item.description }}</p>
+                                                                </td>
+                                                                <td>{{ item.rate }}</td>
+                                                                <td>{{ item.quantity }}</td>
+                                                                <td>{{ item.get_total_without_tax }}</td>
+                                                                <td>{{ item.tax }}%</td>
+                                                                <td>{{ item.amount }}</td>
+                                                            </tr>
+                                                        {% else %}
+                                                            <tr>
+                                                                <td>
+                                                                    <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
+                                                                    <p class="mb-0 text-muted">{{ item.description }}</p>
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>{{ item.rate }}</td>
+                                                                <td>{{ item.quantity }}</td>
+                                                                <td>{{ item.amount }}</td>
+                                                            </tr>
+                                                        {% endif %}
                                                     {% endfor %}
 
                                                     <tr>
@@ -266,9 +279,8 @@
                                                     <tr>
                                                         <th colspan="1" class="border-0"></th>
                                                         <th colspan="1" class="border-0"></th>
-                                                        </td>
                                                         <td colspan="4" class="border-0 fs-14 text-dark"><b>
-                                                            {{ quotation.total_in_words|capitalize_and_replace }}</b>
+                                                            {{ quotation.total_in_words }}</b>
                                                         </td>
                                                     </tr>
                                                     </tbody>

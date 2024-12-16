@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header pb-3">
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <h4 class="card-title">{{ project.project_name }}</h4>
@@ -39,7 +39,7 @@
                                 </div>  <!--end row-->
                             </div><!--end card-header-->
                             <div class="card-body pt-0">
-                                <p class="text-muted fw-medium mb-3">{{ project.description|slice:100 }}...</p>
+                                <p class="text-muted fw-medium ">{{ project.description|slice:100 }}...</p>
                                 <ul class="list-unstyled mb-0">
 
                                     <div class="row d-flex">
@@ -48,7 +48,7 @@
                                             <li class="mt-2">
                                                 <i class="las la-user me-2 text-secondary fs-22 align-middle"></i>
                                                 <b> Client Name </b>:
-                                                {{ project.customer.get_full_name }}
+                                                {{ project.customer }}
                                             </li>
                                             <li class="mt-2"><i
                                                     class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
@@ -61,7 +61,7 @@
                                             <li class="mt-2"><i
                                                     class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
                                                 <b>
-                                                    Phone </b> : {{ project.customer.phone }}
+                                                    Phone </b> : {{ project.customer.mobile }}
                                             </li>
                                             <li class="mt-2"><i
                                                     class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
@@ -173,7 +173,7 @@
                                                                 <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">No
                                                                 </button>
-                                                                <a href="{% url 'project:start_project' project.id %}"
+                                                                <a href="{% url 'project:start_project' project.quotation.pk %}"
                                                                    type="button"
                                                                    class="btn btn-primary">Yes</a>
                                                             </div>

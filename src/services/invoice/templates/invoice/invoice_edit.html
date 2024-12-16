@@ -1,0 +1,45 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Update Invoice{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                    <h4 class="page-title">
+                        <a class="btn btn-secondary btn-sm" href="{% url 'invoice:detail' object.pk %}"><i
+                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                        Update Invoice</h4>
+
+                </div>
+
+
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-light text-dark text-center">
+                                <h5 class="mb-0">Update Inovice</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button style="width:200px" type="submit"
+                                            class="btn btn-success mt-3">
+                                        Submit
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}

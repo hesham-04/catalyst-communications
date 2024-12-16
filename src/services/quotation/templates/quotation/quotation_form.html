@@ -19,9 +19,16 @@
                     <div class="col-md-12">
                         <div class="card shadow">
                             <div class="card-body">
-                                {% for error in form.errors %}
-                                    <small><p class="text-danger">Error in {{ error }} field.</p></small>
-                                {% endfor %}
+                                {% if errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        <strong>There were some errors:</strong>
+                                        <ul>
+                                            {% for error in errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
                                 <form method="POST">
                                     {% csrf_token %}
                                     <div class="row mt-3">
@@ -39,7 +46,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <a style="width:200px" type="button" id="add-item"
-                                                       class="btn btn-soft-primary mt-3">
+                                                       class="btn btn-soft-primary ms-4  mt-3">
                                                         <i class="fa fa-plus"></i>
                                                         Add Item
                                                     </a>
@@ -51,7 +58,7 @@
                                                 <h5 class="mt-1">Quotation Items</h5>
                                                 <div class="form-check form-switch form-switch-dark ms-auto">
                                                     <input class="form-check-input" type="checkbox"
-                                                           id="customSwitchDark" checked>
+                                                           id="customSwitchDark" name="include_tax" checked>
                                                     <label class="form-check-label" for="customSwitchDark">Tax</label>
                                                 </div>
                                             </div>
@@ -145,5 +152,41 @@
             taxToggle.addEventListener('change', toggleTaxFields);
         });
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Use event delegation to handle dynamically incrementing input fields
+            $(document).on("keypress", "input[id^='id_form-'][id$='-tax']", function (e) {
+                const charCode = e.which;
+                const currentValue = $(this).val();
+                const isDecimal = currentValue.includes(".");
+
+                // Allow only digits and one decimal point
+                if (
+                    charCode !== 46 && // Decimal point
+                    (charCode < 48 || charCode > 57) // Not a number
+                ) {
+                    e.preventDefault();
+                }
+
+                // Prevent multiple decimals
+                if (charCode === 46 && isDecimal) {
+                    e.preventDefault();
+                }
+            });
+
+            $(document).on("input", "input[id^='id_form-'][id$='-tax']", function () {
+                const maxLength = 4; // Maximum 3 digits
+                const value = $(this).val();
+
+                // If length exceeds the maximum, trim the extra characters
+                if (value.length > maxLength) {
+                    $(this).val(value.substring(0, maxLength));
+                }
+            });
+        });
+    </script>
+
 
 {% endblock %}

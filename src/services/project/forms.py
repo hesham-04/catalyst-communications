@@ -29,6 +29,22 @@ class ProjectForm(forms.ModelForm):
             "customer": forms.Select(attrs={"class": "form-control"}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        fields_to_validate = [
+            "project_name",
+        ]
+
+        for field in fields_to_validate:
+            value = cleaned_data.get(field)
+            if value and not all(char.isalnum() or char.isspace() for char in value):
+                self.add_error(
+                    field,
+                    f"{field.replace('_', '  ').capitalize()} should only contain alphanumeric characters and spaces.",
+                )
+
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

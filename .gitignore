@@ -57,5 +57,8 @@ coverage/
 # Pytest
 .pytest_cache/
 /migrations
+**/migrations/
+*.pytest_cache/
 
 *.pyc
+*.pyo
