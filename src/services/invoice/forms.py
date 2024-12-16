@@ -14,6 +14,7 @@ class InvoiceForm(forms.ModelForm):
             "client_name",
             "company_name",
             "phone",
+            "email",
             "address",
             "due_date",
             "subject",
@@ -50,6 +51,13 @@ class InvoiceForm(forms.ModelForm):
                     "required": True,
                 }
             ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Email",
+                    "required": True,
+                }
+            ),
             "due_date": forms.DateInput(
                 attrs={"class": "form-control", "type": "Date", "required": True}
             ),
@@ -64,7 +72,7 @@ class InvoiceForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Notes",
-                    "rows": 6,
+                    "rows": 10,
                     "required": True,
                 }
             ),
@@ -88,6 +96,9 @@ class InvoiceForm(forms.ModelForm):
                 Column("phone", css_class="form-group col-md-6 mb-3"),
                 Column("address", css_class="form-group col-md-6 mb-3"),
                 css_class="row",
+            ),
+            Row(
+                Column("email", css_class="form-group col-md-12 mb-3"), css_class="row"
             ),
             Row(
                 Column("subject", css_class="form-group col-md-6 mb-3"),

@@ -73,24 +73,6 @@ class CustomerForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "form-select"}),
         }
 
-    def clean_mobile(self):
-        mobile = self.cleaned_data.get("mobile")
-        if not str(mobile).startswith(("+92", "03")):
-            raise forms.ValidationError(
-                "Mobile number must start with +92 or 03 (for Pakistan)."
-            )
-        return mobile
-
-    def clean_phone(self):
-        phone = self.cleaned_data.get("phone")
-        if str(phone) == "":
-            return None
-        elif not str(phone).startswith(("+92", "03")):
-            raise forms.ValidationError(
-                "Phone number must start with +92 or 03 (for Pakistan)."
-            )
-        return phone
-
     def clean(self):
         cleaned_data = super().clean()
         fields_to_validate = [
@@ -101,7 +83,7 @@ class CustomerForm(forms.ModelForm):
 
         for field in fields_to_validate:
             value = cleaned_data.get(field)
-            if value and not value.isalnum():
+            if value and not all(char.isalnum() or char.isspace() for char in value):
                 self.add_error(
                     field,
                     f"{field.replace('_', ' ').capitalize()} should only contain alphanumeric characters.",

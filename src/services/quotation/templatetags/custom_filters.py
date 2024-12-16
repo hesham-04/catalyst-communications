@@ -11,19 +11,7 @@ def multiply(value, arg):
     except (ValueError, TypeError):
         return ""
 
-
-@register.filter
-def capitalize_and_replace(value):
-    # Capitalize the first letter of the string
-    value = value.capitalize()
-
-    # Replace "euro, zero cents" with "rupees"
-    value = value.replace("euro, zero cents", "rupees")
-    value = value.replace("euro, one cent", "rupee")
-    value = value.replace("euros, zero cents", "rupees")
-    value = value.replace("euros, one cent", "rupee")
-
-    return value
+    # return float(value) * float(arg)
 
 
 @register.filter

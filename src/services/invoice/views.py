@@ -32,10 +32,10 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["project"] = Project.objects.get(pk=self.kwargs["pk"])
-        invoiceitemformSet = modelformset_factory(
+        invoice_item_form_set = modelformset_factory(
             InvoiceItem, form=InvoiceItemForm, extra=1
         )
-        context["formset"] = invoiceitemformSet(queryset=InvoiceItem.objects.none())
+        context["formset"] = invoice_item_form_set(queryset=InvoiceItem.objects.none())
         return context
 
     def form_valid(self, form):
@@ -43,17 +43,33 @@ class CreateInvoiceView(LoginRequiredMixin, CreateView):
         form.instance.project = project
         invoice = form.save()
 
-        InvoiceItemFormSet = modelformset_factory(InvoiceItem, form=InvoiceItemForm)
-        formset = InvoiceItemFormSet(self.request.POST)
+        invoice_item_formset = modelformset_factory(InvoiceItem, form=InvoiceItemForm)
+        formset = invoice_item_formset(self.request.POST)
 
         if formset.is_valid():
             for item_form in formset:
                 item_form.instance.invoice = invoice
                 item_form.save()
 
-        invoice.calculate_total_amount()
+            # SET TAX TO FALSE IF TAX ON ALL ITEMS IS 0.0
+            for item in invoice.items.all():
+                if item.tax == 0.0:
+                    invoice.tax = False
+        else:
+            # Collect errors and display them as messages
+            error_list = []
+            for form in formset:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_list.append(f"{field}: {error}")
 
-        return super().form_valid(form)
+            # Add the errors to the messages framework
+            for error in error_list:
+                messages.error(self.request, error)
+
+            # Redirect to the project detail page
+            project_id = self.get_initial()["project"].pk
+            return redirect("project:detail", pk=project_id)
 
     def get_success_url(self):
         return reverse("invoice:detail", kwargs={"pk": self.object.pk})

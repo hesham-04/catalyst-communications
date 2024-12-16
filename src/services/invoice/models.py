@@ -4,6 +4,8 @@ from django.db.models import Sum
 from django.utils import timezone
 from num2words import num2words
 from phonenumber_field.modelfields import PhoneNumberField
+
+from src.core.utils import capitalize_and_replace_currency
 from src.services.project.models import Project
 
 
@@ -42,7 +44,9 @@ class Invoice(models.Model):
     def calculate_total_amount(self):
         total = self.items.aggregate(total=Sum("amount"))["total"] or 0
         self.total_amount = total
-        self.total_in_words = num2words(total, to="currency", lang="en_IN")
+        self.total_in_words = capitalize_and_replace_currency(
+            num2words(total, to="currency", lang="en_IN")
+        )
         self.save(update_fields=["total_amount", "total_in_words"])
 
     def save(self, *args, **kwargs):
@@ -95,9 +99,9 @@ class InvoiceItem(models.Model):
         max_digits=15, decimal_places=2, editable=False
     )  # For all the items (SUMS)
     tax = models.DecimalField(
-        max_digits=5,
+        max_digits=4,
         decimal_places=2,
-        default=0.00,
+        default=0.0,
         validators=[MinValueValidator(0.00), MaxValueValidator(50.00)],
     )
 
