@@ -72,59 +72,59 @@ class LoanListView(LoginRequiredMixin, ListView):
         return Loan.objects.filter(project=self.kwargs["pk"]).order_by("-due_date")
 
 
+# VALIDATION ✔
 class ReturnLoanView(LoginRequiredMixin, CreateView):
     form_class = LoanReturnForm
     template_name = "loan/return_loan.html"
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(Loan, id=self.kwargs["pk"])
 
     def form_valid(self, form):
-        loan = self.get_object()
-        loan_return = form.save(commit=False)
-
         return_amount = form.cleaned_data["return_amount"]
         remarks = form.cleaned_data["remarks"]
+        loan = self.get_object()
 
-        # Create an expense Object for this project.
-        # Subtract from the Loan model.
+        loan_return = form.save(commit=False)
 
-        amount = form.cleaned_data["return_amount"]
-
-        if amount > loan.remaining_amount:
+        # Validate the Form:
+        if return_amount > loan.remaining_amount:
             form.add_error(
                 "return_amount", "The amount is more than the project loan amount."
             )
             return self.form_invalid(form)
 
-        if amount > loan.project.project_account_balance:
+        if return_amount > loan.project.project_account_balance:
             form.add_error(
                 "return_amount", "The amount is more than Project account balance."
             )
             return self.form_invalid(form)
 
+        # Create an expense Object for this project & Perform the return.
         return_loan_to_lender(
-            loan_id=loan.pk,
             project_id=loan.project.id,
+            loan_id=loan.pk,
             amount=return_amount,
-            source=None,
-            destination=loan.lender.name,
             reason=remarks,
         )
 
         loan_return.loan = loan
         loan_return.save()
-        messages.success(self.request, "Loan return successfully recorded.")
+        messages.success(
+            self.request,
+            f"Successfully recorded loan return of {return_amount} for "
+            f"project {loan.project.project_name}.",
+        )
         return redirect("project:detail", pk=loan.project.id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         loan = self.get_object()
+        logs = LoanReturn.objects.filter(loan=loan).order_by("-return_date")
+
         context["loan"] = loan
         context["project"] = loan.project
-        context["return_logs"] = LoanReturn.objects.filter(loan=loan).order_by(
-            "-return_date"
-        )
+        context["return_logs"] = logs
         return context
 
 

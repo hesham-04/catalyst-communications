@@ -169,12 +169,6 @@ class LoanReturn(models.Model):
     def __str__(self):
         return f"Return of {self.return_amount} on {self.return_date} for Loan ID {self.loan.id}"
 
-    def save(self, *args, **kwargs):
-        # Add custom logic if needed, such as validating the return amount
-        if self.return_amount > self.loan.remaining_amount:
-            raise ValueError("Return amount cannot exceed the remaining loan balance.")
-        super().save(*args, **kwargs)
-
 
 class MiscLoan(models.Model):
     lender = models.ForeignKey(

@@ -63,7 +63,8 @@ class LoanReturnForm(forms.ModelForm):
                     "type": "datetime-local",
                     "class": "form-control",
                     "placeholder": "Select date and time",
-                }
+                },
+                format="%Y-%m-%dT%H:%M",
             ),
             "remarks": forms.Textarea(
                 attrs={
