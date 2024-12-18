@@ -9,6 +9,7 @@ from src.services.transaction.models import Ledger
 from src.services.vendor.models import Vendor
 
 
+# VALIDATION ✔
 @transaction.atomic
 def add_budget_to_project(project_id, amount, source, destination, reason):
     """
@@ -45,13 +46,12 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
     )
 
 
+# VALIDATION ✔
 @transaction.atomic
 def add_loan_to_project(project_id, amount, source, reason):
     project = Project.objects.select_for_update().get(pk=project_id)
-    project.total_budget_assigned += amount
-
     project.project_account_balance += amount
-    project.save()
+    project.save(update_fields=["project_account_balance"])
 
     lender = Lender.objects.get(pk=source.pk)
 
@@ -59,8 +59,10 @@ def add_loan_to_project(project_id, amount, source, reason):
         transaction_type="CREATE_LOAN",
         project=project,
         amount=amount,
-        source=f"Loan: {lender.name} ({lender.pk})",
-        destination=f"Project: {project.project_name} ACC ({project.pk})",
+        source_content_type=ContentType.objects.get_for_model(lender),
+        source_object_id=lender.pk,
+        destination_content_type=ContentType.objects.get_for_model(project),
+        destination_object_id=project.pk,
         reason=reason,
     )
 

@@ -18,7 +18,6 @@ from .forms import LoanReturnForm
 from .models import Loan, LoanReturn, Lender, MiscLoan
 from ..transaction.models import Ledger
 
-
 # VALIDATION ✔
 class LendLoanView(LoginRequiredMixin, CreateView):
     """
