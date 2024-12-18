@@ -103,16 +103,21 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
         reason=reason,
     )
 
+
 # VALIDATION ✔
 @transaction.atomic
 def create_expense_calculations(project_id, amount, budget_source, vendor_pk, reason):
     project = Project.objects.select_for_update().get(pk=project_id)
 
+    # Handle source deduction
     if budget_source == "CASH":
         project.project_cash -= amount
 
     elif budget_source == "ACC":
         project.project_account_balance -= amount
+
+    # NO DESTINATION FOR EXPENSE
+    # Vendor Usage is determined from the self.total_expense method defined in the vendor model
 
     project.save()
     vendor = Vendor.objects.get(pk=vendor_pk)
@@ -129,6 +134,7 @@ def create_expense_calculations(project_id, amount, budget_source, vendor_pk, re
     )
 
 
+# DEPRECATED †
 @transaction.atomic
 def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None):
     project = Project.objects.select_for_update().get(pk=project_id)
@@ -152,29 +158,27 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
     )
 
 
+# VALIDATION ✔
 @transaction.atomic
-def process_invoice_payment(invoice_id, destination, amount, account_id=None):
+def process_invoice_payment(invoice_id, amount, account_id):
     try:
         invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
         invoice.status = "PAID"
         invoice.save(update_fields=["status"])
 
-        if account_id:
-            account = AccountBalance.objects.select_for_update().get(pk=account_id)
-
-        ledger_reason = f"Payment for Invoice"
-
-        if destination == "account" and account:
-            account.balance += amount
-            account.save(update_fields=["balance"])
+        account = AccountBalance.objects.select_for_update().get(pk=account_id)
+        account.balance += amount
+        account.save(update_fields=["balance"])
 
         Ledger.objects.create(
             transaction_type="INVOICE_PAYMENT",
             project=invoice.project,
             amount=amount,
-            source=f"Invoice Paid: {invoice.client_name} ({invoice.pk})",
-            destination=f"Wallet: {account.account_name} ({account.pk})",
-            reason=ledger_reason,
+            source_content_type=ContentType.objects.get_for_model(invoice),
+            source_object_id=invoice.pk,
+            destination_content_type=ContentType.objects.get_for_model(account),
+            destination_object_id=account.pk,
+            reason="Invoice Payment",
         )
 
         return True, "Invoice successfully paid and funds transferred."

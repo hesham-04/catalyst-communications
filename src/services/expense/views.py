@@ -64,6 +64,7 @@ class ExpenseIndexView(LoginRequiredMixin, TemplateView):
                 print("Form is not valid")
             return self.get(request, *args, **kwargs)
 
+
 # VALIDATION ✔
 class CreateExpenseView(LoginRequiredMixin, CreateView):
     model = Expense
@@ -121,6 +122,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
         return context
 
 
+# DEPRECATED †
 class ExpensePaymentView(LoginRequiredMixin, FormView):
     template_name = "expense/expense_payment.html"
     form_class = ExpensePaymentForm
