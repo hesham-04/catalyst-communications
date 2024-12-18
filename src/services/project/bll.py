@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
@@ -11,6 +12,7 @@ from src.services.vendor.models import Vendor
 @transaction.atomic
 def add_budget_to_project(project_id, amount, source, destination, reason):
     """
+    The Budget To A Project Can only be assigned form a Bank account Instance
     Adjusts the budget of a project based on the source and destination of funds.
     :param reason:
     :param project_id: The ID of the project
@@ -27,9 +29,6 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
 
     # Handle source deduction
     account = AccountBalance.objects.get(pk=source.pk)
-
-    if not account or account.balance < amount:
-        raise ValueError("Insufficient account balance.")
     account.balance -= amount
     account.save()
 
@@ -38,22 +37,16 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         transaction_type="BUDGET_ASSIGN",
         project=project,
         amount=amount,
-        source=f"Wallet: {source.account_name} ({source.pk})",
-        destination=f"Project: {project.project_name} ACC ({project.pk})",
+        source_content_type=ContentType.objects.get_for_model(project),
+        source_object_id=project.pk,
+        destination_content_type=ContentType.objects.get_for_model(account),
+        destination_object_id=account.pk,
         reason=reason,
     )
 
-    return {
-        "message": "Budget successfully assigned to the project.",
-        "project_id": project_id,
-        "amount": amount,
-        "source": source,
-        "destination": destination,
-    }
-
 
 @transaction.atomic
-def add_loan_to_project(project_id, amount, source, reason, destination=None):
+def add_loan_to_project(project_id, amount, source, reason):
     project = Project.objects.select_for_update().get(pk=project_id)
     project.total_budget_assigned += amount
 

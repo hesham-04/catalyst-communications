@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from src.services.project.models import Project
 
@@ -5,17 +7,26 @@ from src.services.project.models import Project
 class Ledger(models.Model):
 
     TRANSACTION_TYPES = [
-        ("BUDGET_ASSIGN", "Budget Assigned to Project"),  # From Main ACC to Project
+        (
+            "BUDGET_ASSIGN",
+            "Budget Assigned to Project",  # From Main ACC to Project ( CAN ONLY BE TRANSFERRED FORM ACC TO PROJ CASH )
+        ),
         ("TRANSFER", "Funds Transfer"),  # Only from Project ACC to Project CASH
-        ("CREATE_LOAN", "Loan Created"),  # Project Loan
-        ("RETURN_LOAN", "Loan Returned"),  # Return
-        ("MISC_LOAN_CREATE", "Miscellaneous Loan"),
-        ("MISC_LOAN_RETURN", "Miscellaneous Loan Return"),
-        ("CREATE_EXPENSE", "Expense Created"),
-        ("MISC_EXPENSE", " Miscellaneous Expense Created"),
-        ("ADD_CASH", "Added Cash"),  # Cash Added to The General Cash in Hand
-        ("INVOICE_PAYMENT", "Invoice Paid"),
-        ("ADD_ACC_BALANCE", "Balance Added"),
+        ("CREATE_LOAN", "Loan Created"),  # Project Loan Created
+        ("RETURN_LOAN", "Loan Returned"),  # Project Loan Return
+        ("MISC_LOAN_CREATE", "Miscellaneous Loan"),  # MISCELLANEOUS LOAN CREATED
+        ("MISC_LOAN_RETURN", "Miscellaneous Loan Return"),  # MISCELLANEOUS LOAN RETURN
+        ("CREATE_EXPENSE", "Expense Created"),  # PROJ EXPENSE CREATED
+        (
+            "MISC_EXPENSE",
+            " Miscellaneous Expense Created",  # MISCELLANEOUS EXPENSE CREATED
+        ),
+        ("ADD_CASH", "Added Cash"),  # Add Cash to Petty Cash
+        ("INVOICE_PAYMENT", "Invoice Paid"),  # Project Invoice Payment
+        (
+            "ADD_ACC_BALANCE",
+            "Balance Added",  # Update General Account Balance [ NOT IMPLEMENTED ] TODO: IMPLEMENT THIS
+        ),
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
@@ -23,14 +34,29 @@ class Ledger(models.Model):
         Project, on_delete=models.SET_NULL, null=True, blank=True
     )
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    source = models.CharField(max_length=255, blank=True, null=True)
-    destination = models.CharField(max_length=255, blank=True, null=True)
-    category = models.CharField(max_length=255, blank=True, null=True)
+
+    # Source fields (Generic Relation)
+    source_content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, related_name="source_ledgers"
+    )
+    source_object_id = models.PositiveIntegerField()
+    source = GenericForeignKey("source_content_type", "source_object_id")
+
+    # Destination fields (Generic Relation)
+    destination_content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, related_name="destination_ledgers"
+    )
+    destination_object_id = models.PositiveIntegerField()
+    destination = GenericForeignKey("destination_content_type", "destination_object_id")
+
+    expense_category = models.ForeignKey(
+        "expense.ExpenseCategory", on_delete=models.SET_NULL, null=True, blank=True
+    )
     reason = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Project: {self.project} - Source: {self.source} - Destination: {self.destination} - {self.transaction_type}: {self.amount}"
+        return f"{self.amount} from {self.source} to {self.destination}"
 
     class Meta:
         ordering = ["-created_at"]

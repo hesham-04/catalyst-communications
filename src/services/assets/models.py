@@ -12,7 +12,7 @@ class CashInHand(models.Model):
     name = models.CharField(max_length=255, unique=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateField(auto_now_add=True,  null=True)
+    created_at = models.DateField(auto_now_add=True, null=True)
 
     def adjust_balance(self, amount, transaction_type):
         """
@@ -22,12 +22,12 @@ class CashInHand(models.Model):
         :param transaction_type:
         :return:
         """
-        if transaction_type == 'CREDIT':
+        if transaction_type == "CREDIT":
             if self.balance < amount:
                 raise ValueError("Insufficient cash in hand")
             else:
                 self.balance -= amount
-        elif transaction_type == 'DEBIT':
+        elif transaction_type == "DEBIT":
             self.balance += amount
         self.save()
 
@@ -43,7 +43,9 @@ class CashInHand(models.Model):
 class AccountBalance(models.Model):
     account_name = models.CharField(max_length=255, unique=True)
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
-    starting_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, null=True, blank=True)
+    starting_balance = models.DecimalField(
+        max_digits=12, decimal_places=2, default=0.00, null=True, blank=True
+    )
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateField(auto_now_add=True, null=True)
 
@@ -55,12 +57,12 @@ class AccountBalance(models.Model):
         :param transaction_type:
         :return:
         """
-        if transaction_type == 'CREDIT':
+        if transaction_type == "CREDIT":
             if self.balance < amount:
                 raise ValueError("Insufficient funds in account")
             else:
                 self.balance -= amount
-        elif transaction_type == 'DEBIT':
+        elif transaction_type == "DEBIT":
             self.balance += amount
         self.save()
 
@@ -71,19 +73,16 @@ class AccountBalance(models.Model):
         :return: Decimal - Total balance across all accounts
         """
         from django.db.models import Sum
-        total_balance = cls.objects.aggregate(total=Sum('balance'))['total']
+
+        total_balance = cls.objects.aggregate(total=Sum("balance"))["total"]
         return total_balance or 0
 
     def __str__(self):
         return f"{self.account_name} - Balance: {self.balance} PKR"
 
     @classmethod
-    def get_total_balance(cls):
-        return cls.objects.aggregate(total=models.Sum('balance'))['total'] or 0
-
-    @classmethod
     def deduct_from_balance(cls, amount):
-        accounts = cls.objects.filter(balance__gt=0).order_by('-balance')
+        accounts = cls.objects.filter(balance__gt=0).order_by("-balance")
         for account in accounts:
             if amount <= 0:
                 break
@@ -97,11 +96,9 @@ class AccountBalance(models.Model):
                 account.save()
         if amount > 0:
             raise ValidationError("Insufficient account balance.")
-        
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.starting_balance = self.balance
             super().save(*args, **kwargs)
         super().save(*args, **kwargs)
-        
-

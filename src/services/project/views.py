@@ -141,20 +141,14 @@ class AddBudgetView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context["project"] = self.project
 
-        if CashInHand.objects.first():
-            cih = CashInHand.objects.first().balance
-        else:
-            cih = 0
-
-        if AccountBalance.objects.first():
-            ab = AccountBalance.objects.first().balance
-        else:
-            ab = 0
+        cih = CashInHand.objects.first().balance if CashInHand.objects.exists() else 0
+        ab = AccountBalance.get_total_balance()
 
         context["cash_balance"] = cih
         context["account_balance"] = ab
         return context
 
+    # VALIDATION ✔
     def form_valid(self, form):
         amount = form.cleaned_data["amount"]
         source = form.cleaned_data["source"]
@@ -168,13 +162,6 @@ class AddBudgetView(LoginRequiredMixin, FormView):
             form.add_error("source", "The selected Account does not have enough Funds.")
             return self.form_invalid(form)
 
-        if source == "ACC":
-            # account = AccountBalance.objects.get(id=source.id)  # FOR LATER
-            account = AccountBalance.objects.first()
-            if account.balance < amount:
-                form.add_error("amount", "Insufficient balance in the account.")
-                return self.form_invalid(form)
-
         add_budget_to_project(
             project_id=self.project.pk,
             amount=amount,
@@ -184,11 +171,12 @@ class AddBudgetView(LoginRequiredMixin, FormView):
         )
 
         messages.success(self.request, "Budget successfully updated.")
-
         return redirect("project:detail", pk=self.project.pk)
 
     def form_invalid(self, form):
-        messages.error(self.request, "There was an error with your submission.")
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field.capitalize()}: {error}")
         return super().form_invalid(form)
 
 

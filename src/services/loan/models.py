@@ -1,19 +1,32 @@
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 from src.services.project.models import Project
 
 
-# Create your models here.
-
 class Lender(models.Model):
     name = models.CharField(max_length=255, help_text="Name of the lender")
-    email = models.EmailField(help_text="Email address of the lender", blank=True, null=True)
-    phone = models.IntegerField(help_text="Phone number of the lender", blank=True, null=True)
-    bank_account = models.CharField(max_length=11, help_text="Bank Account of the lender", blank=True, null=True)
-    account_number = models.CharField(max_length=20, help_text="Account number of the lender", blank=True, null=True)
-    iban = models.CharField(max_length=34, help_text="IBAN of the lender", blank=True, null=True)
+    email = models.EmailField(
+        help_text="Email address of the lender", blank=True, null=True
+    )
+    phone = PhoneNumberField(
+        max_length=20,
+        help_text="Phone number of the lender",
+        blank=True,
+        null=True,
+        region="PK",
+    )
+    bank_account = models.CharField(
+        max_length=11, help_text="Bank Account of the lender", blank=True, null=True
+    )
+    account_number = models.CharField(
+        max_length=20, help_text="Account number of the lender", blank=True, null=True
+    )
+    iban = models.CharField(
+        max_length=34, help_text="IBAN of the lender", blank=True, null=True
+    )
 
     def __str__(self):
         return self.name
@@ -23,8 +36,14 @@ class Lender(models.Model):
         Calculate the total due amount for all loans of this lender.
         """
 
-        misc_loans = self.misc_loans.aggregate(total_due=Sum('remaining_amount'))['total_due'] or 0
-        loans = self.loans.aggregate(total_due=models.Sum('remaining_amount'))['total_due'] or 0
+        misc_loans = (
+            self.misc_loans.aggregate(total_due=Sum("remaining_amount"))["total_due"]
+            or 0
+        )
+        loans = (
+            self.loans.aggregate(total_due=models.Sum("remaining_amount"))["total_due"]
+            or 0
+        )
 
         return round(loans + misc_loans, 2)
 
@@ -34,20 +53,35 @@ class Loan(models.Model):
     lender = models.ForeignKey(Lender, on_delete=models.CASCADE, related_name="loans")
 
     # Monetary fields
-    loan_amount = models.DecimalField(max_digits=12, decimal_places=2, help_text="Total loan amount")
-    payable_after_interest = models.DecimalField(max_digits=12, decimal_places=2, help_text="Payable after interest",
-                                                 null=True)
-    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, help_text="Interest rate as a percentage",
-                                        null=True)
-    remaining_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
-                                           help_text="Remaining loan balance")
+    loan_amount = models.DecimalField(
+        max_digits=12, decimal_places=2, help_text="Total loan amount"
+    )
+    payable_after_interest = models.DecimalField(
+        max_digits=12, decimal_places=2, help_text="Payable after interest", null=True
+    )
+    interest_rate = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text="Interest rate as a percentage",
+        null=True,
+    )
+    remaining_amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0.00,
+        help_text="Remaining loan balance",
+    )
 
     # Dates
-    date_issued = models.DateField(default=timezone.now, help_text="Date when the loan was issued")
+    date_issued = models.DateField(
+        default=timezone.now, help_text="Date when the loan was issued"
+    )
     due_date = models.DateField(help_text="Due date for loan repayment")
 
     # Status and reason
-    is_repaid = models.BooleanField(default=False, help_text="Indicates if the loan has been fully repaid")
+    is_repaid = models.BooleanField(
+        default=False, help_text="Indicates if the loan has been fully repaid"
+    )
     reason = models.CharField(max_length=544, blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -88,9 +122,11 @@ class Loan(models.Model):
         or for loans related to a specific project if project_pk is provided.
         """
         if project_pk is not None:
-            total_unpaid = cls.objects.filter(project__pk=project_pk).aggregate(total=Sum('remaining_amount'))['total']
+            total_unpaid = cls.objects.filter(project__pk=project_pk).aggregate(
+                total=Sum("remaining_amount")
+            )["total"]
         else:
-            total_unpaid = cls.objects.aggregate(total=Sum('remaining_amount'))['total']
+            total_unpaid = cls.objects.aggregate(total=Sum("remaining_amount"))["total"]
         return round(total_unpaid or 0, 2)
 
 
@@ -99,7 +135,7 @@ class LoanReturn(models.Model):
         Loan,
         on_delete=models.CASCADE,
         related_name="returns",
-        help_text="The loan associated with this return."
+        help_text="The loan associated with this return.",
     )
     return_amount = models.DecimalField(
         max_digits=12,
@@ -114,22 +150,19 @@ class LoanReturn(models.Model):
         null=True,
     )
     created_at = models.DateTimeField(
-        auto_now_add=True,
-        help_text="Timestamp when this return record was created."
+        auto_now_add=True, help_text="Timestamp when this return record was created."
     )
     updated_at = models.DateTimeField(
-        auto_now=True,
-        help_text="Timestamp of the last update to this return record."
+        auto_now=True, help_text="Timestamp of the last update to this return record."
     )
 
     class Meta:
-        ordering = ['-return_date']
+        ordering = ["-return_date"]
         verbose_name = "Loan Return"
         verbose_name_plural = "Loan Returns"
         constraints = [
             models.CheckConstraint(
-                check=models.Q(return_amount__gt=0),
-                name="return_amount_positive"
+                check=models.Q(return_amount__gt=0), name="return_amount_positive"
             )
         ]
 
@@ -144,23 +177,40 @@ class LoanReturn(models.Model):
 
 
 class MiscLoan(models.Model):
-    lender = models.ForeignKey(Lender, on_delete=models.CASCADE, related_name="misc_loans")
+    lender = models.ForeignKey(
+        Lender, on_delete=models.CASCADE, related_name="misc_loans"
+    )
 
     # Monetary fields
-    loan_amount = models.DecimalField(max_digits=12, decimal_places=2, help_text="Total loan amount")
-    payable_after_interest = models.DecimalField(max_digits=12, decimal_places=2, help_text="Payable after interest",
-                                                 null=True)
-    interest_rate = models.DecimalField(max_digits=5, decimal_places=2, help_text="Interest rate as a percentage",
-                                        null=True)
-    remaining_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00,
-                                           help_text="Remaining loan balance")
+    loan_amount = models.DecimalField(
+        max_digits=12, decimal_places=2, help_text="Total loan amount"
+    )
+    payable_after_interest = models.DecimalField(
+        max_digits=12, decimal_places=2, help_text="Payable after interest", null=True
+    )
+    interest_rate = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text="Interest rate as a percentage",
+        null=True,
+    )
+    remaining_amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0.00,
+        help_text="Remaining loan balance",
+    )
 
     # Dates
-    date_issued = models.DateField(default=timezone.now, help_text="Date when the loan was issued")
+    date_issued = models.DateField(
+        default=timezone.now, help_text="Date when the loan was issued"
+    )
     due_date = models.DateField(help_text="Due date for loan repayment")
 
     # Status and reason
-    is_repaid = models.BooleanField(default=False, help_text="Indicates if the loan has been fully repaid")
+    is_repaid = models.BooleanField(
+        default=False, help_text="Indicates if the loan has been fully repaid"
+    )
     reason = models.CharField(max_length=544, blank=True, null=True)
 
     def save(self, *args, **kwargs):
