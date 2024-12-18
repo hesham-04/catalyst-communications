@@ -64,7 +64,7 @@ class ExpenseIndexView(LoginRequiredMixin, TemplateView):
                 print("Form is not valid")
             return self.get(request, *args, **kwargs)
 
-
+# VALIDATION ✔
 class CreateExpenseView(LoginRequiredMixin, CreateView):
     model = Expense
     form_class = ExpenseForm
@@ -73,6 +73,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         project = get_object_or_404(Project, pk=self.kwargs["pk"])
         form.instance.project = project  # Associate the project with the expense.
+
         amount = form.cleaned_data["amount"]
         budget_source = form.cleaned_data["budget_source"]
         description = form.cleaned_data["description"]
@@ -101,7 +102,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
             project_id=project.pk,
             amount=amount,
             budget_source=budget_source,
-            destination=vendor.pk,
+            vendor_pk=vendor.pk,
             reason=description,
         )
         expense = form.save()
@@ -111,25 +112,13 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["project"] = get_object_or_404(Project, pk=self.kwargs["pk"])
         context["expenses"] = Expense.objects.filter(project=self.kwargs["pk"])
-        context["total_expenses"] = self.get_total_expenses()
-        context["expenses_today"] = self.get_expenses_today()
-        return context
-
-    def get_total_expenses(self):
-        expenses = Expense.objects.filter(project=self.kwargs["pk"])
-        total = sum(expense.amount for expense in expenses)
-        return total
-
-    def get_expenses_today(self):
-        expenses = Expense.objects.filter(project=self.kwargs["pk"])
-        today = date.today()
-        expenses_today = expenses.filter(
-            created_at__year=today.year,
-            created_at__month=today.month,
-            created_at__day=today.day,
+        context["total_expenses"] = Expense.calculate_total_expenses(
+            project_id=self.kwargs["pk"]
         )
-        total = sum(expense.amount for expense in expenses_today)
-        return total
+        context["expenses_today"] = Expense.calculate_total_expenses(
+            project_id=self.kwargs["pk"], start_date=date.today()
+        )
+        return context
 
 
 class ExpensePaymentView(LoginRequiredMixin, FormView):

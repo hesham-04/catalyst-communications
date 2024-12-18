@@ -38,6 +38,10 @@ class LendLoanView(LoginRequiredMixin, CreateView):
         reason = form.cleaned_data["reason"]
 
         # No amount or balance checks needed because a loan is being created.
+        if amount <= 0:
+            form.add_error("loan_amount", "Amount must be greater than zero.")
+            return self.form_invalid(form)
+
         # Make changes to the Project & Ledger before creating the loan Object
         add_loan_to_project(
             project_id=self.kwargs["pk"], amount=amount, source=lender, reason=reason
@@ -88,6 +92,11 @@ class ReturnLoanView(LoginRequiredMixin, CreateView):
         loan_return = form.save(commit=False)
 
         # Validate the Form:
+
+        if return_amount <= 0:
+            form.add_error("return_amount", "Amount must be greater than zero.")
+            return self.form_invalid(form)
+
         if return_amount > loan.remaining_amount:
             form.add_error(
                 "return_amount", "The amount is more than the project loan amount."

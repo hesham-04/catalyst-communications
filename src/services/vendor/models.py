@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from phonenumber_field.modelfields import PhoneNumberField
 
 from src.services.expense.models import Expense
 
@@ -16,13 +17,13 @@ class Vendor(models.Model):
     iban = models.CharField(max_length=34, blank=True, null=True)
 
     email = models.EmailField(max_length=255, blank=True, null=True)
-    phone = models.IntegerField(blank=True, null=True)
+    phone = PhoneNumberField(blank=True, null=True, region="PK")
 
     registration_number = models.CharField(max_length=50, blank=True, null=True)
     vat_number = models.CharField(max_length=50, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
 
-    total_expense = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    # total_expense = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default="USD")
     is_active = models.BooleanField(default=True)
@@ -31,6 +32,15 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def total_expense(self):
+        return (
+            self.expenses.filter(payment_status=Expense.PaymentStatus.PAID).aggregate(
+                total=Sum("amount")
+            )["total"]
+            or 0
+        )
 
     def get_unpaid_expenses(self):
         """

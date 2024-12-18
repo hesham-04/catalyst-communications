@@ -41,7 +41,7 @@
                                             <td class="px-0 text-end"><span
                                                     class="text-primary ps-2 align-self-center text-end">{{ project.project_cash }} PKR</span>
                                             </td>
-                                        </tr>
+                                        </tr><!--end tr-->
                                         <tr class="">
                                             <td class="px-0">
                                                 <div class="d-flex align-items-center">
@@ -54,7 +54,7 @@
                                             <td class="px-0 text-end"><span
                                                     class="text-primary ps-2 align-self-center text-end"> {{ project.project_account_balance }} PKR</span>
                                             </td>
-                                        </tr>
+                                        </tr><!--end tr-->
 
                                         </tbody>
                                     </table> <!--end table-->

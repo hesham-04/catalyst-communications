@@ -103,11 +103,9 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
         reason=reason,
     )
 
-
+# VALIDATION ✔
 @transaction.atomic
-def create_expense_calculations(
-    project_id, amount, budget_source, destination, reason=None
-):
+def create_expense_calculations(project_id, amount, budget_source, vendor_pk, reason):
     project = Project.objects.select_for_update().get(pk=project_id)
 
     if budget_source == "CASH":
@@ -117,16 +115,16 @@ def create_expense_calculations(
         project.project_account_balance -= amount
 
     project.save()
-    vendor = Vendor.objects.get(pk=destination)
-    vendor.total_expense += amount
-    vendor.save()
+    vendor = Vendor.objects.get(pk=vendor_pk)
 
     Ledger.objects.create(
         transaction_type="CREATE_EXPENSE",
         project=project,
         amount=amount,
-        source=f"Project {project.project_name} {budget_source} ({project.pk})",
-        destination=f"Vendor: {vendor.name} ({vendor.pk})",
+        source_content_type=ContentType.objects.get_for_model(project),
+        source_object_id=project.pk,
+        destination_content_type=ContentType.objects.get_for_model(vendor),
+        destination_object_id=vendor.pk,
         reason=reason,
     )
 

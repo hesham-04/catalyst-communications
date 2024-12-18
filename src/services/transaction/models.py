@@ -56,7 +56,7 @@ class Ledger(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.amount} from {self.source} to {self.destination}"
+        return f"{self.transaction_type} {self.amount} from {self.source} to {self.destination}"
 
     class Meta:
         ordering = ["-created_at"]
