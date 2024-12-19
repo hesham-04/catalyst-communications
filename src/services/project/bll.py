@@ -191,14 +191,14 @@ def process_invoice_payment(invoice_id, amount, account_id):
 # VALIDATION ✔
 @transaction.atomic
 def create_journal_expense_calculations(
-    category, reason, vendor_pk, amount, source, account_pk=None
+    category, reason, vendor, amount, source, account_pk=None
 ):
     """
     Creates a ledger entry for a journal expense.
 
     :param category: The category of the expense
     :param reason: The reason for the expense
-    :param vendor_pk: The vendor id to which the expense is made
+    :param vendor: The vendor id to which the expense is made
     :param amount: The amount of the expense
     :param source: The source of the expense (CASH or ACC)
     :param account_pk: The account id from which the expense is made (if source is ACC)
@@ -217,8 +217,6 @@ def create_journal_expense_calculations(
             cash_in_hand.balance -= amount
             cash_in_hand.save(update_fields=["balance"])
             source_account = cash_in_hand
-
-        vendor = Vendor.objects.get(pk=vendor_pk)
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(

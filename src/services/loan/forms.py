@@ -78,7 +78,7 @@ class LoanReturnForm(forms.ModelForm):
 
 class MiscLoanForm(forms.ModelForm):
     lender = forms.ModelChoiceField(
-        queryset=Lender.objects.all(),
+        queryset=Lender.objects,
         label="Select Lender",
         widget=forms.Select(attrs={"class": "form-control"}),
     )
