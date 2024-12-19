@@ -50,7 +50,7 @@
                                                 <h5 class="mt-1">Invoice Items</h5>
                                                 <div class="form-check form-switch form-switch-dark ms-auto">
                                                     <input class="form-check-input" type="checkbox"
-                                                           id="customSwitchDark" checked>
+                                                           id="customSwitchDark">
                                                     <label class="form-check-label" for="customSwitchDark">Tax</label>
                                                 </div>
                                             </div>
@@ -58,9 +58,6 @@
                                             {{ formset.management_form }}
                                             <!-- Container for dynamically added items -->
                                             <div id="invoice-items">
-                                                {% for error in form.errors %}
-                                                    <p class="error">{{ error }}</p>
-                                                {% endfor %}
                                                 {% for form in formset %}
                                                     <div class="card border-2 shadow-lg invoice-item">
                                                         <div class="card-body px-4 py-2">

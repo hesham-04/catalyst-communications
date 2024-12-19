@@ -1,6 +1,7 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}Update Invoice{% endblock %}
 {% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
 {% load static %}
 {% block content %}
 
@@ -23,12 +24,12 @@
                     <div class="col-md-6">
                         <div class="card shadow-sm">
                             <div class="card-header bg-light text-dark text-center">
-                                <h5 class="mb-0">Update Inovice</h5>
+                                <h5 class="mb-0">Update Invoice</h5>
                             </div>
                             <div class="card-body">
                                 <form method="post">
                                     {% csrf_token %}
-                                    {{ form.as_p }}
+                                    {{ form|crispy }}
                                     <button style="width:200px" type="submit"
                                             class="btn btn-success mt-3">
                                         Submit

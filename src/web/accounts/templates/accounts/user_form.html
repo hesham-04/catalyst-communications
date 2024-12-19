@@ -1,5 +1,5 @@
 {% extends 'dashboard/base.html' %}
-{% block title %}Create Project{% endblock %}
+{% block title %}User Form{% endblock %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
 {% load static %}
@@ -14,17 +14,17 @@
             {% if object %}
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'loan:lenders' %}"><i
+                        <a class="btn btn-secondary btn-sm" href="{% url 'accounts:list' %}"><i
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                        Edit Lender</h4>
+                        Edit User</h4>
 
                 </div>
             {% else %}
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'loan:lenders' %}"><i
+                        <a class="btn btn-secondary btn-sm" href="{% url 'accounts:list' %}"><i
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                        Add Lender</h4>
+                        Add User</h4>
 
                 </div>
             {% endif %}
@@ -34,7 +34,7 @@
                 <div class="col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header bg-light text-dark text-center">
-                            <h5 class="mb-0">Lender Form</h5> <!-- Replace 'Form Title' with your desired heading -->
+                            <h5 class="mb-0">User Form</h5> <!-- Replace 'Form Title' with your desired heading -->
                         </div>
                         <div class="card-body">
                             <form method="post">

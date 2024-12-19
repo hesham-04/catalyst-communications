@@ -13,7 +13,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm, InvoiceUpdateForm
+from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm
 from .models import Invoice, InvoiceItem
 from ..project.bll import process_invoice_payment
 from ..project.models import Project

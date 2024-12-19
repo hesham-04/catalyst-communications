@@ -4,10 +4,10 @@ from django.db import transaction
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 from django.views.generic import TemplateView
 
-from .forms import QuotationForm, QuotationItemForm
+from .forms import QuotationForm, QuotationItemForm, QuotationUpdateForm
 from .models import Quotation, QuotationItem
 from ..project.models import Project
 
@@ -80,15 +80,6 @@ class CreateQuotationView(LoginRequiredMixin, CreateView):
         return reverse("quotation:detail", kwargs={"pk": self.object.pk})
 
 
-class PrintQuotationView(LoginRequiredMixin, TemplateView):
-    template_name = "quotation/quotation_print.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["quotation"] = get_object_or_404(Quotation, pk=self.kwargs["pk"])
-        return context
-
-
 class QuotationDetailView(LoginRequiredMixin, DetailView):
     model = Quotation
     template_name = "quotation/quotation_detail.html"
@@ -97,3 +88,12 @@ class QuotationDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["quotation"] = get_object_or_404(Quotation, pk=self.kwargs["pk"])
         return context
+
+
+class QuotationUpdateView(LoginRequiredMixin, UpdateView):
+    model = Quotation
+    form_class = QuotationUpdateForm
+    template_name = "quotation/quotation_edit.html"
+
+    def get_success_url(self):
+        return reverse("quotation:detail", kwargs={"pk": self.object.pk})

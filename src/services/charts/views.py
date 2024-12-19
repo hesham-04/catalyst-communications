@@ -590,7 +590,7 @@ def project_expenses(request, pk):
     )
 
     # Add a title row with project information
-    sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=5)
+    sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=6)
     sheet["A1"] = f"Ledger Journal for {project.project_name}"
     sheet["A1"].font = Font(size=14, bold=True, color="FFFFFF")
     sheet["A1"].alignment = centered_alignment

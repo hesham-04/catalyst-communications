@@ -40,9 +40,13 @@
                                             </select>
                                         </form>
                                     </div>
-
-                                    <h4 class="my-2 fs-24 fw-semibold">{{ total_balance }} <small
-                                            class="font-14">PKR</small></h4>
+                                    {% if request.user.is_admin %}
+                                        <h4 class="my-2 fs-24 fw-semibold">{{ total_balance }} <small
+                                                class="font-14">PKR</small></h4>
+                                    {% else %}
+                                        <h4 class="my-2 fs-24 fw-semibold"> ***** <small
+                                                class="font-14"></small></h4>
+                                    {% endif %}
 
                                     <button type="submit" class="btn btn-soft-primary"><a
                                             href="{% url 'assets:index' %}">All Wallets</a></button>
@@ -62,7 +66,12 @@
                                             <div class="col-9">
                                                 <p class="text-muted text-uppercase mb-0 fw-normal fs-13">Cash IN
                                                     HAND</p>
-                                                <h4 class="mt-1 mb-0 fw-medium">{{ cash_in_hand }} PKR</h4>
+                                                {% if request.user.is_admin %}
+                                                    <h4 class="mt-1 mb-0 fw-medium">{{ cash_in_hand }} PKR</h4>
+                                                {% else %}
+                                                    <h4 class="mt-1 mb-0 fw-medium">*****</h4>
+                                                {% endif %}
+
                                             </div>
                                             <!--end col-->
                                             <div class="col-3 align-self-center">
@@ -86,7 +95,12 @@
                                             <div class="col-9">
                                                 <p class="text-muted text-uppercase mb-0 fw-normal fs-13">ACCOUNT
                                                     BALANCE</p>
-                                                <h4 class="mt-1 mb-0 fw-medium">{{ account_balance }} PKR</h4>
+                                                {% if request.user.is_admin %}
+                                                    <h4 class="mt-1 mb-0 fw-medium">{{ account_balance }} PKR</h4>
+                                                {% else %}
+                                                    <h4 class="mt-1 mb-0 fw-medium">*****</h4>
+                                                {% endif %}
+
                                             </div>
                                             <!--end col-->
                                             <div class="col-3 align-self-center">

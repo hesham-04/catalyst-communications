@@ -1,5 +1,5 @@
 {% extends 'dashboard/base.html' %}
-{% block title %}Customer Detail{% endblock %}
+{% block title %}{{ invoice.invoice_number }}{% endblock %}
 {% load static %}
 {% load project_tags %}
 {% load custom_filters %}
@@ -48,7 +48,7 @@
                                     </div>  <!--end row-->
                                 </div><!--end card-header-->
                                 <div class="card-body pt-0">
-                                    <ul class="list-unstyled mb-0">`
+                                    <ul class="list-unstyled mb-0">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <li class=""><i
@@ -172,9 +172,9 @@
                                             {% if invoice.letterhead %}
                                                 <img class="mb-2" src="{% static 'img/logo.png' %}" alt="logo-small"
                                                      class="logo-sm me-1 ms-4"
-                                                     height="70">
+                                                     height="100">
                                             {% else %}
-                                                <div class="row" style="height: 120px"></div>
+                                                <div class="row" style="height: 80px"></div>
                                             {% endif %}
 
                                         </div>
@@ -182,14 +182,15 @@
                                     </div><!--end row-->
                                     <div class="row">
                                         <div class="col-12 text-end align-self-center">
-                                            <h5 class="mb-1 fw-semibold text-dark"><span
+                                            <h3 class="mb-1 fw-semibold text-dark"><span
                                                     class="text-dark">Invoice:</span>
-                                                {{ invoice.invoice_number }}</h5>
+                                                {{ invoice.invoice_number }}</h3>
                                             <h5 class="mb-0 fw-semibold text-dark"><span
                                                     class="text-dark">Issue Date:</span>
                                                 {{ invoice.date|date:"d-m-Y" }}</h5>
                                         </div><!--end col-->
                                     </div>
+                                
                                 </div><!--end card-body-->
 
                                 <div class="row justify-content-between d-print-flex">
@@ -213,7 +214,8 @@
                                                     <strong class="fs-14">Billed To :</strong><br>
                                                     {{ invoice.company_name }} <br>
                                                     {{ invoice.address }}<br>
-                                                    <strong title="Phone">Phone:</strong> {{ invoice.project.customer.phone }}
+                                                    <strong title="Phone">Email:</strong> {{ invoice.phone }}
+                                                    <strong title="Phone">Phone:</strong> {{ invoice.phone }}
                                                 </address>
                                             </div>
                                         </div><!--end col-->

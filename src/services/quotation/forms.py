@@ -158,3 +158,90 @@ class QuotationItemForm(forms.ModelForm):
         # Calculate amount including tax
         instance.save()  # Automatically updates the amount and total
         return instance
+
+
+class QuotationUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Quotation
+        fields = [
+            "client_name",
+            "company_name",
+            "phone",
+            "date",
+            "quotation_number",
+            "email",
+            "address",
+            "subject",
+            "notes",
+            "letterhead",
+            "due_date",
+        ]
+
+        widgets = {
+            "client_name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Client Name",
+                    "required": True,
+                }
+            ),
+            "company_name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Company Name",
+                    "required": True,
+                }
+            ),
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Phone Number",
+                    "required": True,
+                }
+            ),
+            "date": forms.DateInput(
+                attrs={"class": "form-control", "type": "date", "required": True}
+            ),
+            "quotation_number": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Quotation Number",
+                    "required": True,
+                    "maxlength": 11,
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Email",
+                    "required": True,
+                }
+            ),
+            "address": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Address",
+                    "required": True,
+                }
+            ),
+            "subject": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Subject",
+                    "required": True,
+                }
+            ),
+            "notes": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Notes",
+                    "required": True,
+                }
+            ),
+            "letterhead": forms.CheckboxInput(
+                attrs={"class": "form-check-input", "required": True}
+            ),
+            "due_date": forms.DateInput(
+                attrs={"class": "form-control", "type": "date", "required": True}
+            ),
+        }

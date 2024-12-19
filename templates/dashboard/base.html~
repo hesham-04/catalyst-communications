@@ -222,18 +222,17 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:list' %}">
+                                <i class="iconoir-group menu-icon"></i>
+                                <span class="text-danger">User Management</span>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'assets:index' %}">
                                 <i class="iconoir-candlestick-chart menu-icon"></i>
                                 <span>Wallet</span>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:list' %}">
-                                <i class="iconoir-group menu-icon"></i>
-                                <span class="text-danger">User Management</span>
                             </a>
                         </li>
                     {% endif %}
