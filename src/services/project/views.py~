@@ -149,6 +149,7 @@ class AddBudgetView(LoginRequiredMixin, FormView):
         context["account_balance"] = ab
         return context
 
+
     def form_valid(self, form):
         amount = form.cleaned_data["amount"]
         source = form.cleaned_data["source"]

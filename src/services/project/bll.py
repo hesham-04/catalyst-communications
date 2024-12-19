@@ -1,16 +1,19 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
-from src.services.loan.models import Loan, Lender
+from src.services.loan.models import Loan, Lender, MiscLoan
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
 from src.services.vendor.models import Vendor
 
 
+# VALIDATION ✔
 @transaction.atomic
-def add_budget_to_project(project_id, amount, source, destination, reason):
+def add_budget_to_project(project_id, amount, source, reason):
     """
+    The Budget To A Project Can only be assigned form a Bank account Instance
     Adjusts the budget of a project based on the source and destination of funds.
     :param reason:
     :param project_id: The ID of the project
@@ -27,9 +30,6 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
 
     # Handle source deduction
     account = AccountBalance.objects.get(pk=source.pk)
-
-    if not account or account.balance < amount:
-        raise ValueError("Insufficient account balance.")
     account.balance -= amount
     account.save()
 
@@ -38,27 +38,20 @@ def add_budget_to_project(project_id, amount, source, destination, reason):
         transaction_type="BUDGET_ASSIGN",
         project=project,
         amount=amount,
-        source=f"Wallet: {source.account_name} ({source.pk})",
-        destination=f"Project: {project.project_name} ACC ({project.pk})",
+        source_content_type=ContentType.objects.get_for_model(project),
+        source_object_id=project.pk,
+        destination_content_type=ContentType.objects.get_for_model(account),
+        destination_object_id=account.pk,
         reason=reason,
     )
 
-    return {
-        "message": "Budget successfully assigned to the project.",
-        "project_id": project_id,
-        "amount": amount,
-        "source": source,
-        "destination": destination,
-    }
 
-
+# VALIDATION ✔
 @transaction.atomic
-def add_loan_to_project(project_id, amount, source, reason, destination=None):
+def add_loan_to_project(project_id, amount, source, reason):
     project = Project.objects.select_for_update().get(pk=project_id)
-    project.total_budget_assigned += amount
-
     project.project_account_balance += amount
-    project.save()
+    project.save(update_fields=["project_account_balance"])
 
     lender = Lender.objects.get(pk=source.pk)
 
@@ -66,74 +59,85 @@ def add_loan_to_project(project_id, amount, source, reason, destination=None):
         transaction_type="CREATE_LOAN",
         project=project,
         amount=amount,
-        source=f"Loan: {lender.name} ({lender.pk})",
-        destination=f"Project: {project.project_name} ACC ({project.pk})",
+        source_content_type=ContentType.objects.get_for_model(lender),
+        source_object_id=lender.pk,
+        destination_content_type=ContentType.objects.get_for_model(project),
+        destination_object_id=project.pk,
         reason=reason,
     )
 
 
+# VALIDATION ✔
 @transaction.atomic
-def return_loan_to_lender(loan_id, project_id, amount, source, destination, reason):
+def return_loan_to_lender(project_id, loan_id, amount, reason):
     project = Project.objects.select_for_update().get(pk=project_id)
     loan = Loan.objects.select_for_update().get(pk=loan_id)
 
-    loan.remaining_amount -= amount
-    if loan.remaining_amount <= 0:
-        loan.remaining_amount = 0
-        loan.is_repaid = True
-    loan.save()
-
+    # Subtract from the loan remaining amount
+    loan.update_remaining_amount(amount)
     project.project_account_balance -= amount
 
+    loan.save()
     project.save()
 
+    # Create an Expense instance for the loan return.
     Expense.objects.create(
         project=project,
-        description="Loan return",
+        description="Loan Return",
         amount=amount,
-        budget_source="Project ACC",
-        category=None,
-        vendor=None,  # destination
+        budget_source="Project Account Balance",
+        expense_category=None,
+        vendor=None,  # Destination but NONE
         payment_status=Expense.PaymentStatus.PAID,
     )
 
+    # Record the transaction in the ledger
     Ledger.objects.create(
         transaction_type="RETURN_LOAN",
         project=project,
         amount=amount,
-        source=f"Project: {project.project_name} ACC ({project.pk})",
-        destination=f"Lender: {loan.lender.name} ({loan.pk})",
+        source_content_type=ContentType.objects.get_for_model(project),
+        source_object_id=project.pk,
+        destination_content_type=ContentType.objects.get_for_model(loan),
+        destination_object_id=loan.pk,
         reason=reason,
     )
 
 
+# VALIDATION ✔
 @transaction.atomic
 def create_expense_calculations(
-    project_id, amount, budget_source, destination, reason=None
+    project_id, amount, budget_source, vendor_pk, category, reason
 ):
     project = Project.objects.select_for_update().get(pk=project_id)
 
+    # Handle source deduction
     if budget_source == "CASH":
         project.project_cash -= amount
 
     elif budget_source == "ACC":
         project.project_account_balance -= amount
 
+    # NO DESTINATION FOR EXPENSE
+    # Vendor Usage is determined from the self.total_expense method defined in the vendor model
+
     project.save()
-    vendor = Vendor.objects.get(pk=destination)
-    vendor.total_expense += amount
-    vendor.save()
+    vendor = Vendor.objects.get(pk=vendor_pk)
 
     Ledger.objects.create(
         transaction_type="CREATE_EXPENSE",
         project=project,
         amount=amount,
-        source=f"Project {project.project_name} {budget_source} ({project.pk})",
-        destination=f"Vendor: {vendor.name} ({vendor.pk})",
+        source_content_type=ContentType.objects.get_for_model(project),
+        source_object_id=project.pk,
+        destination_content_type=ContentType.objects.get_for_model(vendor),
+        destination_object_id=vendor.pk,
+        expense_category=category,  # FIXED LATER. CHECK AGAIN ✔
         reason=reason,
     )
 
 
+# VALIDATION - TEMPORARILY DEPRECATED †
 @transaction.atomic
 def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None):
     project = Project.objects.select_for_update().get(pk=project_id)
@@ -157,29 +161,27 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
     )
 
 
+# VALIDATION ✔
 @transaction.atomic
-def process_invoice_payment(invoice_id, destination, amount, account_id=None):
+def process_invoice_payment(invoice_id, amount, account_id):
     try:
         invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
         invoice.status = "PAID"
         invoice.save(update_fields=["status"])
 
-        if account_id:
-            account = AccountBalance.objects.select_for_update().get(pk=account_id)
-
-        ledger_reason = f"Payment for Invoice"
-
-        if destination == "account" and account:
-            account.balance += amount
-            account.save(update_fields=["balance"])
+        account = AccountBalance.objects.select_for_update().get(pk=account_id)
+        account.balance += amount
+        account.save(update_fields=["balance"])
 
         Ledger.objects.create(
             transaction_type="INVOICE_PAYMENT",
             project=invoice.project,
             amount=amount,
-            source=f"Invoice Paid: {invoice.client_name} ({invoice.pk})",
-            destination=f"Wallet: {account.account_name} ({account.pk})",
-            reason=ledger_reason,
+            source_content_type=ContentType.objects.get_for_model(invoice),
+            source_object_id=invoice.pk,
+            destination_content_type=ContentType.objects.get_for_model(account),
+            destination_object_id=account.pk,
+            reason="Invoice Payment",
         )
 
         return True, "Invoice successfully paid and funds transferred."
@@ -189,16 +191,17 @@ def process_invoice_payment(invoice_id, destination, amount, account_id=None):
         return False, f"An error occurred while processing the payment: {str(e)}"
 
 
+# VALIDATION ✔
 @transaction.atomic
 def create_journal_expense_calculations(
-    category, reason, destination, amount, source, account_pk=None
+    category, reason, vendor, amount, source, account_pk=None
 ):
     """
     Creates a ledger entry for a journal expense.
 
     :param category: The category of the expense
     :param reason: The reason for the expense
-    :param destination: The vendor id to which the expense is made
+    :param vendor: The vendor id to which the expense is made
     :param amount: The amount of the expense
     :param source: The source of the expense (CASH or ACC)
     :param account_pk: The account id from which the expense is made (if source is ACC)
@@ -206,57 +209,52 @@ def create_journal_expense_calculations(
     """
     try:
         # Update the account/cash balance
+        source_account = None
         if source == "ACC":
             account = AccountBalance.objects.select_for_update().get(pk=account_pk)
             account.balance -= amount
             account.save(update_fields=["balance"])
+            source_account = account
         else:
-            cashinhand = CashInHand.objects.first()
-            cashinhand.balance -= amount
-            cashinhand.save(update_fields=["balance"])
-
-        # Update the vendor's total expense
-        if destination:
-            vendor = Vendor.objects.get(pk=destination)
-            vendor.total_expense += amount
-            vendor.save(update_fields=["total_expense"])
-
-        else:
-            vendor = None
+            cash_in_hand = CashInHand.objects.first()
+            cash_in_hand.balance -= amount
+            cash_in_hand.save(update_fields=["balance"])
+            source_account = cash_in_hand
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(
             transaction_type="MISC_EXPENSE",
             amount=amount,
-            source=(
-                f"Wallet: {account.account_name} ({account.pk})"
-                if source == "ACC"
-                else f"Wallet: Cash In Hand ({cashinhand.pk})"
-            ),
-            destination=(f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"None"),
+            source_content_type=ContentType.objects.get_for_model(source_account),
+            source_object_id=source_account.pk,
+            destination_content_type=ContentType.objects.get_for_model(vendor),
+            destination_object_id=vendor.pk,
             reason=reason,
-            category=f"{category.name} ({category.pk})",
+            expense_category=category,
         )
         return True, "Journal Entry Successfully created"
 
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"
 
-
+# VALIDATION ✔
 @transaction.atomic
-def create_misc_loan(destination_account, source, reason, amount):
+def create_misc_loan(destination_account, misc_loan_pk, reason, amount):
     try:
-        var = destination_account.balance + amount
-        destination_account.save()
+        account = destination_account
+        account.balance += amount
+        account.save()
 
-        lender = Lender.objects.get(pk=source)
+        loan = MiscLoan.objects.get(pk=misc_loan_pk)
 
         Ledger.objects.create(
             transaction_type="MISC_LOAN_CREATE",
             project=None,
             amount=amount,
-            source=f"Loan: {lender.name} ({lender.pk})",
-            destination=f"Wallet: {destination_account.account_name} ({destination_account.pk})",
+            source_content_type=ContentType.objects.get_for_model(loan),
+            source_object_id=loan.pk,
+            destination_content_type=ContentType.objects.get_for_model(account),
+            destination_object_id=account.pk,
             reason=reason,
         )
 

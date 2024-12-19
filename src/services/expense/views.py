@@ -65,6 +65,7 @@ class ExpenseIndexView(LoginRequiredMixin, TemplateView):
             return self.get(request, *args, **kwargs)
 
 
+# VALIDATION ✔
 class CreateExpenseView(LoginRequiredMixin, CreateView):
     model = Expense
     form_class = ExpenseForm
@@ -73,10 +74,12 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         project = get_object_or_404(Project, pk=self.kwargs["pk"])
         form.instance.project = project  # Associate the project with the expense.
+
         amount = form.cleaned_data["amount"]
         budget_source = form.cleaned_data["budget_source"]
         description = form.cleaned_data["description"]
         vendor = form.cleaned_data["vendor"]
+        category = form.cleaned_data["category"]
 
         # Validate the amounts
         # Check for the source and deduct from project source.
@@ -101,8 +104,9 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
             project_id=project.pk,
             amount=amount,
             budget_source=budget_source,
-            destination=vendor.pk,
+            vendor_pk=vendor.pk,
             reason=description,
+            category=category,
         )
         expense = form.save()
         return redirect(reverse("project:detail", kwargs={"pk": project.pk}))
@@ -111,27 +115,16 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["project"] = get_object_or_404(Project, pk=self.kwargs["pk"])
         context["expenses"] = Expense.objects.filter(project=self.kwargs["pk"])
-        context["total_expenses"] = self.get_total_expenses()
-        context["expenses_today"] = self.get_expenses_today()
+        context["total_expenses"] = Expense.calculate_total_expenses(
+            project_id=self.kwargs["pk"]
+        )
+        context["expenses_today"] = Expense.calculate_total_expenses(
+            project_id=self.kwargs["pk"], start_date=date.today()
+        )
         return context
 
-    def get_total_expenses(self):
-        expenses = Expense.objects.filter(project=self.kwargs["pk"])
-        total = sum(expense.amount for expense in expenses)
-        return total
 
-    def get_expenses_today(self):
-        expenses = Expense.objects.filter(project=self.kwargs["pk"])
-        today = date.today()
-        expenses_today = expenses.filter(
-            created_at__year=today.year,
-            created_at__month=today.month,
-            created_at__day=today.day,
-        )
-        total = sum(expense.amount for expense in expenses_today)
-        return total
-
-
+# DEPRECATED †
 class ExpensePaymentView(LoginRequiredMixin, FormView):
     template_name = "expense/expense_payment.html"
     form_class = ExpensePaymentForm
@@ -188,19 +181,22 @@ class ExpenseCategoryListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
 
+# VALIDATION ✔
 class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
     model = JournalExpense
     form_class = JournalExpenseForm
     success_url = reverse_lazy("expense:index")
-    template_name = "expense/journalexpense_form.html"
+    template_name = "expense/journal_expense_form.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["cashinhand"] = (
+        context["cash_in_hand"] = (
             CashInHand.objects.first().balance if CashInHand.objects.exists() else 0
         )
         context["account_balance"] = AccountBalance.get_total_balance()
-        context["expenses_today"] = self.get_expenses_today()
+        context["expenses_today"] = JournalExpense.calculate_total_expenses(
+            start_date=date.today()
+        )
         return context
 
     def form_valid(self, form):
@@ -210,16 +206,15 @@ class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
         description = form.cleaned_data["description"]
         category = form.cleaned_data["category"]
 
+        # If source is ACC then we need an instance, else we have only one CIH instance
         if source == "ACC":
-            try:
-                account = AccountBalance.objects.get(pk=form.cleaned_data["account_pk"])
-                if account.balance < amount:
-                    form.add_error(
-                        "amount", "The selected account does not have enough funds."
-                    )
-                    return self.form_invalid(form)
-            except AccountBalance.DoesNotExist:
-                form.add_error("budget_source", "Selected account does not exist.")
+            account = form.cleaned_data[
+                "account"
+            ]  # If ACC an Account Object Instance is provided by the form
+            if account.balance < amount:
+                form.add_error(
+                    "amount", "The selected account does not have enough funds."
+                )
                 return self.form_invalid(form)
 
         else:
@@ -234,23 +229,18 @@ class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
         success, message = create_journal_expense_calculations(
             category=category,
             reason=description,
-            destination=destination.pk if destination else None,
+            vendor=destination,
             amount=amount,
             source=source,
-            account_pk=account.pk if source == "ACC" else None,
+            account_pk=account.pk if source == "ACC" and account else None,
         )
         if not success:
             form.add_error("budget_source", message)
             return self.form_invalid(form)
 
-        messages.success(self.request, "General expense has been successfully created!")
-        return super().form_valid(form)
-
-    def get_expenses_today(self):
-        today = date.today()
-        expenses_today = JournalExpense.objects.filter(
-            created_at__year=today.year,
-            created_at__month=today.month,
-            created_at__day=today.day,
+        messages.success(
+            self.request,
+            f"General expense {form.cleaned_data['description']} "
+            f"of {form.cleaned_data['amount']} has been successfully created!",
         )
-        return sum(expense.amount for expense in expenses_today)
+        return super().form_valid(form)

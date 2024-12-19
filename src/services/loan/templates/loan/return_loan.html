@@ -11,12 +11,11 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'project:detail' loan.project.pk %}"><i
+                        <a class="btn btn-secondary btn-sm" href="{% url 'loan:list' loan.project.pk %}"><i
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
                         Loan Management</h4>
 
                 </div>
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="col-md-12">
@@ -88,8 +87,9 @@
                                             <!--end col-->
                                             <div class="col-6 align-self-center text-end">
                                                 <p class="text-dark text-uppercase mb-0 fw-normal fs-12"><i
-                                                        class="fas fa-money-check fs-12 me-2 text-dark"></i>Lender BIC:
-                                                    {{ loan.lender.bic }}</p>
+                                                        class="fas fa-money-check fs-12 me-2 text-dark"></i>Lender Bank
+                                                    ACC:
+                                                    {{ loan.lender.bank_account }}</p>
                                                 <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">IBAN:
                                                     {{ loan.lender.iban }}</h5>
                                             </div><!--end col-->

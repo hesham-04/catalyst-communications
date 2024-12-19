@@ -6,7 +6,11 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, FormView
 
-from src.services.project.bll import add_loan_to_project, create_misc_loan, return_misc_loan
+from src.services.project.bll import (
+    add_loan_to_project,
+    create_misc_loan,
+    return_misc_loan,
+)
 from src.services.project.bll import return_loan_to_lender
 from src.services.project.models import Project
 from .forms import LoanForm, MiscLoanForm, MiscLoanReturnForm
@@ -15,101 +19,121 @@ from .models import Loan, LoanReturn, Lender, MiscLoan
 from ..transaction.models import Ledger
 
 
+# VALIDATION ✔
 class LendLoanView(LoginRequiredMixin, CreateView):
-    form_class = LoanForm
-    template_name = 'loan/lend_loan.html'
+    """
+    Create a loan for a project [( PROJECT LOAN )]
+    """
 
-    def get_object(self):
-        return get_object_or_404(Project, id=self.kwargs['pk'])
+    form_class = LoanForm
+    template_name = "loan/lend_loan.html"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Project, id=self.kwargs["pk"])
 
     def form_valid(self, form):
         loan = form.save(commit=False)
-        lender = form.cleaned_data['lender']
-        amount = form.cleaned_data['loan_amount']
-        reason = form.cleaned_data['reason']
+        lender = form.cleaned_data["lender"]
+        amount = form.cleaned_data["loan_amount"]
+        reason = form.cleaned_data["reason"]
+
+        # No amount or balance checks needed because a loan is being created.
+        if amount <= 0:
+            form.add_error("loan_amount", "Amount must be greater than zero.")
+            return self.form_invalid(form)
 
         # Make changes to the Project & Ledger before creating the loan Object
         add_loan_to_project(
-            project_id=self.kwargs['pk'],
-            amount=amount,
-            source=lender,
-            reason=reason
+            project_id=self.kwargs["pk"], amount=amount, source=lender, reason=reason
         )
 
         # Link the project to loan object
-
         loan.project = self.get_object()
         loan.save()
 
-        messages.success(self.request, "Loan successfully created for project.")
-        return redirect('project:detail', pk=self.kwargs['pk'])
+        messages.success(
+            self.request,
+            f"Loan of {amount} successfully created for project {self.get_object().project_name}.",
+        )
+        return redirect("project:detail", pk=self.kwargs["pk"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['project'] = self.get_object()
+        context["project"] = self.get_object()  # For The GoBack Button (PK)
         return context
 
 
 class LoanListView(LoginRequiredMixin, ListView):
     model = Loan
-    template_name = 'loan/loan_list.html'
+    template_name = "loan/loan_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['project'] = get_object_or_404(Project, id=self.kwargs['pk'])
+        context["project"] = get_object_or_404(Project, id=self.kwargs["pk"])
         return context
 
     def get_queryset(self):
-        return Loan.objects.filter(project=self.kwargs['pk']).order_by('-due_date')
+        return Loan.objects.filter(project=self.kwargs["pk"]).order_by("-due_date")
 
 
+# VALIDATION ✔
 class ReturnLoanView(LoginRequiredMixin, CreateView):
     form_class = LoanReturnForm
-    template_name = 'loan/return_loan.html'
+    template_name = "loan/return_loan.html"
 
-    def get_object(self):
-        return get_object_or_404(Loan, id=self.kwargs['pk'])
+    def get_object(self, queryset=None):
+        return get_object_or_404(Loan, id=self.kwargs["pk"])
 
     def form_valid(self, form):
+        return_amount = form.cleaned_data["return_amount"]
+        remarks = form.cleaned_data["remarks"]
         loan = self.get_object()
+
         loan_return = form.save(commit=False)
 
-        return_amount = form.cleaned_data['return_amount']
-        remarks = form.cleaned_data['remarks']
+        # Validate the Form:
 
-        # Create an expense Object for this project.
-        # Subtract from the Loan model.
-
-        amount = form.cleaned_data['return_amount']
-
-        if amount > loan.remaining_amount:
-            form.add_error('return_amount', "The amount is more than the project loan amount.")
+        if return_amount <= 0:
+            form.add_error("return_amount", "Amount must be greater than zero.")
             return self.form_invalid(form)
 
-        if amount > loan.project.project_account_balance:
-            form.add_error('return_amount', "The amount is more than Project account balance.")
+        if return_amount > loan.remaining_amount:
+            form.add_error(
+                "return_amount", "The amount is more than the project loan amount."
+            )
             return self.form_invalid(form)
 
+        if return_amount > loan.project.project_account_balance:
+            form.add_error(
+                "return_amount", "The amount is more than Project account balance."
+            )
+            return self.form_invalid(form)
+
+        # Create an expense Object for this project & Perform the return.
         return_loan_to_lender(
-            loan_id=loan.pk,
             project_id=loan.project.id,
+            loan_id=loan.pk,
             amount=return_amount,
-            source=None,
-            destination=loan.lender.name,
-            reason=remarks
+            reason=remarks,
         )
 
         loan_return.loan = loan
         loan_return.save()
-        messages.success(self.request, "Loan return successfully recorded.")
-        return redirect('project:detail', pk=loan.project.id)
+        messages.success(
+            self.request,
+            f"Successfully recorded loan return of {return_amount} for "
+            f"project {loan.project.project_name}.",
+        )
+        return redirect("project:detail", pk=loan.project.id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         loan = self.get_object()
-        context['loan'] = loan
-        context['project'] = loan.project
-        context['return_logs'] = LoanReturn.objects.filter(loan=loan).order_by('-return_date')
+        logs = LoanReturn.objects.filter(loan=loan).order_by("-return_date")
+
+        context["loan"] = loan
+        context["project"] = loan.project
+        context["return_logs"] = logs
         return context
 
 
@@ -129,40 +153,46 @@ class LenderDetailView(LoginRequiredMixin, DetailView):
 
         combined_loans = list(loans) + list(misc_loans)
 
-        context['loans'] = combined_loans
+        context["loans"] = combined_loans
         return context
 
 
 class LenderCreateView(LoginRequiredMixin, CreateView):
     model = Lender
-    fields = '__all__'
+    fields = "__all__"
     success_url = reverse_lazy("loan:lenders")
 
 
 class MiscLoanCreateView(LoginRequiredMixin, CreateView):
     model = MiscLoan
     form_class = MiscLoanForm
-    success_url = reverse_lazy('loan:lenders')
+    success_url = reverse_lazy("loan:lenders")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['lender'] = get_object_or_404(Lender, pk=self.kwargs['pk'])
+        context["lender"] = get_object_or_404(Lender, pk=self.kwargs["pk"])
         return context
 
     def form_valid(self, form):
+
         with transaction.atomic():
             misc_loan = form.save(commit=False)
+            destination_account = form.cleaned_data["destination"]
+            reason = form.cleaned_data["reason"]
+            amount = form.cleaned_data["loan_amount"]
 
-            destination_account = form.cleaned_data['destination']
+            if amount <= 0:
+                form.add_error("loan_amount", "Amount must be greater than zero.")
+                return self.form_invalid(form)
+            misc_loan.save()
 
             success, message = create_misc_loan(
                 destination_account=destination_account,
-                source=misc_loan.lender.pk,
-                reason=form.cleaned_data['reason'],
-                amount=form.cleaned_data['loan_amount'],
+                misc_loan_pk=misc_loan.pk,
+                reason=reason,
+                amount=amount,
             )
 
-            misc_loan.save()
         messages.success(self.request, "Misc loan successfully created.")
         return super().form_valid(form)
 
@@ -172,21 +202,25 @@ class MiscLoanReturnView(LoginRequiredMixin, FormView):
     template_name = "loan/miscloan_return.html"
 
     def dispatch(self, request, *args, **kwargs):
-        self.object = get_object_or_404(MiscLoan, id=self.kwargs['pk'])
+        self.object = get_object_or_404(MiscLoan, id=self.kwargs["pk"])
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        return_amount = form.cleaned_data['return_amount']
-        return_source = form.cleaned_data['source']
-        remarks = form.cleaned_data['remarks']
+        return_amount = form.cleaned_data["return_amount"]
+        return_source = form.cleaned_data["source"]
+        remarks = form.cleaned_data["remarks"]
         loan = self.object
 
         if return_amount > loan.remaining_amount:
-            form.add_error('return_amount', "The amount is more than the project loan amount.")
+            form.add_error(
+                "return_amount", "The amount is more than the project loan amount."
+            )
             return self.form_invalid(form)
 
         if return_amount > return_source.balance:
-            form.add_error('return_amount', "The amount is more than Project account balance.")
+            form.add_error(
+                "return_amount", "The amount is more than Project account balance."
+            )
             return self.form_invalid(form)
 
         success, message = return_misc_loan(
@@ -197,11 +231,13 @@ class MiscLoanReturnView(LoginRequiredMixin, FormView):
         )
 
         messages.success(self.request, "Loan Return successfully recorded.")
-        return redirect('loan:lender-detail', pk=loan.lender.pk)
+        return redirect("loan:lender-detail", pk=loan.lender.pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['loan'] = self.object
-        entries = Ledger.objects.filter(transaction_type='MISC_LOAN_RETURN')
-        context['return_logs'] = entries.filter(Q(destination__icontains=f"({self.object.pk})"))
+        context["loan"] = self.object
+        entries = Ledger.objects.filter(transaction_type="MISC_LOAN_RETURN")
+        context["return_logs"] = entries.filter(
+            Q(destination__icontains=f"({self.object.pk})")
+        )
         return context

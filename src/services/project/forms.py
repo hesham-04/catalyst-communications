@@ -74,9 +74,6 @@ class ProjectForm(forms.ModelForm):
 
 
 class AddBudgetForm(forms.Form):
-    SOURCE_CHOICES = [
-        ("ACC", "Account"),
-    ]
     amount = forms.DecimalField(max_digits=12, decimal_places=2, label="Amount")
     source = forms.ModelChoiceField(
         queryset=AccountBalance.objects.all(),

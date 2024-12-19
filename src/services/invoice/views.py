@@ -97,7 +97,10 @@ class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
         return reverse_lazy("project:detail", kwargs={"pk": invoice.project.pk})
 
 
+# VALIDATION ✔
 class InvoicePaidView(LoginRequiredMixin, View):
+
+    # noinspection PyMethodMayBeStatic
     def get(self, request, *args, **kwargs):
         invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
         form = TransferFundsForm()
@@ -105,24 +108,29 @@ class InvoicePaidView(LoginRequiredMixin, View):
             request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
         )
 
+    # noinspection PyMethodMayBeStatic
     def post(self, request, *args, **kwargs):
         invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
         form = TransferFundsForm(request.POST)
 
         if form.is_valid():
-            account = form.cleaned_data["account"]
+            account = form.cleaned_data[
+                "account"
+            ]  # This is a model instance of The AccountBalance Model
             amount = invoice.total_amount
 
             # Processing the invoice payment
             success, message = process_invoice_payment(
                 invoice_id=invoice.pk,
-                destination="account",
                 account_id=account.pk,
                 amount=amount,
             )
 
             if success:
-                messages.success(request, "Funds Successfully Transferred")
+                messages.success(
+                    request,
+                    f"{amount} Funds Successfully Transferred to {account.account_name}.",
+                )
                 return redirect(reverse("project:detail", args=[invoice.project.pk]))
             else:
                 messages.error(request, message)
