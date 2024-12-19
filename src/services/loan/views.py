@@ -174,19 +174,25 @@ class MiscLoanCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
+
         with transaction.atomic():
             misc_loan = form.save(commit=False)
-
             destination_account = form.cleaned_data["destination"]
+            reason = form.cleaned_data["reason"]
+            amount = form.cleaned_data["loan_amount"]
+
+            if amount <= 0:
+                form.add_error("loan_amount", "Amount must be greater than zero.")
+                return self.form_invalid(form)
+            misc_loan.save()
 
             success, message = create_misc_loan(
                 destination_account=destination_account,
-                source=misc_loan.lender.pk,
-                reason=form.cleaned_data["reason"],
-                amount=form.cleaned_data["loan_amount"],
+                misc_loan_pk=misc_loan.pk,
+                reason=reason,
+                amount=amount,
             )
 
-            misc_loan.save()
         messages.success(self.request, "Misc loan successfully created.")
         return super().form_valid(form)
 

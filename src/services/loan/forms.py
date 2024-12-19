@@ -109,7 +109,7 @@ class MiscLoanForm(forms.ModelForm):
         widget=forms.DateInput(attrs={"class": "form-control", "type": "date"}),
     )
     destination = forms.ModelChoiceField(
-        queryset=AccountBalance.objects.all(),
+        queryset=AccountBalance.objects,
         label="Destination Account",
         widget=forms.Select(attrs={"class": "form-control"}),
     )
@@ -137,7 +137,7 @@ class MiscLoanReturnForm(forms.Form):
     )
 
     source = forms.ModelChoiceField(
-        queryset=AccountBalance.objects.all(),
+        queryset=AccountBalance.objects,
         label="Source Account",
         widget=forms.Select(attrs={"class": "form-control"}),
     )

@@ -3,7 +3,7 @@ from django.db import transaction
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
-from src.services.loan.models import Loan, Lender
+from src.services.loan.models import Loan, Lender, MiscLoan
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
 from src.services.vendor.models import Vendor
@@ -237,21 +237,24 @@ def create_journal_expense_calculations(
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"
 
-
+# VALIDATION ✔
 @transaction.atomic
-def create_misc_loan(destination_account, source, reason, amount):
+def create_misc_loan(destination_account, misc_loan_pk, reason, amount):
     try:
-        var = destination_account.balance + amount
-        destination_account.save()
+        account = destination_account
+        account.balance += amount
+        account.save()
 
-        lender = Lender.objects.get(pk=source)
+        loan = MiscLoan.objects.get(pk=misc_loan_pk)
 
         Ledger.objects.create(
             transaction_type="MISC_LOAN_CREATE",
             project=None,
             amount=amount,
-            source=f"Loan: {lender.name} ({lender.pk})",
-            destination=f"Wallet: {destination_account.account_name} ({destination_account.pk})",
+            source_content_type=ContentType.objects.get_for_model(loan),
+            source_object_id=loan.pk,
+            destination_content_type=ContentType.objects.get_for_model(account),
+            destination_object_id=account.pk,
             reason=reason,
         )
 
