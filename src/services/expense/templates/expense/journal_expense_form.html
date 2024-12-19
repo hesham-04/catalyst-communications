@@ -89,14 +89,13 @@
                                         class="thumb-md justify-content-center d-flex align-items-center bg-success-subtle text-success rounded-circle me-2">CIH</span>
                                                     <div class="flex-grow-1 text-truncate">
                                                         <h6 class="m-0 text-truncate">Cash in hand</h6>
-                                                        <p class="font-12 mb-0 text-muted">20 August 2024</p>
                                                     </div>
                                                     <!--end media body-->
                                                 </div>
                                                 <!--end media-->
                                             </td>
                                             <td class="px-0 text-end"><span
-                                                    class="text-primary ps-2 align-self-center text-end">{{ cashinhand }} PKR</span>
+                                                    class="text-primary ps-2 align-self-center text-end">{{ cash_in_hand }} PKR</span>
                                             </td>
                                         </tr>
                                         <!--end tr-->
@@ -107,7 +106,6 @@
                                         class="thumb-md justify-content-center d-flex align-items-center bg-warning-subtle text-warning rounded-circle me-2">ACC</span>
                                                     <div class="flex-grow-1 text-truncate">
                                                         <h6 class="m-0 text-truncate">Account Balance</h6>
-                                                        <p class="font-12 mb-0 text-muted">15 August 2024</p>
                                                     </div>
                                                     <!--end media body-->
                                                 </div>
@@ -128,15 +126,10 @@
                                                 <div class="card-body">
                                                     <div class="row d-flex justify-content-center">
                                                         <div class="col">
-                                                            <p class="text-dark mb-1 fw-semibold">Total Expenses</p>
-                                                            <h3 class="my-2 fs-24 fw-bold text-danger">{{ total_expenses }}
+                                                            <p class="text-dark mb-1 fw-semibold mt-3">Expenses
+                                                                Today</p>
+                                                            <h3 class="my-2 fs-24 fw-bold text-danger">{{ expenses_today }}
                                                                 PKR</h3>
-                                                            <p class="mb-0 text-truncate text-muted"><i
-                                                                    class="ti ti-thumb-up text-success fs-18"></i>
-                                                                <span class="text-dark fw-semibold">{{ expenses_today }}</span>
-                                                                Expenses
-                                                                Today
-                                                            </p>
                                                         </div>
                                                         <div class="col-auto align-self-center">
                                                             <div

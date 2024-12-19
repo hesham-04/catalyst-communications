@@ -49,7 +49,7 @@ class JournalExpenseForm(forms.ModelForm):
         initial="cash_in_hand",
     )
     account = forms.ModelChoiceField(
-        queryset=AccountBalance.objects.all(),
+        queryset=AccountBalance.objects,
         required=False,
         label="Select Account (if applicable)",
     )

@@ -72,8 +72,6 @@ class AccountBalance(models.Model):
         Calculates the sum of all account balances.
         :return: Decimal - Total balance across all accounts
         """
-        from django.db.models import Sum
-
         total_balance = cls.objects.aggregate(total=Sum("balance"))["total"]
         return total_balance or 0
 

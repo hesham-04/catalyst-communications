@@ -134,7 +134,7 @@ def create_expense_calculations(project_id, amount, budget_source, vendor_pk, re
     )
 
 
-# DEPRECATED †
+# VALIDATION - TEMPORARILY DEPRECATED †
 @transaction.atomic
 def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None):
     project = Project.objects.select_for_update().get(pk=project_id)
@@ -188,16 +188,17 @@ def process_invoice_payment(invoice_id, amount, account_id):
         return False, f"An error occurred while processing the payment: {str(e)}"
 
 
+# VALIDATION ✔
 @transaction.atomic
 def create_journal_expense_calculations(
-    category, reason, destination, amount, source, account_pk=None
+    category, reason, vendor_pk, amount, source, account_pk=None
 ):
     """
     Creates a ledger entry for a journal expense.
 
     :param category: The category of the expense
     :param reason: The reason for the expense
-    :param destination: The vendor id to which the expense is made
+    :param vendor_pk: The vendor id to which the expense is made
     :param amount: The amount of the expense
     :param source: The source of the expense (CASH or ACC)
     :param account_pk: The account id from which the expense is made (if source is ACC)
@@ -205,36 +206,30 @@ def create_journal_expense_calculations(
     """
     try:
         # Update the account/cash balance
+        source_account = None
         if source == "ACC":
             account = AccountBalance.objects.select_for_update().get(pk=account_pk)
             account.balance -= amount
             account.save(update_fields=["balance"])
+            source_account = account
         else:
-            cashinhand = CashInHand.objects.first()
-            cashinhand.balance -= amount
-            cashinhand.save(update_fields=["balance"])
+            cash_in_hand = CashInHand.objects.first()
+            cash_in_hand.balance -= amount
+            cash_in_hand.save(update_fields=["balance"])
+            source_account = cash_in_hand
 
-        # Update the vendor's total expense
-        if destination:
-            vendor = Vendor.objects.get(pk=destination)
-            vendor.total_expense += amount
-            vendor.save(update_fields=["total_expense"])
-
-        else:
-            vendor = None
+        vendor = Vendor.objects.get(pk=vendor_pk)
 
         # Create a ledger entry after updating the account/cash balance
         Ledger.objects.create(
             transaction_type="MISC_EXPENSE",
             amount=amount,
-            source=(
-                f"Wallet: {account.account_name} ({account.pk})"
-                if source == "ACC"
-                else f"Wallet: Cash In Hand ({cashinhand.pk})"
-            ),
-            destination=(f"Vendor: {vendor.name} ({vendor.pk})" if vendor else f"None"),
+            source_content_type=ContentType.objects.get_for_model(source_account),
+            source_object_id=source_account.pk,
+            destination_content_type=ContentType.objects.get_for_model(vendor),
+            destination_object_id=vendor.pk,
             reason=reason,
-            category=f"{category.name} ({category.pk})",
+            category=category,
         )
         return True, "Journal Entry Successfully created"
 

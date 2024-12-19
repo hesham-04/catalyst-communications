@@ -179,19 +179,22 @@ class ExpenseCategoryListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
 
+# VALIDATION ✔
 class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
     model = JournalExpense
     form_class = JournalExpenseForm
     success_url = reverse_lazy("expense:index")
-    template_name = "expense/journalexpense_form.html"
+    template_name = "expense/journal_expense_form.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["cashinhand"] = (
+        context["cash_in_hand"] = (
             CashInHand.objects.first().balance if CashInHand.objects.exists() else 0
         )
         context["account_balance"] = AccountBalance.get_total_balance()
-        context["expenses_today"] = self.get_expenses_today()
+        context["expenses_today"] = JournalExpense.calculate_total_expenses(
+            start_date=date.today()
+        )
         return context
 
     def form_valid(self, form):
@@ -201,16 +204,15 @@ class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
         description = form.cleaned_data["description"]
         category = form.cleaned_data["category"]
 
+        # If source is ACC then we need an instance, else we have only one CIH instance
         if source == "ACC":
-            try:
-                account = AccountBalance.objects.get(pk=form.cleaned_data["account_pk"])
-                if account.balance < amount:
-                    form.add_error(
-                        "amount", "The selected account does not have enough funds."
-                    )
-                    return self.form_invalid(form)
-            except AccountBalance.DoesNotExist:
-                form.add_error("budget_source", "Selected account does not exist.")
+            account = form.cleaned_data[
+                "account"
+            ]  # If ACC an Account Object Instance is provided by the form
+            if account.balance < amount:
+                form.add_error(
+                    "amount", "The selected account does not have enough funds."
+                )
                 return self.form_invalid(form)
 
         else:
@@ -225,23 +227,18 @@ class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
         success, message = create_journal_expense_calculations(
             category=category,
             reason=description,
-            destination=destination.pk if destination else None,
+            vendor=destination,
             amount=amount,
             source=source,
-            account_pk=account.pk if source == "ACC" else None,
+            account_pk=account.pk if source == "ACC" and account else None,
         )
         if not success:
             form.add_error("budget_source", message)
             return self.form_invalid(form)
 
-        messages.success(self.request, "General expense has been successfully created!")
-        return super().form_valid(form)
-
-    def get_expenses_today(self):
-        today = date.today()
-        expenses_today = JournalExpense.objects.filter(
-            created_at__year=today.year,
-            created_at__month=today.month,
-            created_at__day=today.day,
+        messages.success(
+            self.request,
+            f"General expense {form.cleaned_data['description']} "
+            f"of {form.cleaned_data['amount']} has been successfully created!",
         )
-        return sum(expense.amount for expense in expenses_today)
+        return super().form_valid(form)
