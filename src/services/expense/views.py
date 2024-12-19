@@ -79,6 +79,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
         budget_source = form.cleaned_data["budget_source"]
         description = form.cleaned_data["description"]
         vendor = form.cleaned_data["vendor"]
+        category = form.cleaned_data["category"]
 
         # Validate the amounts
         # Check for the source and deduct from project source.
@@ -105,6 +106,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
             budget_source=budget_source,
             vendor_pk=vendor.pk,
             reason=description,
+            category=category,
         )
         expense = form.save()
         return redirect(reverse("project:detail", kwargs={"pk": project.pk}))

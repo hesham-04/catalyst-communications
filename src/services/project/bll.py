@@ -86,7 +86,7 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
         description="Loan Return",
         amount=amount,
         budget_source="Project Account Balance",
-        category=None,
+        expense_category=None,
         vendor=None,  # Destination but NONE
         payment_status=Expense.PaymentStatus.PAID,
     )
@@ -106,7 +106,9 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
 
 # VALIDATION ✔
 @transaction.atomic
-def create_expense_calculations(project_id, amount, budget_source, vendor_pk, reason):
+def create_expense_calculations(
+    project_id, amount, budget_source, vendor_pk, category, reason
+):
     project = Project.objects.select_for_update().get(pk=project_id)
 
     # Handle source deduction
@@ -130,6 +132,7 @@ def create_expense_calculations(project_id, amount, budget_source, vendor_pk, re
         source_object_id=project.pk,
         destination_content_type=ContentType.objects.get_for_model(vendor),
         destination_object_id=vendor.pk,
+        expense_category=category,  # FIXED LATER. CHECK AGAIN ✔
         reason=reason,
     )
 
@@ -227,7 +230,7 @@ def create_journal_expense_calculations(
             destination_content_type=ContentType.objects.get_for_model(vendor),
             destination_object_id=vendor.pk,
             reason=reason,
-            category=category,
+            expense_category=category,
         )
         return True, "Journal Entry Successfully created"
 
