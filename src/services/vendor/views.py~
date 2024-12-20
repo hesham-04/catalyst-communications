@@ -4,7 +4,9 @@ from django.views.generic import CreateView
 from django.views.generic import DetailView, ListView
 
 from .forms import VendorForm
-from .models import Vendor
+from .models import (
+    Vendor
+)
 from ..expense.models import Expense, ExpenseCategory
 from ..project.models import Project
 
@@ -13,20 +15,20 @@ from ..project.models import Project
 class VendorCreateView(LoginRequiredMixin, CreateView):
     model = Vendor
     form_class = VendorForm
-    success_url = reverse_lazy("vendor:vendors")  # Redirect after creation
+    success_url = reverse_lazy('vendor:vendors')  # Redirect after creation 
 
 
 class VendorListView(LoginRequiredMixin, ListView):
     model = Vendor
     paginate_by = 25
-    context_object_name = "vendors"
+    context_object_name = 'vendors'
 
     def get_queryset(self):
-        queryset = Vendor.objects.all().order_by("-created_at")
+        queryset = Vendor.objects.all().order_by('-created_at')
 
-        order = self.request.GET.get("order", None)
-        if order == "desc":
-            queryset = queryset.order_by("-total_expense")
+        order = self.request.GET.get('order', None)
+        if order == 'desc':
+            queryset = queryset.order_by('-total_expense')
 
         return queryset
 
@@ -39,9 +41,9 @@ class VendorDetailView(LoginRequiredMixin, DetailView):
 
         expenses = Expense.objects.filter(vendor=self.object)
 
-        project_id = self.request.GET.get("project")
-        category_id = self.request.GET.get("category")
-        payment_status = self.request.GET.get("status")
+        project_id = self.request.GET.get('project')
+        category_id = self.request.GET.get('category')
+        payment_status = self.request.GET.get('status')
 
         if project_id:
             expenses = expenses.filter(project_id=project_id)
@@ -51,13 +53,11 @@ class VendorDetailView(LoginRequiredMixin, DetailView):
             expenses = expenses.filter(payment_status=payment_status)
 
         # Add the filtered expenses to the context
-        context["expenses"] = expenses
+        context['expenses'] = expenses
 
         # Add additional context for the filter options (dropdowns in the template)
-        context["projects"] = Project.objects.filter(
-            expenses__vendor=self.object
-        ).distinct()
-        context["categories"] = ExpenseCategory.objects.all()
-        context["statuses"] = Expense.PaymentStatus.choices
+        context['projects'] = Project.objects.filter(expenses__vendor=self.object).distinct()
+        context['categories'] = ExpenseCategory.objects.all()
+        context['statuses'] = Expense.PaymentStatus.choices
 
         return context
