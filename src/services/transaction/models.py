@@ -60,11 +60,16 @@ class Ledger(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["project"]),
+            models.Index(fields=["transaction_type"]),
+        ]
 
     def delete(self, *args, **kwargs):
         # Perform any pre-delete actions here
         # If Source or Destination is Project then the subtraction or addition is possible from two fields:
         # [ (project_account_balance), (project_cash) ]
+
         super().delete(*args, **kwargs)
 
         # Perform any post-delete actions here
