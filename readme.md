@@ -50,7 +50,7 @@ responsive user experience for businesses aiming to optimize their communication
 4. Configure the `.env` file with your database and Redis settings.
 5. Apply migrations:
     ```bash
-    python manage.py makemigrations core  assets vendor loan invoice quotation expense loan customer project transaction
+    python manage.py makemigrations accounts core  assets vendor loan invoice quotation expense loan customer project transaction
     python manage.py migrate
     ```
 6. Start the development server:

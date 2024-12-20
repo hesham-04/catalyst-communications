@@ -110,7 +110,7 @@
                                             <tr>
                                                 <td>
                                                     {% if object.project %}
-                                                        <a href="{% url 'project:detail' object.project.pk %}">{{ object.project.project_name }}</a>
+                                                        {{ object.project.project_name }}
                                                     {% else %}
                                                         Not For a Project
                                                     {% endif %}

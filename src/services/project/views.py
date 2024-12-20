@@ -18,7 +18,7 @@ from django.views.generic import (
 
 from src.services.assets.models import CashInHand, AccountBalance
 from src.services.expense.views import Expense
-from .bll import add_budget_to_project
+from .bll import add_budget_to_project, add_cash_to_project
 from .forms import AddBudgetForm, CreateProjectCashForm
 from .forms import ProjectForm
 from .models import Project
@@ -166,7 +166,6 @@ class AddBudgetView(LoginRequiredMixin, FormView):
             project_id=self.project.pk,
             amount=amount,
             source=source,
-            destination=None,
             reason=reason,
         )
 
@@ -295,34 +294,30 @@ class CreateProjectCash(LoginRequiredMixin, FormView):
         amount = form.cleaned_data.get("amount")
         reason = form.cleaned_data.get("reason")
 
+        if amount <= 0:
+            form.add_error("amount", "The amount should be greater than zero.")
+            return self.form_invalid(form)
+
         if amount > project.project_account_balance:
             form.add_error("amount", "Not enough balance in project budget")
             return self.form_invalid(form)
 
-        project.project_cash += amount
-        project.project_account_balance -= amount
-
-        project.save()
-
-        Ledger.objects.create(
-            transaction_type="TRANSFER",
-            project=project,
+        add_cash_to_project(
+            project_id=project.pk,
             amount=amount,
-            source=f"Project {project.project_name} ACC ({project.pk})",
-            destination=f"Project {project.project_name} CASH ({project.pk})",
             reason=reason,
         )
 
         messages.success(self.request, "Worked like a charm")
         return super().form_valid(form)
 
-    def get_success_url(self):
-        return reverse_lazy("project:finances", kwargs={"pk": self.kwargs.pk})
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = Project.objects.get(pk=self.kwargs["pk"])
         return context
+
+    def get_success_url(self):
+        return reverse_lazy("project:finances", kwargs={"pk": self.kwargs["pk"]})
 
 
 class ProjectExpensesView(LoginRequiredMixin, TemplateView):

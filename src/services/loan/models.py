@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
@@ -236,3 +237,11 @@ class MiscLoan(models.Model):
             self.remaining_amount = 0
             self.is_repaid = True
         self.save()
+
+    @classmethod
+    def calculate_total_unpaid_amount(cls):
+        """
+        Calculate the total unpaid amount for all loans.
+        """
+        total_unpaid = cls.objects.aggregate(total=Sum("remaining_amount"))["total"]
+        return round(total_unpaid or 0, 2)

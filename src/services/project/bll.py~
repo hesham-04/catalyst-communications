@@ -325,7 +325,6 @@ def add_cash_to_project(project_id, amount, reason):
     except Exception as e:
         return False, f"An error occurred while processing the payment: {str(e)}"
 
-
 # VALIDATION ✔
 @transaction.atomic
 def add_general_cash_in_hand(amount, source, reason):

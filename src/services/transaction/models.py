@@ -21,7 +21,7 @@ class Ledger(models.Model):
             "MISC_EXPENSE",
             " Miscellaneous Expense Created",  # MISCELLANEOUS EXPENSE CREATED
         ),
-        ("ADD_CASH", "Added Cash"),  # Add Cash to Petty Cash
+        ("ADD_CASH", "Added Cash"),  # Add Cash to Petty Cash General.
         ("INVOICE_PAYMENT", "Invoice Paid"),  # Project Invoice Payment
         (
             "ADD_ACC_BALANCE",
