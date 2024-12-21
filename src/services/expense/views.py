@@ -99,6 +99,7 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
             if amount > project.project_account_balance:
                 form.add_error("amount", "Amount exceeds project account balance.")
                 return self.form_invalid(form)
+        expense = form.save()
 
         create_expense_calculations(
             project_id=project.pk,
@@ -107,8 +108,9 @@ class CreateExpenseView(LoginRequiredMixin, CreateView):
             vendor_pk=vendor.pk,
             reason=description,
             category=category,
+            expense=expense,
         )
-        expense = form.save()
+
         return redirect(reverse("project:detail", kwargs={"pk": project.pk}))
 
     def get_context_data(self, **kwargs):
@@ -226,12 +228,20 @@ class JournalExpenseCreateView(LoginRequiredMixin, CreateView):
                 form.add_error("amount", "Not enough cash in hand.")
                 return self.form_invalid(form)
 
+        if amount <= 0:
+            form.add_error("amount", "Amount must be greater than zero.")
+            return self.form_invalid(form)
+
+        misc_expense = form.save(commit=False)
+        misc_expense.save()
+
         success, message = create_journal_expense_calculations(
             category=category,
             reason=description,
             vendor=destination,
             amount=amount,
             source=source,
+            misc_expense=misc_expense,
             account_pk=account.pk if source == "ACC" and account else None,
         )
         if not success:

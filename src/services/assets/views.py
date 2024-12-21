@@ -13,7 +13,9 @@ from django.views.generic.edit import CreateView, DeleteView, FormView
 
 from .forms import CashInHandForm
 from .models import CashInHand, AccountBalance
+from ..project.bll import add_general_cash_in_hand
 from ..transaction.models import Ledger
+from ...web.dashboard.utils import ledger_filter
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -38,10 +40,7 @@ class CashInHandDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         cashinhand = CashInHand.objects.first() or 0
 
-        object_list = Ledger.objects.filter(
-            Q(source__icontains="Wallet: Cash In Hand")
-            | Q(destination__icontains="Wallet: Cash In Hand")
-        )
+        object_list = ledger_filter(source=cashinhand, destination=cashinhand)
 
         # Pagination setup
         page = request.GET.get("page", 1)
@@ -61,19 +60,20 @@ class CashInHandDetailView(LoginRequiredMixin, View):
         return render(request, "assets/cashinhand.html", context)
 
 
+# IDK IF IM SURE ABOUT ANY OF THIS.
 class AddCashInHandView(LoginRequiredMixin, FormView):
     form_class = CashInHandForm
     template_name = "assets/cashinhand_form.html"
 
+    @transaction.atomic
     def form_valid(self, form):
         amount = form.cleaned_data["balance"]
         source_id = form.cleaned_data["source"]
         reason = form.cleaned_data["reason"]
 
-        try:
-            account = source_id
-        except AccountBalance.DoesNotExist:
-            form.add_error("source", "The selected source does not exist.")
+        account = source_id
+        if amount <= 0:
+            form.add_error("balance", "The amount must be greater than zero.")
             return self.form_invalid(form)
 
         if amount > account.balance:
@@ -82,27 +82,16 @@ class AddCashInHandView(LoginRequiredMixin, FormView):
             )
             return self.form_invalid(form)
 
-        with transaction.atomic():
-            account.balance -= amount
-            account.save(update_fields=["balance"])
-
-            # Add to CashInHand
-            cashinhand, created = CashInHand.objects.get_or_create(
-                defaults={"balance": 0}
-            )
-            cashinhand.balance += amount
-            cashinhand.save(update_fields=["balance"])
-
-            # Create ledger entry
-            Ledger.objects.create(
-                transaction_type="ADD_CASH",
-                amount=amount,
-                source=f"Wallet: {account.account_name} ({account.pk})",
-                destination=f"Wallet: Cash In Hand ({cashinhand.pk})",
-                reason=reason,
-            )
-
+        add_general_cash_in_hand(
+            amount=amount,
+            source=source_id,
+            reason=reason,
+        )
         # Show a success message and redirect to a success page
+        messages.success(
+            self.request,
+            f"Cash in hand updated successfully. Added: {amount}",
+        )
         messages.success(self.request, "Cash in hand updated successfully.")
         return super().form_valid(form)
 
@@ -119,9 +108,6 @@ class CashInHandDeleteView(LoginRequiredMixin, DeleteView):
     model = CashInHand
     template_name = "cashinhand_confirm_delete.html"
     success_url = reverse_lazy("cashinhand_list")
-
-
-""" Account Balance"""
 
 
 class AccountBalanceCreateView(LoginRequiredMixin, CreateView):
@@ -153,10 +139,7 @@ class AccountBalanceDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        object_list = Ledger.objects.filter(
-            Q(source__icontains=f"Wallet: {self.object.account_name}")
-            | Q(destination__icontains=f"Wallet: {self.object.account_name}")
-        )
+        object_list = ledger_filter(source=self.object, destination=self.object)
 
         paginator = Paginator(object_list, 20)
         page = self.request.GET.get("page")

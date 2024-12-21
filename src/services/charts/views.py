@@ -15,6 +15,7 @@ from src.services.expense.models import JournalExpense
 from src.services.invoice.models import Invoice
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
+from src.web.dashboard.utils import ledger_filter
 
 
 class ChartsIndex(View):
@@ -708,14 +709,17 @@ def generate_bank_statements_view(request):
         row = 4
 
         # Fetch Transactions
-        transactions = Ledger.objects.filter(
-            Q(source__icontains=f"Wallet: {account.account_name}")
-            | Q(destination__icontains=f"Wallet: {account.account_name}")
-        ).order_by("created_at")
+        transactions = ledger_filter(source=account, destination=account).order_by(
+            "-created_at"
+        )
 
         # Add Transactions
         for i, tx in enumerate(transactions, start=1):
-            if tx.transaction_type in ["INVOICE_PAYMENT", "ADD_ACC_BALANCE"]:
+            if tx.transaction_type in [
+                "INVOICE_PAYMENT",
+                "ADD_ACC_BALANCE",
+                "MISC_LOAN_CREATE",
+            ]:
                 credit = tx.amount
                 debit = 0
                 current_balance += credit
@@ -727,7 +731,7 @@ def generate_bank_statements_view(request):
             # Add transaction details to the sheet
             sheet.cell(row=row, column=start_col).value = i
             sheet.cell(row=row, column=start_col + 1).value = tx.created_at.strftime(
-                "%Y-%m-%d"
+                "%Y-%m-%d %H:%M"
             )
             sheet.cell(row=row, column=start_col + 2).value = tx.reason
             sheet.cell(row=row, column=start_col + 3).value = float(debit)

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
@@ -17,6 +18,7 @@ from .forms import LoanForm, MiscLoanForm, MiscLoanReturnForm
 from .forms import LoanReturnForm
 from .models import Loan, LoanReturn, Lender, MiscLoan
 from ..transaction.models import Ledger
+from ...web.dashboard.utils import ledger_filter
 
 
 # VALIDATION ✔
@@ -41,15 +43,15 @@ class LendLoanView(LoginRequiredMixin, CreateView):
         if amount <= 0:
             form.add_error("loan_amount", "Amount must be greater than zero.")
             return self.form_invalid(form)
+        loan.project = self.get_object()
+        loan.save()
 
         # Make changes to the Project & Ledger before creating the loan Object
         add_loan_to_project(
-            project_id=self.kwargs["pk"], amount=amount, source=lender, reason=reason
+            project_id=self.kwargs["pk"], amount=amount, source=loan, reason=reason
         )
 
         # Link the project to loan object
-        loan.project = self.get_object()
-        loan.save()
 
         messages.success(
             self.request,
@@ -129,8 +131,9 @@ class ReturnLoanView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         loan = self.get_object()
-        logs = LoanReturn.objects.filter(loan=loan).order_by("-return_date")
-
+        logs = Ledger.objects.filter(
+            project=loan.project, transaction_type="RETURN_LOAN"
+        )
         context["loan"] = loan
         context["project"] = loan.project
         context["return_logs"] = logs
@@ -163,6 +166,7 @@ class LenderCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("loan:lenders")
 
 
+# VALIDATION ✔
 class MiscLoanCreateView(LoginRequiredMixin, CreateView):
     model = MiscLoan
     form_class = MiscLoanForm
@@ -193,13 +197,17 @@ class MiscLoanCreateView(LoginRequiredMixin, CreateView):
                 amount=amount,
             )
 
-        messages.success(self.request, "Misc loan successfully created.")
+        messages.success(self.request, f"Loan of amount {amount} created successfully")
         return super().form_valid(form)
 
 
 class MiscLoanReturnView(LoginRequiredMixin, FormView):
     form_class = MiscLoanReturnForm
-    template_name = "loan/miscloan_return.html"
+    template_name = "loan/misc_loan_return.html"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.object = None
 
     def dispatch(self, request, *args, **kwargs):
         self.object = get_object_or_404(MiscLoan, id=self.kwargs["pk"])
@@ -207,9 +215,13 @@ class MiscLoanReturnView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         return_amount = form.cleaned_data["return_amount"]
-        return_source = form.cleaned_data["source"]
+        account = form.cleaned_data["source"]
         remarks = form.cleaned_data["remarks"]
         loan = self.object
+
+        if return_amount <= 0:
+            form.add_error("return_amount", "Amount must be greater than zero.")
+            return self.form_invalid(form)
 
         if return_amount > loan.remaining_amount:
             form.add_error(
@@ -217,7 +229,7 @@ class MiscLoanReturnView(LoginRequiredMixin, FormView):
             )
             return self.form_invalid(form)
 
-        if return_amount > return_source.balance:
+        if return_amount > account.balance:
             form.add_error(
                 "return_amount", "The amount is more than Project account balance."
             )
@@ -225,19 +237,19 @@ class MiscLoanReturnView(LoginRequiredMixin, FormView):
 
         success, message = return_misc_loan(
             destination_account=self.object,
-            source=return_source,
+            source=account,
             reason=remarks,
             amount=return_amount,
         )
 
-        messages.success(self.request, "Loan Return successfully recorded.")
+        messages.success(self.request, message)
         return redirect("loan:lender-detail", pk=loan.lender.pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["loan"] = self.object
-        entries = Ledger.objects.filter(transaction_type="MISC_LOAN_RETURN")
-        context["return_logs"] = entries.filter(
-            Q(destination__icontains=f"({self.object.pk})")
+        loan = self.object
+        context["loan"] = loan
+        context["return_logs"] = ledger_filter(
+            destination=loan, transaction_type="MISC_LOAN_RETURN"
         )
         return context

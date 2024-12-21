@@ -4,8 +4,8 @@ from django.db.models import Sum
 from django.utils import timezone
 from num2words import num2words
 from phonenumber_field.modelfields import PhoneNumberField
+from src.web.dashboard.utils import capitalize_and_replace_currency
 
-from src.core.utils import capitalize_and_replace_currency
 from src.services.project.models import Project
 
 

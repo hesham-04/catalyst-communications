@@ -10,18 +10,18 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Date</th>
+                            <th>ID</th>
                             <th>Amount Returned</th>
                             <th>Remarks</th>
-                            <th>Created At</th>
+                            <th>Return Time</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for log in return_logs %}
                             <tr>
-                                <td>{{ log.return_date|date:"d M Y" }}</td>
-                                <td>{{ log.return_amount }}</td>
-                                <td>{{ log.remarks|default:"N/A" }}</td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ log.amount }}</td>
+                                <td>{{ log.reason|default:"N/A" }}</td>
                                 <td>{{ log.created_at }}</td>
                             </tr>
                         {% endfor %}

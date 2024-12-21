@@ -10,8 +10,12 @@ app_name = "charts"
 
 urlpatterns = [
     path("", ChartsIndex.as_view(), name="list"),
-    path("generate/<str:pk>/", generate_project_report, name="project-report"),
-    path("project-sheet/<str:pk>/", project_expenses, name="project-expense-journal"),
+    path("project-report/<str:pk>/", generate_project_report, name="project-report"),
+    path(
+        "project-expense-sheet/<str:pk>/",
+        project_expenses,
+        name="project-expense-journal",
+    ),
     path(
         "generate-bank-statements/",
         generate_bank_statements_view,

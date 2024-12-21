@@ -1,7 +1,11 @@
+from django.contrib import messages
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.shortcuts import redirect
+
 from src.services.project.models import Project
+from src.services.transaction.repercussions import delete_transaction_instance
 
 
 class Ledger(models.Model):
@@ -21,7 +25,7 @@ class Ledger(models.Model):
             "MISC_EXPENSE",
             " Miscellaneous Expense Created",  # MISCELLANEOUS EXPENSE CREATED
         ),
-        ("ADD_CASH", "Added Cash"),  # Add Cash to Petty Cash
+        ("ADD_CASH", "Added Cash"),  # Add Cash to Petty Cash General.
         ("INVOICE_PAYMENT", "Invoice Paid"),  # Project Invoice Payment
         (
             "ADD_ACC_BALANCE",
@@ -53,6 +57,22 @@ class Ledger(models.Model):
         "expense.ExpenseCategory", on_delete=models.SET_NULL, null=True, blank=True
     )
     reason = models.TextField(blank=True, null=True)
+
+    # DELETE FIELDS:
+    misc_expense = models.ForeignKey(
+        "expense.JournalExpense",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="This is populated only when creating misc expense instance",
+    )
+    expense = models.ForeignKey(
+        "expense.Expense",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="This is populated only when creating a return loan & expense create instance",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -60,11 +80,24 @@ class Ledger(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["project"]),
+            models.Index(fields=["transaction_type"]),
+        ]
 
     def delete(self, *args, **kwargs):
         # Perform any pre-delete actions here
         # If Source or Destination is Project then the subtraction or addition is possible from two fields:
         # [ (project_account_balance), (project_cash) ]
+        try:
+            delete_transaction_instance(
+                transaction_type=self.transaction_type,
+                source=self.source,
+                destination=self.destination,
+                amount=self.amount,
+                ledger=self.pk,
+            )
+        except Exception as e:
+            messages.error(self.request, f"An error occurred: {e}")
+            return redirect("transaction:list")
         super().delete(*args, **kwargs)
-
-        # Perform any post-delete actions here
