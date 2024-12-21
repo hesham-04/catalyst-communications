@@ -43,15 +43,15 @@ class LendLoanView(LoginRequiredMixin, CreateView):
         if amount <= 0:
             form.add_error("loan_amount", "Amount must be greater than zero.")
             return self.form_invalid(form)
+        loan.project = self.get_object()
+        loan.save()
 
         # Make changes to the Project & Ledger before creating the loan Object
         add_loan_to_project(
-            project_id=self.kwargs["pk"], amount=amount, source=lender, reason=reason
+            project_id=self.kwargs["pk"], amount=amount, source=loan, reason=reason
         )
 
         # Link the project to loan object
-        loan.project = self.get_object()
-        loan.save()
 
         messages.success(
             self.request,
@@ -131,8 +131,9 @@ class ReturnLoanView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         loan = self.get_object()
-        logs = LoanReturn.objects.filter(loan=loan).order_by("-return_date")
-
+        logs = Ledger.objects.filter(
+            project=loan.project, transaction_type="RETURN_LOAN"
+        )
         context["loan"] = loan
         context["project"] = loan.project
         context["return_logs"] = logs

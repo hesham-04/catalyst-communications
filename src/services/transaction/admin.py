@@ -43,6 +43,7 @@ class LedgerAdmin(admin.ModelAdmin):
         "destination_content_type",
         "destination_object_id",
         "expense_category",
+        "expense",
         "reason",
         "created_at",
     )

@@ -41,10 +41,10 @@ def add_budget_to_project(project_id, amount, source, reason):
         transaction_type="BUDGET_ASSIGN",
         project=project,
         amount=amount,
-        source_content_type=ContentType.objects.get_for_model(project),
-        source_object_id=project.pk,
-        destination_content_type=ContentType.objects.get_for_model(account),
-        destination_object_id=account.pk,
+        source_content_type=ContentType.objects.get_for_model(account),
+        source_object_id=account.pk,
+        destination_content_type=ContentType.objects.get_for_model(project),
+        destination_object_id=project.pk,
         reason=reason,
     )
 
@@ -56,14 +56,14 @@ def add_loan_to_project(project_id, amount, source, reason):
     project.project_account_balance += amount
     project.save(update_fields=["project_account_balance"])
 
-    lender = Lender.objects.get(pk=source.pk)
+    loan = Lender.objects.get(pk=source.pk)
 
     Ledger.objects.create(
         transaction_type="CREATE_LOAN",
         project=project,
         amount=amount,
-        source_content_type=ContentType.objects.get_for_model(lender),
-        source_object_id=lender.pk,
+        source_content_type=ContentType.objects.get_for_model(loan),
+        source_object_id=loan.pk,
         destination_content_type=ContentType.objects.get_for_model(project),
         destination_object_id=project.pk,
         reason=reason,
@@ -84,12 +84,11 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
     project.save()
 
     # Create an Expense instance for the loan return.
-    Expense.objects.create(
+    expense = Expense.objects.create(
         project=project,
         description="Loan Return",
         amount=amount,
         budget_source="Project Account Balance",
-        expense_category=None,
         vendor=None,  # Destination but NONE
         payment_status=Expense.PaymentStatus.PAID,
     )
@@ -103,6 +102,7 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
         source_object_id=project.pk,
         destination_content_type=ContentType.objects.get_for_model(loan),
         destination_object_id=loan.pk,
+        expense=expense,
         reason=reason,
     )
 
@@ -110,7 +110,7 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
 # VALIDATION ✔
 @transaction.atomic
 def create_expense_calculations(
-    project_id, amount, budget_source, vendor_pk, category, reason
+    project_id, amount, budget_source, vendor_pk, category, reason, expense
 ):
     project = Project.objects.select_for_update().get(pk=project_id)
 
@@ -137,6 +137,7 @@ def create_expense_calculations(
         destination_object_id=vendor.pk,
         expense_category=category,  # FIXED LATER. CHECK AGAIN ✔
         reason=reason,
+        expense=expense,
     )
 
 
@@ -197,7 +198,7 @@ def process_invoice_payment(invoice_id, amount, account_id):
 # VALIDATION ✔
 @transaction.atomic
 def create_journal_expense_calculations(
-    category, reason, vendor, amount, source, account_pk=None
+    category, reason, vendor, amount, misc_expense, source, account_pk=None
 ):
     """
     Creates a ledger entry for a journal expense.
@@ -205,6 +206,7 @@ def create_journal_expense_calculations(
     :param category: The category of the expense
     :param reason: The reason for the expense
     :param vendor: The vendor id to which the expense is made
+    :param misc_expense: The misc expense instance for the ledger
     :param amount: The amount of the expense
     :param source: The source of the expense (CASH or ACC)
     :param account_pk: The account id from which the expense is made (if source is ACC)
@@ -233,6 +235,7 @@ def create_journal_expense_calculations(
             destination_content_type=ContentType.objects.get_for_model(vendor),
             destination_object_id=vendor.pk,
             reason=reason,
+            misc_expense=misc_expense,
             expense_category=category,
         )
         return True, "Journal Entry Successfully created"
