@@ -37,7 +37,7 @@ class CashInHand(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Cash in Hand Balance: {self.balance}"
+        return f"Cash in Hand - Balance: {self.balance}"
 
 
 class AccountBalance(models.Model):

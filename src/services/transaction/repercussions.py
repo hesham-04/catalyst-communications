@@ -2,7 +2,7 @@ from .handlers import TRANSACTION_HANDLERS
 
 
 def delete_transaction_instance(
-    transaction_type, source=None, destination=None, amount=None, ledger=None
+    transaction_type, source=None, destination=None, amount=None, ledger=None, **kwargs
 ):
     """
     Dispatcher for handling different transaction types.
@@ -14,6 +14,6 @@ def delete_transaction_instance(
     """
     handler = TRANSACTION_HANDLERS.get(transaction_type)
     if handler:
-        handler(source, destination=destination, amount=amount, ledger=ledger)
+        handler(source, destination=destination, amount=amount, ledger=ledger, **kwargs)
     else:
         raise ValueError(f"Unsupported transaction type: {transaction_type}")

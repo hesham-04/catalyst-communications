@@ -18,14 +18,15 @@
                     <div class="col-md-6 ms-auto text-end">
                         <a href="{% url 'expense:expense-category-list' %}" class=" btn btn-soft-primary mb-3">
                             Expense Categories</a>
-                        <a href="{% url 'expense:journal-create' %}" class=" btn btn-soft-danger mb-3">Create General
-                            Expense</a>
+
                         <!-- Button to trigger modal -->
-                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-soft-warning mb-3" data-bs-toggle="modal"
                                 data-bs-target="#exampleModalCenter">
                             Generate Expense Sheet
                         </button>
 
+                        <a href="{% url 'expense:journal-create' %}" class=" btn btn-soft-danger mb-3">Create General
+                            Expense</a>
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModalCenter" data-bs-backdrop="false" tabindex="-1"
                              aria-labelledby="exampleModalCenterTitle" aria-hidden="true" role="dialog">
@@ -80,7 +81,7 @@
                                             <td>{{ expense.created_at|date:"d M Y" }}
                                                 <span>{{ expense.created_at|time:"h:ia" }}</span>
                                             </td>
-                                            <td>{{ expense.category }}</td>
+                                            <td>{{ expense.expense_category.name }}</td>
                                             <td>{{ expense.reason|slice:20 }}</td>
                                             <td>{{ expense.amount }}</td>
                                             <td>

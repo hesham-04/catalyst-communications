@@ -15,10 +15,11 @@ from .forms import CashInHandForm
 from .models import CashInHand, AccountBalance
 from ..project.bll import add_general_cash_in_hand
 from ..transaction.models import Ledger
+from ...core.mixins import AdminRequiredMixin
 from ...web.dashboard.utils import ledger_filter
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class IndexView(AdminRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "assets/assets_index.html"
 
     def get_context_data(self, **kwargs):
@@ -36,7 +37,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CashInHandDetailView(LoginRequiredMixin, View):
+class CashInHandDetailView(AdminRequiredMixin, LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         cashinhand = CashInHand.objects.first() or 0
 
@@ -61,7 +62,7 @@ class CashInHandDetailView(LoginRequiredMixin, View):
 
 
 # IDK IF IM SURE ABOUT ANY OF THIS.
-class AddCashInHandView(LoginRequiredMixin, FormView):
+class AddCashInHandView(AdminRequiredMixin, LoginRequiredMixin, FormView):
     form_class = CashInHandForm
     template_name = "assets/cashinhand_form.html"
 
@@ -104,36 +105,36 @@ class AddCashInHandView(LoginRequiredMixin, FormView):
         return reverse_lazy("assets:cash_list")
 
 
-class CashInHandDeleteView(LoginRequiredMixin, DeleteView):
+class CashInHandDeleteView(AdminRequiredMixin, LoginRequiredMixin, DeleteView):
     model = CashInHand
     template_name = "cashinhand_confirm_delete.html"
     success_url = reverse_lazy("cashinhand_list")
 
 
-class AccountBalanceCreateView(LoginRequiredMixin, CreateView):
+class AccountBalanceCreateView(AdminRequiredMixin, LoginRequiredMixin, CreateView):
     model = AccountBalance
     fields = ["account_name", "balance"]
     success_url = reverse_lazy("assets:accounts")
 
 
-class AccountBalanceList(LoginRequiredMixin, ListView):
+class AccountBalanceList(AdminRequiredMixin, LoginRequiredMixin, ListView):
     model = AccountBalance
     paginate_by = 20
 
 
-class AccountBalanceUpdateView(LoginRequiredMixin, UpdateView):
+class AccountBalanceUpdateView(AdminRequiredMixin, LoginRequiredMixin, UpdateView):
     model = AccountBalance
     fields = ["account_name", "balance"]
     success_url = reverse_lazy("assets:accounts")
 
 
-class AccountBalanceDeleteView(LoginRequiredMixin, DeleteView):
+class AccountBalanceDeleteView(AdminRequiredMixin, LoginRequiredMixin, DeleteView):
     model = AccountBalance
     template_name = "accountbalance_confirm_delete.html"
     success_url = reverse_lazy("assets:accounts")
 
 
-class AccountBalanceDetailView(LoginRequiredMixin, DetailView):
+class AccountBalanceDetailView(AdminRequiredMixin, LoginRequiredMixin, DetailView):
     model = AccountBalance
 
     def get_context_data(self, **kwargs):

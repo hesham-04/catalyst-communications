@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import User
 from .forms import UserForm, UserUpdateForm
+from ...core.mixins import AdminRequiredMixin
 
 
 class CustomLoginView(LoginView):
@@ -21,25 +22,25 @@ class CustomLogoutView(LoginRequiredMixin, View):
         return redirect("accounts:login")
 
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(AdminRequiredMixin, LoginRequiredMixin, ListView):
     model = User
 
 
-class UserCreateView(LoginRequiredMixin, CreateView):
+class UserCreateView(AdminRequiredMixin, LoginRequiredMixin, CreateView):
     model = User
     form_class = UserForm
     template_name = "accounts/user_form.html"
     success_url = reverse_lazy("accounts:list")
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(AdminRequiredMixin, LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserUpdateForm
     template_name = "accounts/user_form.html"
     success_url = reverse_lazy("accounts:list")
 
 
-class UserDeleteView(LoginRequiredMixin, DeleteView):
+class UserDeleteView(AdminRequiredMixin, LoginRequiredMixin, DeleteView):
     model = User
     template_name = "accounts/user_confirm_delete.html"
     success_url = reverse_lazy("accounts:list")

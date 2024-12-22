@@ -149,7 +149,6 @@
                             <div class="card" style="
                                 position: relative;
                                 padding: 20px;
-                                background-color: #ffffff;
                                 border: 1px solid #ccc;">
 
                                 <div style="
@@ -190,7 +189,7 @@
                                                 {{ invoice.date|date:"d-m-Y" }}</h5>
                                         </div><!--end col-->
                                     </div>
-                                
+
                                 </div><!--end card-body-->
 
                                 <div class="row justify-content-between d-print-flex">
@@ -214,7 +213,8 @@
                                                     <strong class="fs-14">Billed To :</strong><br>
                                                     {{ invoice.company_name }} <br>
                                                     {{ invoice.address }}<br>
-                                                    <strong title="Phone">Email:</strong> {{ invoice.phone }}
+                                                    <strong title="Phone">Email:</strong> {{ invoice.email }}<br>
+
                                                     <strong title="Phone">Phone:</strong> {{ invoice.phone }}
                                                 </address>
                                             </div>

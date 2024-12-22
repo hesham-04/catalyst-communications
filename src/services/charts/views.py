@@ -10,6 +10,7 @@ from openpyxl.cell import MergedCell
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
+from src.core.mixins import AdminRequiredMixin
 from src.services.assets.models import AccountBalance
 from src.services.expense.models import JournalExpense
 from src.services.invoice.models import Invoice
@@ -18,7 +19,7 @@ from src.services.transaction.models import Ledger
 from src.web.dashboard.utils import ledger_filter
 
 
-class ChartsIndex(View):
+class ChartsIndex(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
         return render(request, "charts/charts_index.html", {"projects": projects})

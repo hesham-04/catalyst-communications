@@ -193,6 +193,7 @@ class StartProjectView(LoginRequiredMixin, View):
             client_name=quotation.client_name,
             company_name=quotation.company_name,
             phone=quotation.phone,
+            email=quotation.email,
             address=quotation.address,
             subject=quotation.subject,
             notes=quotation.notes,
@@ -201,6 +202,7 @@ class StartProjectView(LoginRequiredMixin, View):
             due_date=quotation.due_date,
             project=quotation.project,
             letterhead=quotation.letterhead,
+            tax=quotation.tax,
             status="PENDING",
         )
 

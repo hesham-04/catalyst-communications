@@ -5,6 +5,7 @@ from django.db import models
 from django.shortcuts import redirect
 
 from src.services.project.models import Project
+from src.services.transaction.handlers import misc_expense
 from src.services.transaction.repercussions import delete_transaction_instance
 
 
@@ -15,18 +16,21 @@ class Ledger(models.Model):
             "BUDGET_ASSIGN",
             "Budget Assigned to Project",  # From Main ACC to Project ( CAN ONLY BE TRANSFERRED FORM ACC TO PROJ CASH )
         ),
-        ("TRANSFER", "Funds Transfer"),  # Only from Project ACC to Project CASH
-        ("CREATE_LOAN", "Loan Created"),  # Project Loan Created
-        ("RETURN_LOAN", "Loan Returned"),  # Project Loan Return
-        ("MISC_LOAN_CREATE", "Miscellaneous Loan"),  # MISCELLANEOUS LOAN CREATED
-        ("MISC_LOAN_RETURN", "Miscellaneous Loan Return"),  # MISCELLANEOUS LOAN RETURN
-        ("CREATE_EXPENSE", "Expense Created"),  # PROJ EXPENSE CREATED
+        (
+            "TRANSFER",
+            "Funds transfer to project cash",
+        ),  # Only from Project ACC to Project CASH
+        ("CREATE_LOAN", "Loan created"),  # Project Loan Created
+        ("RETURN_LOAN", "Loan returned"),  # Project Loan Return
+        ("MISC_LOAN_CREATE", "Miscellaneous loan"),  # MISCELLANEOUS LOAN CREATED
+        ("MISC_LOAN_RETURN", "Miscellaneous loan return"),  # MISCELLANEOUS LOAN RETURN
+        ("CREATE_EXPENSE", "Expense created"),  # PROJ EXPENSE CREATED
         (
             "MISC_EXPENSE",
-            " Miscellaneous Expense Created",  # MISCELLANEOUS EXPENSE CREATED
+            " Miscellaneous expense created",  # MISCELLANEOUS EXPENSE CREATED
         ),
-        ("ADD_CASH", "Added Cash"),  # Add Cash to Petty Cash General.
-        ("INVOICE_PAYMENT", "Invoice Paid"),  # Project Invoice Payment
+        ("ADD_CASH", "Added Cash in hand"),  # Add Cash to Petty Cash General.
+        ("INVOICE_PAYMENT", "Invoice paid"),  # Project Invoice Payment
         (
             "ADD_ACC_BALANCE",
             "Balance Added",  # Update General Account Balance [ NOT IMPLEMENTED ] TODO: IMPLEMENT THIS
@@ -76,7 +80,7 @@ class Ledger(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.transaction_type} {self.amount} from {self.source} to {self.destination}"
+        return f"{self.get_transaction_type_display()} {self.amount} from {self.source} to {self.destination}"
 
     class Meta:
         ordering = ["-created_at"]
@@ -85,7 +89,8 @@ class Ledger(models.Model):
             models.Index(fields=["transaction_type"]),
         ]
 
-    def delete(self, *args, **kwargs):
+    # noinspection Signature of method 'Ledger. delete()' does not match signature of the base method in class 'Model'
+    def delete(self, request, *args, **kwargs):
         # Perform any pre-delete actions here
         # If Source or Destination is Project then the subtraction or addition is possible from two fields:
         # [ (project_account_balance), (project_cash) ]
@@ -96,8 +101,10 @@ class Ledger(models.Model):
                 destination=self.destination,
                 amount=self.amount,
                 ledger=self.pk,
+                expense=self.expense,
+                misc_expense=self.misc_expense,
             )
         except Exception as e:
-            messages.error(self.request, f"An error occurred: {e}")
+            messages.error(request, f"An error occurred: {e}")
             return redirect("transaction:list")
         super().delete(*args, **kwargs)

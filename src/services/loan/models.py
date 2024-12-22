@@ -224,7 +224,7 @@ class MiscLoan(models.Model):
         return self.loan_amount
 
     def __str__(self):
-        return f"Misc Loan from {self.lender.name}"
+        return f"Loan from {self.lender.name}"
 
     def get_total_paid(self):
         """Calculate the total amount paid so far."""

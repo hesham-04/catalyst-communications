@@ -1,0 +1,66 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customers{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Note:</strong> You are attempting to delete a transaction. This action has
+                            repercussions.
+                        </div>
+                        <div class="card shadow-lg">
+                            <div class="card-body bg-gradient-danger border border-danger rounded-2">
+                                <h5 class="ms-2">Are you sure you want to delete:</h5>
+
+                                <p class="ms-2 text-danger"><b>{{ object }}</b></p>
+                                <hr>
+
+                                <div class="card-body p-2 pb-4">
+                                    <h5 class="card-title">Delete Transaction Details</h5>
+                                    <p class="card-text">
+                                        Deleting a transaction will attempt to undo all changes made by it. During this
+                                        process, the system will reverse the transfer by:
+                                        <br>
+                                        Source: <span class="text-success">{{ object.source }}</span> &nbsp;
+                                        Destination: <span class="text-danger">{{ object.destination }}</span>
+                                        <br><br>
+                                        - Adding the
+                                        <strong style="color: red;">Transaction</strong>
+                                        amount back to the source.
+
+                                        <br>
+                                        - Subtracting/Deleting the <strong
+                                            style="color: red;">Transaction/Instance</strong>
+                                        amount from the destination.
+
+                                        <br><br>
+                                        This ensures that your financial records remain accurate after the deletion.
+                                    </p>
+                                </div>
+
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <a href="{% url 'transaction:list' %}" class="btn btn-secondary me-2">
+                                        <i class="fa fa-arrow-left me-1"></i>Go Back
+                                    </a>
+                                    <input class="btn btn-danger float-end" type="submit" value="Confirm">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
