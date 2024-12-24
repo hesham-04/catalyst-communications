@@ -155,15 +155,24 @@ def add_cash(source, destination, amount, **kwargs):
 
 
 @transaction.atomic
-def invoice_payment(**kwargs):
+def invoice_payment(source, destination, amount, **kwargs):
     """
     Placeholder for INVOICE_PAYMENT transaction type.
     """
-    pass  # Implementation needed
+    if destination.balance < amount:
+        raise TransactionError(
+            f"Insufficient balance in {destination.account_name} account.",
+            details={"source": source, "amount": amount},
+        )
+    else:
+        source.status = "PENDING"
+        source.save()
+        destination.balance -= amount
+        destination.save()
 
 
 @transaction.atomic
-def add_acc_balance(**kwargs):
+def add_acc_balance(source, destination, **kwargs):
     """
     Placeholder for ADD_ACC_BALANCE transaction type.
     """

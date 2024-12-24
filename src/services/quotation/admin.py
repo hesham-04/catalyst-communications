@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Quotation, QuotationItem
+from .models import Quotation, QuotationItem, ItemGeneral, QuotationGeneral
 
 
 class QuotationItemInline(admin.TabularInline):
@@ -42,3 +42,39 @@ class QuotationItemAdmin(admin.ModelAdmin):
     search_fields = ("item_name", "description", "quotation__quotation_number")
     readonly_fields = ("amount",)
     list_filter = ("quotation__project",)
+
+
+from django.contrib import admin
+from .models import (
+    ItemGeneral,
+    QuotationGeneral,
+)  # Ensure models are imported correctly
+
+
+@admin.register(ItemGeneral)
+class ItemGeneralAdmin(admin.ModelAdmin):
+    fields = ("item_name", "description", "quantity", "rate", "tax", "amount")
+    readonly_fields = ("amount",)
+    list_display = (
+        "item_name",
+        "quantity",
+        "rate",
+        "tax",
+        "amount",
+    )  # Display key fields in admin list
+    search_fields = ("item_name", "description")  # Enable searching
+
+
+@admin.register(QuotationGeneral)
+class QuotationGeneralAdmin(admin.ModelAdmin):
+    fields = ("client_name", "company_name", "total_amount", "status", "date")
+    readonly_fields = ("total_amount",)
+    list_display = (
+        "client_name",
+        "company_name",
+        "total_amount",
+        "status",
+        "date",
+    )  # Display key fields
+    search_fields = ("client_name", "company_name")  # Enable searching
+    list_filter = ("status", "date")  # Enable filtering options

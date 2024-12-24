@@ -3,7 +3,9 @@ from src.services.customer.models import Customer
 
 
 class BillingAddress(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='billing_address')
+    customer = models.OneToOneField(
+        Customer, on_delete=models.CASCADE, related_name="billing_address"
+    )
     attention = models.CharField(max_length=100, blank=True)
     country_region = models.CharField(max_length=100)
     street_1 = models.CharField(max_length=100)
@@ -16,7 +18,3 @@ class BillingAddress(models.Model):
 
     def __str__(self):
         return f"{self.customer.get_full_name} - Billing - {self.city}, {self.state}"
-
-
-
-

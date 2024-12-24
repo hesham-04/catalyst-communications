@@ -18,7 +18,12 @@ def transaction_delete(request, pk):
     ledger = get_object_or_404(Ledger, pk=pk)
 
     if request.method == "POST":
-        ledger.delete(request)
+        if "override_delete" in request.POST:
+
+            # Handle override delete logic here
+            ledger.delete(request, without_repercussions=True)
+        else:
+            ledger.delete(request, without_repercussions=False)
         return redirect("transaction:list")
 
     if request.method == "GET":

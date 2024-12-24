@@ -83,7 +83,7 @@ class Invoice(models.Model):
             return round(total_receivables["total"] or 0, 2)
 
     def __str__(self):
-        return f"Invoice {self.invoice_number} - {self.client_name} - {self.project.project_name}"
+        return f"Invoice {self.invoice_number} - {self.project.project_name}"
 
     class Meta:
         ordering = ["-created_at"]

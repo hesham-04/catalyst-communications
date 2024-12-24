@@ -44,14 +44,17 @@
                                         <br><br>
                                         This ensures that your financial records remain accurate after the deletion.
                                     </p>
+                                    <p>Overriding will bypass this process</p>
                                 </div>
-
                                 <form method="post">
                                     {% csrf_token %}
                                     <a href="{% url 'transaction:list' %}" class="btn btn-secondary me-2">
                                         <i class="fa fa-arrow-left me-1"></i>Go Back
                                     </a>
-                                    <input class="btn btn-danger float-end" type="submit" value="Confirm">
+                                    <input class="btn btn-danger float-end" type="submit" value="Delete">
+                                    <input id="override-delete-btn" class="btn btn-warning float-end me-2" type="submit"
+                                           name="override_delete"
+                                           value="Override Delete" disabled>
                                 </form>
                             </div>
                         </div>
@@ -62,5 +65,14 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('#override-delete-btn').prop('disabled', false);
+            }, 10000); // 10 seconds
+        });
+    </script>
 
 {% endblock %}

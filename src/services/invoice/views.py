@@ -17,6 +17,7 @@ from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm, InvoiceUpdat
 from .models import Invoice, InvoiceItem
 from ..project.bll import process_invoice_payment
 from ..project.models import Project
+from ..quotation.models import QuotationGeneral
 
 
 class CreateInvoiceView(LoginRequiredMixin, CreateView):
@@ -99,10 +100,20 @@ class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
 
 # VALIDATION ✔
 class InvoicePaidView(LoginRequiredMixin, View):
+    quote = False
 
     # noinspection PyMethodMayBeStatic
-    def get(self, request, *args, **kwargs):
-        invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
+    def get(self, request, q=False, *args, **kwargs):
+        if q == True:
+            print("Quotation TUREEEEEEEEEEEEEEEE")
+            print("Quotation TUREEEEEEEEEEEEEEEE")
+            print("Quotation TUREEEEEEEEEEEEEEEE")
+            self.quote = True
+            invoice = get_object_or_404(QuotationGeneral, pk=kwargs["pk"])
+            print(invoice)
+        else:
+            invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
+            print("FALSEEEE")
         form = TransferFundsForm()
         return render(
             request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
@@ -110,7 +121,15 @@ class InvoicePaidView(LoginRequiredMixin, View):
 
     # noinspection PyMethodMayBeStatic
     def post(self, request, *args, **kwargs):
-        invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
+        if self.quote:
+            print("POST SELF.QUOTE")
+            print("POST SELF.QUOTE")
+            print("POST SELF.QUOTE")
+            print("POST SELF.QUOTE")
+            invoice = get_object_or_404(QuotationGeneral, pk=kwargs["pk"])
+            print(invoice)
+        else:
+            invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
         form = TransferFundsForm(request.POST)
 
         if form.is_valid():
@@ -124,6 +143,7 @@ class InvoicePaidView(LoginRequiredMixin, View):
                 invoice_id=invoice.pk,
                 account_id=account.pk,
                 amount=amount,
+                q=self.quote,
             )
 
             if success:
@@ -131,7 +151,14 @@ class InvoicePaidView(LoginRequiredMixin, View):
                     request,
                     f"{amount} Funds Successfully Transferred to {account.account_name}.",
                 )
-                return redirect(reverse("project:detail", args=[invoice.project.pk]))
+                if self.quote:
+                    return redirect(
+                        reverse("quotation:general_detail", args=[invoice.pk])
+                    )
+                else:
+                    return redirect(
+                        reverse("project:detail", args=[invoice.project.pk])
+                    )
             else:
                 messages.error(request, message)
                 return render(

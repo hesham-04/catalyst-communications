@@ -53,6 +53,7 @@
                                             <th class="border-top-0">Description</th>
                                             <th class="border-top-0">Budget</th>
                                             <th class="border-top-0">Status</th>
+                                            <th class="border-top-0">Delete</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -69,6 +70,11 @@
                     {{ project.get_project_status_display }}
                 </span>
                                                 </td>
+                                                <td>
+                                                    <a href="{% url 'project:delete' project.id %}"
+                                                       class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash-alt"></i>
+                                                    </a>
 
                                             </tr>
                                         {% empty %}

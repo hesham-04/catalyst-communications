@@ -89,22 +89,24 @@ class Ledger(models.Model):
             models.Index(fields=["transaction_type"]),
         ]
 
-    # noinspection Signature of method 'Ledger. delete()' does not match signature of the base method in class 'Model'
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, without_repercussions=False, *args, **kwargs):
         # Perform any pre-delete actions here
         # If Source or Destination is Project then the subtraction or addition is possible from two fields:
         # [ (project_account_balance), (project_cash) ]
-        try:
-            delete_transaction_instance(
-                transaction_type=self.transaction_type,
-                source=self.source,
-                destination=self.destination,
-                amount=self.amount,
-                ledger=self.pk,
-                expense=self.expense,
-                misc_expense=self.misc_expense,
-            )
-        except Exception as e:
-            messages.error(request, f"An error occurred: {e}")
-            return redirect("transaction:list")
-        super().delete(*args, **kwargs)
+        if without_repercussions:
+            super().delete(*args, **kwargs)
+        else:
+            try:
+                delete_transaction_instance(
+                    transaction_type=self.transaction_type,
+                    source=self.source,
+                    destination=self.destination,
+                    amount=self.amount,
+                    ledger=self.pk,
+                    expense=self.expense,
+                    misc_expense=self.misc_expense,
+                )
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
+                return redirect("transaction:list")
+            super().delete(*args, **kwargs)

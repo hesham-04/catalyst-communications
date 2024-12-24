@@ -3,6 +3,8 @@ from django.db.models import Sum
 
 from src.core.models import BillingAddress
 
+# from src.services.transaction.models import Ledger
+
 
 class Project(models.Model):
     class ProjectStatus(models.TextChoices):
@@ -103,3 +105,9 @@ class Project(models.Model):
             {"Account": "Net Balance", "Amount": invoices_total - expenses_total}
         )
         return trial_balance
+
+    def delete(self):
+        # Ledger.objects.all().filter(project_id=self.pk).delete(
+        #     without_repercussions=True
+        # )
+        super().delete()
