@@ -6,143 +6,141 @@
 
 
 {% block content %}
-<div class="page-wrapper">
-    <!-- Page Content-->
-    <div class="page-content">
-        <div class="container-fluid">
+    <div class="page-wrapper">
+        <!-- Page Content-->
+        <div class="page-content">
+            <div class="container-fluid">
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
-                        <h4 class="page-title">
-                            <a class="btn btn-secondary btn-sm me-2"
-                               href="#"><i
-                                    class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">
+                                <a class="btn btn-secondary btn-sm me-2"
+                                   href="#"><i
+                                        class="fa fa-arrow-left-long me-1"></i> Go Back</a>
 
-                            {{quotation.quotation_number}}</h4>
+                                {{ quotation.quotation_number }}</h4>
 
-                    </div><!--end page-title-box-->
-                </div><!--end col-->
-            </div><!--end row-->
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
 
-            <div class="row">
+                <div class="row">
 
-                <div class="col-md-6">
-
-
-                    <div class="col-md-12">
-                        <div class="card shadow-lg">
-                            <div class="card-header">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h3 class="card-title mb-1">{{ quotation.quotation_number }}</h3>
-                                        <p class="text-muted m-0 p-0"><b>Subject: </b>{{ quotation.subject }}</p>
-                                        <p class="text-muted m-0 p-0"><b>Description: </b>{{ quotation.notes }}</p>
-                                    </div><!--end col-->
-                                    <div class="col-auto">
-                                        <a class="mb-2 text-muted"
-                                           href="{% url 'quotation:edit' quotation.pk %}">
-                                            <i class="fa fa-edit mb-4 me-1"></i>Edit
-                                        </a>
-                                    </div><!--end col-->
-                                </div>  <!--end row-->
-                            </div><!--end card-header-->
-                            <div class="card-body pt-0">
-                                <ul class="list-unstyled mb-0">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <li class=""><i
-                                                    class="las la-user me-2 text-secondary fs-22 align-middle"></i>
-                                                <b> Client Name </b> :<a
-                                                        href="#">
-                                                    {{ quotation.client_name }}</a>
-                                            </li>
-                                            <li class="mt-2"><i
-                                                    class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
-                                                <b> Project </b> : {{ quotation.project.project_name }}
-                                            </li>
-                                            <li class="mt-2"><i
-                                                    class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
-                                                <b> Amount </b> : {{ quotation.total_amount }} PKR
-                                            </li>
-
-                                        </div>
-                                        <div class="col-md-6">
-                                            <li class="mt-2"><i
-                                                    class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-                                                <b> Address </b> : {{ quotation.address }}
-                                            </li>
-                                            <li class="mt-2"><i
-                                                    class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
-                                                <b>
-                                                    Phone </b> : {{ quotation.phone }}
-                                            </li>
-
-                                        </div>
-                                    </div>
-
-                                </ul>
+                    <div class="col-md-6">
 
 
-                            </div><!--end card-body-->
-                        </div>
-                    </div>
-                    <div class="card-body shadow-lg p-2 bg-soft-secondary rounded-bottom mt-2">
-                        <div class="row">
-                            <div class="col-6">
-                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">
-                                    Client: {{ quotation.client_name }}</h5>
-                                <p class="text-dark text-uppercase mb-0 fw-normal fs-12">
-                                    Company: {{ quotation.company_name }}</p>
-                            </div>
-                            <!--end col-->
-                            <div class="col-6 align-self-center text-end">
-                                <p class="text-dark text-uppercase mb-0 fw-normal fs-12"><i
-                                        class="fas fa-money-check fs-12 me-1 text-dark"></i>Contact:
-                                    {{ quotation.phone }}</p>
-                                <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Address:
-                                    {{ quotation.address }}</h5>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div>
-
-                    <div class="row mt-2">
                         <div class="col-md-12">
-                            {% if quotation.status == "QUOTE" %}
-                            <a href="{% url 'quotation:invoice_gen_quote' object.pk %}">
-                                <div class="btn btn-danger">
-                                    Invoice
-                                </div>
-                            </a>
-                            {% endif %}
-                            {% if quotation.status == "INVOICE" %}
-                            <a href="{% url 'quotation:quotation_paid' object.pk %}">
-                                <div class="btn btn-success">
-                                    Mark As Paid
-                                </div>
-                            </a>
-                            {% endif %}
-                            {% if quotation.status == "PAID" %}
-                            <p class="text-success text-center">Invoice Paid & funds Transferred</p>
-                            {% endif %}
+                            <div class="card shadow-lg">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h3 class="card-title mb-1">{{ quotation.quotation_number }}</h3>
+                                            <p class="text-muted m-0 p-0"><b>Subject: </b>{{ quotation.subject }}</p>
+                                            <p class="text-muted m-0 p-0"><b>Description: </b>{{ quotation.notes }}</p>
+                                        </div><!--end col-->
+                                        <div class="col-auto">
+                                            <a class="mb-2 text-muted"
+                                               href="{% url 'quotation:edit' quotation.pk %}">
+                                                <i class="fa fa-edit mb-4 me-1"></i>Edit
+                                            </a>
+                                        </div><!--end col-->
+                                    </div>  <!--end row-->
+                                </div><!--end card-header-->
+                                <div class="card-body pt-0">
+                                    <ul class="list-unstyled mb-0">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <li class=""><i
+                                                        class="las la-user me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Client Name </b> :<a
+                                                            href="#">
+                                                        {{ quotation.client_name }}</a>
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Project </b> : {{ quotation.project.project_name }}
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                                    <b> Amount </b> : {{ quotation.total_amount }} PKR
+                                                </li>
 
+                                            </div>
+                                            <div class="col-md-6">
+                                                <li class="mt-2"><i
+                                                        class="las la-language me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Address </b> : {{ quotation.address }}
+                                                </li>
+                                                <li class="mt-2"><i
+                                                        class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b>
+                                                        Phone </b> : {{ quotation.phone }}
+                                                </li>
+
+                                            </div>
+                                        </div>
+
+                                    </ul>
+
+
+                                </div><!--end card-body-->
+                            </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="card-body shadow-lg p-2 bg-soft-secondary rounded-bottom mt-2">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">
+                                        Client: {{ quotation.client_name }}</h5>
+                                    <p class="text-dark text-uppercase mb-0 fw-normal fs-12">
+                                        Company: {{ quotation.company_name }}</p>
+                                </div>
+                                <!--end col-->
+                                <div class="col-6 align-self-center text-end">
+                                    <p class="text-dark text-uppercase mb-0 fw-normal fs-12"><i
+                                            class="fas fa-money-check fs-12 me-1 text-dark"></i>Contact:
+                                        {{ quotation.phone }}</p>
+                                    <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Address:
+                                        {{ quotation.address }}</h5>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div>
 
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                {% if quotation.status == "QUOTE" %}
+                                    <a href="{% url 'quotation:invoice_gen_quote' object.pk %}">
+                                        <div class="btn btn-danger">
+                                            Invoice
+                                        </div>
+                                    </a>
+                                {% endif %}
+                                {% if quotation.status == "INVOICED" %}
+                                    <a href="{% url 'quotation:quotation_paid' object.pk %}">
+                                        <div class="btn btn-success">
+                                            Mark As Paid
+                                        </div>
+                                    </a>
+                                {% endif %}
+                                {% if quotation.status == "PAID" %}
+                                    <p class="text-success text-center">Invoice Paid & funds Transferred</p>
+                                {% endif %}
+
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
                         </div>
                     </div>
 
-
-                </div>
-
-                <div class="col-md-6" id="printable-section">
-                    <div class="col-12">
-                        <div class="card" style="
+                    <div class="col-md-6" id="printable-section">
+                        <div class="col-12">
+                            <div class="card" style="
                                 position: relative;
                                 padding: 20px;
                                 border: 1px solid #ccc;">
 
-                            <div style="
+                                <div style="
                                         position: absolute;
                                         top: 0;
                                         left: 0;
@@ -155,212 +153,211 @@
                                         opacity: 0.07; /* Make the watermark barely visible */
                                         pointer-events: none;
                                         z-index: 1;">
-                            </div>
-                            <div class="card-body rounded-top">
-                                <div class="row">
-                                    <div class="col-4 align-self-center">
-                                        {% if quotation.letterhead %}
-                                        <img class="mb-2" src="{% static 'img/logo.png' %}" alt="logo-small"
-                                             class="logo-sm me-1 ms-4"
-                                             height="100">
-                                        {% else %}
-                                        <div class="row" style="height: 80px"></div>
-                                        {% endif %}
+                                </div>
+                                <div class="card-body rounded-top">
+                                    <div class="row">
+                                        <div class="col-4 align-self-center">
+                                            {% if quotation.letterhead %}
+                                                <img class="mb-2" src="{% static 'img/logo.png' %}" alt="logo-small"
+                                                     class="logo-sm me-1 ms-4"
+                                                     height="100">
+                                            {% else %}
+                                                <div class="row" style="height: 80px"></div>
+                                            {% endif %}
 
-                                    </div>
-                                    <hr><!--end col-->
-                                </div><!--end row-->
-                                <div class="row">
-                                    <div class="col-12 text-end align-self-center">
-                                        <h4 class="mb-1 fw-semibold text-dark"><span
-                                                class="text-dark">
+                                        </div>
+                                        <hr><!--end col-->
+                                    </div><!--end row-->
+                                    <div class="row">
+                                        <div class="col-12 text-end align-self-center">
+                                            <h4 class="mb-1 fw-semibold text-dark"><span
+                                                    class="text-dark">
                                             {% if quotation.status == "QUOTE" %}
-                                                    Quotation:
+                                                Quotation:
                                             {% else %}
                                                 Invoice:
                                             {% endif %}
                                         </span>
-                                            {{ quotation.quotation_number }}</h4>
-                                        <h6 class="mb-0 fw-semibold text-dark"><span
-                                                class="text-dark">Issue Date:</span>
-                                            {{ quotation.date|date:"d-m-Y" }}</h6>
-                                    </div><!--end col-->
-                                </div>
-                            </div><!--end card-body-->
+                                                {{ quotation.quotation_number }}</h4>
+                                            <h6 class="mb-0 fw-semibold text-dark"><span
+                                                    class="text-dark">Issue Date:</span>
+                                                {{ quotation.date|date:"d-m-Y" }}</h6>
+                                        </div><!--end col-->
+                                    </div>
+                                </div><!--end card-body-->
 
-                            <div class="row justify-content-between d-print-flex">
-                                <div class="col-md-5 ms-2">
-                                    <div class=" d-print-flex align-self-center float-right">
-                                        <div class="">
-                                            <h5 class="my-1 fw-semibold fs-18">Catalyst Communications</h5>
-                                            <p class=" mb-0">Peshawar, Pakistan</p>
-                                            <p class=" mb-0">info@catalystcommunications.pk</p>
-                                            <p class="text-muted ">https://catalystcommunications.pk/</p>
-                                        </div>
-                                    </div><!--end col-->
+                                <div class="row justify-content-between d-print-flex">
+                                    <div class="col-md-5 ms-2">
+                                        <div class=" d-print-flex align-self-center float-right">
+                                            <div class="">
+                                                <h5 class="my-1 fw-semibold fs-18">Catalyst Communications</h5>
+                                                <p class=" mb-0">Peshawar, Pakistan</p>
+                                                <p class=" mb-0">info@catalystcommunications.pk</p>
+                                                <p class="text-muted ">https://catalystcommunications.pk/</p>
+                                            </div>
+                                        </div><!--end col-->
+
+                                    </div>
+                                    <div class="col-md-5 me-2"
+                                         style="display: flex !important; justify-content: flex-end !important;">
+                                        <div class="d-print-flex align-self-center">
+                                            <div class="text-end" style="text-align: right !important;">
+                                                <address class="fs-13 ms-1" style="display: block !important;">
+                                                    <strong class="fs-14">Billed To :</strong><br>
+                                                    {{ quotation.company_name }} <br>
+                                                    {{ quotation.address }}<br>
+                                                    <strong title="Phone">Email:</strong> {{ quotation.email }}<br>
+                                                    <strong title="Phone">Phone:</strong> {{ quotation.phone }}
+                                                </address>
+                                            </div>
+                                        </div><!--end col-->
+                                    </div>
 
                                 </div>
-                                <div class="col-md-5 me-2"
-                                     style="display: flex !important; justify-content: flex-end !important;">
-                                    <div class="d-print-flex align-self-center">
-                                        <div class="text-end" style="text-align: right !important;">
-                                            <address class="fs-13 ms-1" style="display: block !important;">
-                                                <strong class="fs-14">Billed To :</strong><br>
-                                                {{ quotation.company_name }} <br>
-                                                {{ quotation.address }}<br>
-                                                <strong title="Phone">Email:</strong> {{ quotation.email }}<br>
-                                                <strong title="Phone">Phone:</strong> {{ quotation.phone }}
-                                            </address>
-                                        </div>
-                                    </div><!--end col-->
-                                </div>
+                                <div class="card-body">
+                                    <div class="row d-flex justify-content-md-between mb-2">
+                                        <p class="m-0 p-0"><b>Subject:</b> {{ quotation.subject }}</p>
+                                        <p class="m-0 p-0 "><b>Description:</b> <span
+                                                class="text-muted">{{ quotation.notes|slice:100 }}</span></p>
+                                    </div><!--end row-->
 
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="table-responsive project-quotation">
+                                                <table class="table table-bordered mb-0">
+                                                    <thead class="table-light">
+                                                    {% if quotation.tax %}
+                                                        <tr>
+                                                            <th style="width: 60%;">Description</th>
+                                                            <!-- Larger width for Project Breakdown -->
+                                                            <th style="width: 10%;">Rate</th>
+                                                            <th style="width: 10%;">Quantity</th>
+                                                            <th style="width: 10%;">Exclusive</th>
+                                                            <th style="width: 10%;">Tax</th>
+                                                            <th style="width: 10%;">Subtotal</th>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <th style="width: 60%;">Description</th>
+                                                            <!-- Larger width for Project Breakdown -->
+                                                            <th style="width: 10%;"></th>
+                                                            <th style="width: 10%;"></th>
+                                                            <th style="width: 10%;">Rate</th>
+                                                            <th style="width: 10%;">Quantity</th>
+                                                            <th style="width: 10%;">Subtotal</th>
+                                                        </tr>
+                                                    {% endif %}
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for item in quotation.items.all %}
+                                                        {% if quotation.tax %}
+                                                            <tr>
+                                                                <td>
+                                                                    <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
+                                                                    <p class="mb-0 text-muted">{{ item.description }}</p>
+                                                                </td>
+                                                                <td>{{ item.rate }}</td>
+                                                                <td>{{ item.quantity }}</td>
+                                                                <td>{{ item.get_total_without_tax }}</td>
+                                                                <td>{{ item.tax }}%</td>
+                                                                <td>{{ item.amount }}</td>
+                                                            </tr>
+                                                        {% else %}
+                                                            <tr>
+                                                                <td>
+                                                                    <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
+                                                                    <p class="mb-0 text-muted">{{ item.description }}</p>
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>{{ item.rate }}</td>
+                                                                <td>{{ item.quantity }}</td>
+                                                                <td>{{ item.amount }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    <tr>
+                                                        <td colspan="1" class="border-0"></td>
+                                                        <td colspan="1" class="border-0"></td>
+                                                        <td colspan="1" class="border-0"></td>
+                                                        <td colspan="2" class="border-0 fs-14 text-dark"><b>Sub
+                                                            Total:</b>
+                                                        </td>
+                                                        <td class="border-0 fs-14 text-dark">
+                                                            <b>{{ quotation.total_amount }}
+                                                                PKR</b>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th colspan="1" class="border-0"></th>
+                                                        <th colspan="1" class="border-0"></th>
+                                                        <td colspan="4" class="border-0 fs-14 text-dark"><b>
+                                                            {{ quotation.total_in_words }}</b>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>  <!--end /div-->
+                                        </div>  <!--end col-->
+                                    </div><!--end row-->
+
+                                    <div class="row text-end">
+                                        <div class="col-lg-6">
+
+                                        </div> <!--end col-->
+                                        <div class="col-lg-6 align-self-center">
+                                            <div class="float-none float-md-end" style="width: 30%;">
+                                                <img src="{% static 'website/images/extra/signature.png' %}" alt=""
+                                                     class="mt-2 mb-1" height="24">
+                                                <p class="border-top">Account Manager Signature</p>
+                                            </div>
+                                        </div><!--end col-->
+                                    </div><!--end row-->
+                                    <hr>
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-lg-12 col-xl-4 ms-auto align-self-center">
+                                            <div class="text-center"><small class="fs-12">Thank you very much for doing
+                                                business
+                                                with us.</small></div>
+                                        </div><!--end col-->
+                                        <div class="col-lg-12 col-xl-4">
+                                            <div class="float-end d-print-none mt-2 mt-md-0">
+                                                <a href="javascript:void(0)" onclick="printSection()"
+                                                   class="btn btn-info">Print</a>
+
+                                                <a href="#"
+                                                   class="btn btn-secondary"><i class="fa fa-arrow-left-long me-1"></i>
+                                                    Go Back</a>
+                                            </div>
+                                        </div><!--end col-->
+                                    </div><!--end row-->
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="row d-flex justify-content-md-between mb-2">
-                                    <p class="m-0 p-0"><b>Subject:</b> {{ quotation.subject }}</p>
-                                    <p class="m-0 p-0 "><b>Description:</b> <span
-                                            class="text-muted">{{ quotation.notes|slice:100 }}</span></p>
+                        </div> <!-- end col -->
 
-                                </div><!--end row-->
 
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="table-responsive project-quotation">
-                                            <table class="table table-bordered mb-0">
-                                                <thead class="table-light">
-                                                {% if quotation.tax %}
-                                                <tr>
-                                                    <th style="width: 60%;">Description</th>
-                                                    <!-- Larger width for Project Breakdown -->
-                                                    <th style="width: 10%;">Rate</th>
-                                                    <th style="width: 10%;">Quantity</th>
-                                                    <th style="width: 10%;">Exclusive</th>
-                                                    <th style="width: 10%;">Tax</th>
-                                                    <th style="width: 10%;">Subtotal</th>
-                                                </tr>
-                                                {% else %}
-                                                <tr>
-                                                    <th style="width: 60%;">Description</th>
-                                                    <!-- Larger width for Project Breakdown -->
-                                                    <th style="width: 10%;"></th>
-                                                    <th style="width: 10%;"></th>
-                                                    <th style="width: 10%;">Rate</th>
-                                                    <th style="width: 10%;">Quantity</th>
-                                                    <th style="width: 10%;">Subtotal</th>
-                                                </tr>
-                                                {% endif %}
-                                                </thead>
-                                                <tbody>
-                                                {% for item in quotation.items.all %}
-                                                {% if quotation.tax %}
-                                                <tr>
-                                                    <td>
-                                                        <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
-                                                        <p class="mb-0 text-muted">{{ item.description }}</p>
-                                                    </td>
-                                                    <td>{{ item.rate }}</td>
-                                                    <td>{{ item.quantity }}</td>
-                                                    <td>{{ item.get_total_without_tax }}</td>
-                                                    <td>{{ item.tax }}%</td>
-                                                    <td>{{ item.amount }}</td>
-                                                </tr>
-                                                {% else %}
-                                                <tr>
-                                                    <td>
-                                                        <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
-                                                        <p class="mb-0 text-muted">{{ item.description }}</p>
-                                                    </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{{ item.rate }}</td>
-                                                    <td>{{ item.quantity }}</td>
-                                                    <td>{{ item.amount }}</td>
-                                                </tr>
-                                                {% endif %}
-                                                {% endfor %}
-
-                                                <tr>
-                                                    <td colspan="1" class="border-0"></td>
-                                                    <td colspan="1" class="border-0"></td>
-                                                    <td colspan="1" class="border-0"></td>
-                                                    <td colspan="2" class="border-0 fs-14 text-dark"><b>Sub
-                                                        Total:</b>
-                                                    </td>
-                                                    <td class="border-0 fs-14 text-dark">
-                                                        <b>{{ quotation.total_amount }}
-                                                            PKR</b>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th colspan="1" class="border-0"></th>
-                                                    <th colspan="1" class="border-0"></th>
-                                                    <td colspan="4" class="border-0 fs-14 text-dark"><b>
-                                                        {{ quotation.total_in_words }}</b>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>  <!--end /div-->
-                                    </div>  <!--end col-->
-                                </div><!--end row-->
-
-                                <div class="row text-end">
-                                    <div class="col-lg-6">
-
-                                    </div> <!--end col-->
-                                    <div class="col-lg-6 align-self-center">
-                                        <div class="float-none float-md-end" style="width: 30%;">
-                                            <img src="{% static 'website/images/extra/signature.png' %}" alt=""
-                                                 class="mt-2 mb-1" height="24">
-                                            <p class="border-top">Account Manager Signature</p>
-                                        </div>
-                                    </div><!--end col-->
-                                </div><!--end row-->
-                                <hr>
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-lg-12 col-xl-4 ms-auto align-self-center">
-                                        <div class="text-center"><small class="fs-12">Thank you very much for doing
-                                            business
-                                            with us.</small></div>
-                                    </div><!--end col-->
-                                    <div class="col-lg-12 col-xl-4">
-                                        <div class="float-end d-print-none mt-2 mt-md-0">
-                                            <a href="javascript:void(0)" onclick="printSection()"
-                                               class="btn btn-info">Print</a>
-
-                                            <a href="#"
-                                               class="btn btn-secondary"><i class="fa fa-arrow-left-long me-1"></i>
-                                                Go Back</a>
-                                        </div>
-                                    </div><!--end col-->
-                                </div><!--end row-->
-                            </div>
-                        </div>
-                    </div> <!-- end col -->
-
+                    </div>
 
                 </div>
-
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    function printSection() {
-        var printContents = document.getElementById("printable-section").innerHTML;
-        var originalContents = document.body.innerHTML;
+    <script>
+        function printSection() {
+            var printContents = document.getElementById("printable-section").innerHTML;
+            var originalContents = document.body.innerHTML;
 
-        // Replace the body content with only the printable section's content
-        document.body.innerHTML = printContents;
+            // Replace the body content with only the printable section's content
+            document.body.innerHTML = printContents;
 
-        // Trigger the print dialog
-        window.print();
+            // Trigger the print dialog
+            window.print();
 
-        // Restore the original page content after printing
-        document.body.innerHTML = originalContents;
-    }
-</script>
+            // Restore the original page content after printing
+            document.body.innerHTML = originalContents;
+        }
+    </script>
 {% endblock %}
