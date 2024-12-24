@@ -100,50 +100,39 @@ class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
 
 # VALIDATION ✔
 class InvoicePaidView(LoginRequiredMixin, View):
-    quote = False
 
-    # noinspection PyMethodMayBeStatic
     def get(self, request, q=False, *args, **kwargs):
         if q == True:
-            print("Quotation TUREEEEEEEEEEEEEEEE")
-            print("Quotation TUREEEEEEEEEEEEEEEE")
-            print("Quotation TUREEEEEEEEEEEEEEEE")
-            self.quote = True
+            request.session["quote"] = True
             invoice = get_object_or_404(QuotationGeneral, pk=kwargs["pk"])
-            print(invoice)
         else:
+            request.session["quote"] = False
             invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
-            print("FALSEEEE")
+
         form = TransferFundsForm()
         return render(
             request, "invoice/invoice_paid.html", {"form": form, "invoice": invoice}
         )
 
-    # noinspection PyMethodMayBeStatic
     def post(self, request, *args, **kwargs):
-        if self.quote:
-            print("POST SELF.QUOTE")
-            print("POST SELF.QUOTE")
-            print("POST SELF.QUOTE")
-            print("POST SELF.QUOTE")
+        quote = request.session.get("quote", False)
+
+        if quote:
             invoice = get_object_or_404(QuotationGeneral, pk=kwargs["pk"])
-            print(invoice)
         else:
             invoice = get_object_or_404(Invoice, pk=kwargs["pk"])
+
         form = TransferFundsForm(request.POST)
 
         if form.is_valid():
-            account = form.cleaned_data[
-                "account"
-            ]  # This is a model instance of The AccountBalance Model
+            account = form.cleaned_data["account"]
             amount = invoice.total_amount
 
-            # Processing the invoice payment
             success, message = process_invoice_payment(
                 invoice_id=invoice.pk,
                 account_id=account.pk,
                 amount=amount,
-                q=self.quote,
+                q=quote,
             )
 
             if success:
@@ -151,7 +140,7 @@ class InvoicePaidView(LoginRequiredMixin, View):
                     request,
                     f"{amount} Funds Successfully Transferred to {account.account_name}.",
                 )
-                if self.quote:
+                if quote:
                     return redirect(
                         reverse("quotation:general_detail", args=[invoice.pk])
                     )

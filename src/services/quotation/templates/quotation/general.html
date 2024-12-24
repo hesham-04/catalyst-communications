@@ -40,9 +40,10 @@
                                     <thead class="table-light">
                                     <tr>
                                         <th class="border-top-0">Name</th>
+                                        <th class="border-top-0">Client Name</th>
                                         <th class="border-top-0">Email</th>
-                                        <th class="border-top-0">Paid</th>
-                                        <th class="border-top-0 text-center">Contact</th>
+                                        <th class="border-top-0">Status</th>
+                                        <th class="border-top-0 text-center">Amount</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -51,12 +52,13 @@
                                         <td><a href="{% url 'quotation:general_detail' object.pk %}">
                                             {{ object.quotation_number }}</a>
                                         </td>
+                                        <td>{{ object.company_name }}</td>
                                         <td>{{ object.email }}</td>
                                         <td><span
-                                                class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">{{ object.total_expense }} PKR</span>
+                                                class="badge {% if object.status == 'PAID' %}bg-success-subtle text-success {% else %}text-danger bg-danger-subtle{% endif %} fs-11 fw-medium px-2">{{ object.status }}</span>
                                         </td>
 
-                                        <td class="text-center">{{ object.phone }}</td>
+                                        <td class="text-center">{{ object.total_amount }} PKR</td>
                                     </tr>
                                     {% endfor %}
 

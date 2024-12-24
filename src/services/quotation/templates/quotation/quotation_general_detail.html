@@ -114,13 +114,18 @@
                                     Invoice
                                 </div>
                             </a>
-                            {% else %}
+                            {% endif %}
+                            {% if quotation.status == "INVOICE" %}
                             <a href="{% url 'quotation:quotation_paid' object.pk %}">
                                 <div class="btn btn-success">
                                     Mark As Paid
                                 </div>
                             </a>
                             {% endif %}
+                            {% if quotation.status == "PAID" %}
+                            <p class="text-success text-center">Invoice Paid & funds Transferred</p>
+                            {% endif %}
+
                         </div>
                         <div class="col-md-6">
 

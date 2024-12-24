@@ -176,6 +176,7 @@ def process_invoice_payment(invoice_id, amount, account_id, q=False):
             invoice.save(update_fields=["status"])
             print("BLL QUOTATION TRUEE SAVEEE")
         else:
+            print("BLL QUOTATION FALSE SAVEEE")
             invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
             invoice.status = "PAID"
             invoice.save(update_fields=["status"])
