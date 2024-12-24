@@ -168,3 +168,66 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("invoice:detail", kwargs={"pk": self.object.pk})
+
+
+class UpdateInvoiceView(LoginRequiredMixin, UpdateView):
+    model = Invoice
+    form_class = InvoiceForm
+    template_name = "invoice/invoice_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        invoice = self.get_object()
+
+        # Allow adding new items by setting extra > 0
+        invoice_item_form_set = modelformset_factory(
+            InvoiceItem, form=InvoiceItemForm, extra=1, can_delete=True
+        )
+        if self.request.POST:
+            context["formset"] = invoice_item_form_set(
+                self.request.POST, queryset=invoice.items.all()
+            )
+        else:
+            context["formset"] = invoice_item_form_set(queryset=invoice.items.all())
+
+        context["project"] = invoice.project  # Include project context if necessary
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+        invoice = form.save()
+
+        # Process the formset for InvoiceItem objects
+        invoice_item_form_set = modelformset_factory(
+            InvoiceItem, form=InvoiceItemForm, extra=1, can_delete=True
+        )
+        formset = invoice_item_form_set(self.request.POST, queryset=invoice.items.all())
+
+        if formset.is_valid():
+            for item_form in formset:
+                if item_form.cleaned_data.get("DELETE"):
+                    # Handle deletion of items
+                    item_form.instance.delete()
+                elif item_form.cleaned_data:  # Save only non-empty forms
+                    item_form.instance.invoice = invoice
+                    item_form.save()
+
+            # Adjust tax logic if necessary
+            invoice.tax = any(item.tax != 0.0 for item in invoice.items.all())
+            invoice.save()
+
+            return super().form_valid(form)
+        else:
+            # Collect and display errors
+            error_list = []
+            for form in formset:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_list.append(f"{field}: {error}")
+            for error in error_list:
+                messages.error(self.request, error)
+
+            return redirect("invoice:detail", pk=invoice.pk)
+
+    def get_success_url(self):
+        return reverse("invoice:detail", kwargs={"pk": self.object.pk})

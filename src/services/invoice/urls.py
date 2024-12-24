@@ -5,6 +5,7 @@ from .views import (
     InvoicePaidView,
     InvoiceDeleteView,
     InvoiceUpdateView,
+    UpdateInvoiceView,
 )
 
 app_name = "invoice"
@@ -16,5 +17,6 @@ urlpatterns = [
     path("detail/<str:pk>/", InvoiceDetailView.as_view(), name="detail"),
     path("paid/<str:pk>/", InvoicePaidView.as_view(), name="invoice-paid"),
     path("delete/<str:pk>/", InvoiceDeleteView.as_view(), name="invoice-delete"),
-    path("update/<str:pk>/", InvoiceUpdateView.as_view(), name="invoice-update"),
+    path("edit/<str:pk>/", InvoiceUpdateView.as_view(), name="invoice-edit"),
+    path("update/<str:pk>/", UpdateInvoiceView.as_view(), name="invoice-update"),
 ]

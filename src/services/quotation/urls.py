@@ -7,6 +7,9 @@ from .views import (
     CreateGeneralQuotationView,
     GeneralQuotationDetailView,
     invoice_gen_quote,
+    UpdateQuotationView,
+    UpdateGeneralQuotationView,
+    GeneralQuotationUpdateView,
 )
 from ..invoice.views import InvoicePaidView
 
@@ -19,7 +22,12 @@ urlpatterns = [
         name="create_quotation",
     ),
     path("detail/<int:pk>/", QuotationDetailView.as_view(), name="detail"),
-    path("<str:pk>/edit/", QuotationUpdateView.as_view(), name="edit"),
+    path(
+        "<str:pk>/edit/", QuotationUpdateView.as_view(), name="edit"
+    ),  # only the model
+    path(
+        "<str:pk>/update/", UpdateQuotationView.as_view(), name="update"
+    ),  # detailed with formsets
 ]
 
 
@@ -42,4 +50,14 @@ urlpatterns += [
         {"q": True},
         name="quotation_paid",
     ),
+    path(
+        "general/update/<str:pk>/",
+        UpdateGeneralQuotationView.as_view(),
+        name="general_update",
+    ),
+    path(
+        "general/<str:pk>/edit/",
+        GeneralQuotationUpdateView.as_view(),
+        name="general_edit",
+    ),  # only the model
 ]

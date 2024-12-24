@@ -176,8 +176,153 @@ class GeneralQuotationDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class UpdateQuotationView(LoginRequiredMixin, UpdateView):
+    model = Quotation
+    form_class = QuotationForm
+    template_name = "quotation/quotation_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        quotation = self.get_object()
+
+        # Allow adding new items by setting extra > 0
+        QuotationItemFormSet = modelformset_factory(
+            QuotationItem, form=QuotationItemForm, extra=1, can_delete=True
+        )
+        if self.request.POST:
+            context["formset"] = QuotationItemFormSet(
+                self.request.POST, queryset=quotation.items.all()
+            )
+        else:
+            context["formset"] = QuotationItemFormSet(queryset=quotation.items.all())
+
+        context["project"] = quotation.project  # Include project context if needed
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+        quotation = form.save()
+
+        # Process the formset for QuotationItem objects
+        QuotationItemFormSet = modelformset_factory(
+            QuotationItem, form=QuotationItemForm, extra=1, can_delete=True
+        )
+        formset = QuotationItemFormSet(
+            self.request.POST, queryset=quotation.items.all()
+        )
+
+        if formset.is_valid():
+            for item_form in formset:
+                if item_form.cleaned_data.get("DELETE"):
+                    # Handle deletion of items
+                    item_form.instance.delete()
+                elif item_form.cleaned_data:  # Save only non-empty forms
+                    item_form.instance.quotation = quotation
+                    item_form.save()
+
+            # Recalculate total amount
+            quotation.calculate_total_amount()
+
+            # Adjust tax logic if necessary
+            quotation.tax = any(item.tax != 0.0 for item in quotation.items.all())
+            quotation.save()
+
+            return super().form_valid(form)
+        else:
+            # Collect and display errors
+            error_list = []
+            for form in formset:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_list.append(f"{field}: {error}")
+            for error in error_list:
+                messages.error(self.request, error)
+
+            return redirect("quotation:detail", pk=quotation.pk)
+
+    def get_success_url(self):
+        return reverse("quotation:detail", kwargs={"pk": self.object.pk})
+
+
 def invoice_gen_quote(request, pk):
     quotation = get_object_or_404(QuotationGeneral, pk=pk)
     quotation.status = "INVOICED"
     quotation.save()
     return redirect("quotation:general_detail", pk=quotation.pk)
+
+
+class UpdateGeneralQuotationView(LoginRequiredMixin, UpdateView):
+    model = QuotationGeneral
+    form_class = QuotationGeneralForm
+    template_name = "quotation/quotation_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        quotation = self.get_object()
+
+        # Create formset for ItemGeneral with existing items
+        QuotationItemFormSet = modelformset_factory(
+            ItemGeneral, form=ItemGeneralForm, extra=1, can_delete=True
+        )
+        if self.request.POST:
+            context["formset"] = QuotationItemFormSet(
+                self.request.POST, queryset=quotation.items.all()
+            )
+        else:
+            context["formset"] = QuotationItemFormSet(queryset=quotation.items.all())
+
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+        quotation = form.save()
+
+        # Handle formset for ItemGeneral objects
+        QuotationItemFormSet = modelformset_factory(
+            ItemGeneral, form=ItemGeneralForm, extra=1, can_delete=True
+        )
+        formset = QuotationItemFormSet(
+            self.request.POST, queryset=quotation.items.all()
+        )
+
+        if formset.is_valid():
+            for item_form in formset:
+                if item_form.cleaned_data.get("DELETE"):
+                    # Delete the item if marked for deletion
+                    item_form.instance.delete()
+                elif item_form.cleaned_data:  # Save valid forms
+                    item_form.instance.quotation = quotation
+                    item_form.save()
+
+            # Recalculate total amount
+            quotation.calculate_total_amount()
+
+            # Set tax to False if no items have tax
+            quotation.tax = any(item.tax != 0.0 for item in quotation.items.all())
+            quotation.save()
+
+            return super().form_valid(form)
+        else:
+            # Handle errors and display as messages
+            error_list = []
+            for form in formset:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        error_list.append(f"{field}: {error}")
+
+            for error in error_list:
+                messages.error(self.request, error)
+
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("quotation:open-market")
+
+
+class GeneralQuotationUpdateView(LoginRequiredMixin, UpdateView):
+    model = QuotationGeneral
+    form_class = QuotationGeneralForm
+    template_name = "quotation/quotation_general_edit.html"
+
+    def get_success_url(self):
+        return reverse("quotation:general_detail", kwargs={"pk": self.object.pk})

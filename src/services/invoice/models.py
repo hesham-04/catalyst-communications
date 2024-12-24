@@ -103,6 +103,8 @@ class InvoiceItem(models.Model):
         decimal_places=2,
         default=0.0,
         validators=[MinValueValidator(0.00), MaxValueValidator(50.00)],
+        null=True,
+        blank=True,
     )
 
     def save(self, *args, **kwargs):

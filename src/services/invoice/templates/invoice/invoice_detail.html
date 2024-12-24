@@ -35,15 +35,22 @@
                                 <div class="card-header">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            <h4 class="card-title mb-1">{{ invoice.invoice_number }}</h4>
+                                            {% if invoice.status == 'PENDING' %}
+                                                <a href="{% url 'invoice:invoice-edit' object.pk %}"><h4
+                                                        class="card-title mb-1">{{ invoice.invoice_number }}</h4></a>
+                                            {% else %}
+                                                <h4 class="card-title mb-1">{{ invoice.invoice_number }}</h4>
+                                            {% endif %}
                                             <p class="text-muted m-0 p-0"><b>Subject: </b>{{ invoice.subject }}</p>
                                             <p class="text-muted m-0 p-0">Description: {{ invoice.notes }}</p>
                                         </div><!--end col-->
                                         <div class="col-auto text-muted">
-                                            <a class="mb-2 text-muted"
-                                               href="{% url 'invoice:invoice-update' invoice.pk %}">
-                                                <i class="fa fa-edit mb-4 me-1"></i>Edit
-                                            </a>
+                                            {% if invoice.status == 'PENDING' %}
+                                                <a class="mb-2 text-muted"
+                                                   href="{% url 'invoice:invoice-update' invoice.pk %}">
+                                                    <i class="fa fa-edit mb-4 me-1"></i>Edit
+                                                </a>
+                                            {% endif %}
                                         </div><!--end col-->
                                     </div>  <!--end row-->
                                 </div><!--end card-header-->

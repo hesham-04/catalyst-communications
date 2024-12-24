@@ -12,7 +12,10 @@
                         <a class="btn btn-secondary btn-sm me-2" href="{% url 'project:detail' project.pk %}"><i
 
                                 class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                        Create Invoice</h4>
+                        {% if object %}Update Invoice{% else %}
+                            Create Invoice
+                        {% endif %}
+                    </h4>
 
                 </div>
 
@@ -32,8 +35,7 @@
                                                 <div class="col-md-3">
                                                     <button style="width:200px" type="submit"
                                                             class="btn btn-success mt-3">
-                                                        Create
-                                                        Invoice
+                                                        Submit
                                                     </button>
                                                 </div>
                                                 <div class="col-md-9">
