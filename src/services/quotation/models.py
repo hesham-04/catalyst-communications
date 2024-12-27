@@ -145,6 +145,9 @@ class QuotationGeneral(models.Model):
 
     tax = models.BooleanField(default=True, null=True)
 
+    def __str__(self):
+        return f"Misc {self.quotation_number} - {self.client_name}"
+
     def save(self, *args, **kwargs):
         if not self.pk:
             # Save first to generate the primary key

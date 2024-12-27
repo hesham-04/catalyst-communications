@@ -358,3 +358,21 @@ def add_general_cash_in_hand(amount, source, reason):
         return True, "Transaction successful"
     except Exception as e:
         return False, f"A Fatal error occurred while processing the payment: {str(e)}"
+
+
+def add_account_balance(amount, account_pk, reason):
+    try:
+        account = AccountBalance.objects.select_for_update().get(pk=account_pk)
+        account.balance += amount
+        account.save()
+
+        Ledger.objects.create(
+            transaction_type="ADD_ACC_BALANCE",
+            amount=amount,
+            destination_content_type=ContentType.objects.get_for_model(account),
+            destination_object_id=account.pk,
+            reason=reason,
+        )
+        return True, "Transaction successful"
+    except Exception as e:
+        return False, f"A Fatal error occurred while processing the payment: {str(e)}"

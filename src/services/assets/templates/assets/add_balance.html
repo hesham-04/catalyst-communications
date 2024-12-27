@@ -1,0 +1,46 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <div class="page-wrapper">
+
+        <!-- Page Content-->
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                            <h4 class="page-title">
+                                <a class="btn btn-secondary btn-sm" href="{% url 'assets:account-detail' account.pk %}"><i
+                                        class="fa fa-arrow-left-long me-1"></i> Go Back</a>
+                                Add cash</h4>
+
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
+
+                <div class="row justify-content-center">
+                    <h4 class="text-center">Add Balance</b> </h4>
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card border-2 border-warning">
+                            <div class="card-body">
+                                <form method="post" class="form">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div> <!--end col-->
+                </div><!--end row-->
+
+            </div><!-- container -->
+
+
+            <!--end footer-->
+        </div>
+        <!-- end page content -->
+    </div>
+{% endblock %}
+

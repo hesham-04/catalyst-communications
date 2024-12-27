@@ -76,7 +76,7 @@ class AccountBalance(models.Model):
         return total_balance or 0
 
     def __str__(self):
-        return f"{self.account_name} - Balance: {self.balance} PKR"
+        return f"{self.account_name}"
 
     @classmethod
     def deduct_from_balance(cls, amount):

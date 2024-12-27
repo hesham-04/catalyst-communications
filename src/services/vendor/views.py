@@ -7,6 +7,7 @@ from .forms import VendorForm
 from .models import Vendor
 from ..expense.models import Expense, ExpenseCategory
 from ..project.models import Project
+from ...web.dashboard.utils import ledger_filter
 
 
 # Create your views here.
@@ -37,7 +38,9 @@ class VendorDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        expenses = Expense.objects.filter(vendor=self.object)
+        expenses = ledger_filter(
+            "MISC_EXPENSE", destination=self.object
+        ) | ledger_filter("CREATE_EXPENSE", destination=self.object)
 
         project_id = self.request.GET.get("project")
         category_id = self.request.GET.get("category")
@@ -46,7 +49,7 @@ class VendorDetailView(LoginRequiredMixin, DetailView):
         if project_id:
             expenses = expenses.filter(project_id=project_id)
         if category_id:
-            expenses = expenses.filter(category_id=category_id)
+            expenses = expenses.filter(expense_category_id=category_id)
         if payment_status:
             expenses = expenses.filter(payment_status=payment_status)
 
@@ -54,9 +57,9 @@ class VendorDetailView(LoginRequiredMixin, DetailView):
         context["expenses"] = expenses
 
         # Add additional context for the filter options (dropdowns in the template)
-        context["projects"] = Project.objects.filter(
-            expenses__vendor=self.object
-        ).distinct()
+        context["projects"] = (
+            Project.objects.all()
+        )  # Filters the projects that have expenses with this vendor
         context["categories"] = ExpenseCategory.objects.all()
         context["statuses"] = Expense.PaymentStatus.choices
 

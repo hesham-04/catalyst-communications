@@ -146,7 +146,6 @@
                                         <th class="border-top-0">Project</th>
                                         <th class="border-top-0">Source</th>
                                         <th class="border-top-0">Description</th>
-                                        <th class="border-top-0">Vendor</th>
                                         <th class="border-top-0">Category</th>
                                         <th class="border-top-0">Amount</th>
                                         <th class="border-top-0">Status</th>
@@ -155,13 +154,13 @@
                                     <tbody>{% for expense in expenses %}
                                         <tr>
                                             <td>{{ expense.created_at|date:"d M Y" }}</td>
-                                            <td>{{ expense.project.project_name }}</td>
-                                            <td>{{ expense.get_budget_source_display }}</td>
-                                            <td>{{ expense.description|slice:40 }}</td>
-                                            <td>{% if expense.vendor.name %}{{ expense.vendor.name }}{% else %} &nbsp;
+                                            <td>{% if expense.project %}{{ expense.project.project_name }}{% else %}
+                                                - {% endif %}</td>
+                                            <td>{{ expense.source }}</td>
+                                            <td>{{ expense.reason|slice:40 }}</td>
+                                            <td>{% if expense.expense_category %}
+                                                {{ expense.expense_category }}{% else %} &nbsp;
                                                 &nbsp;  - {% endif %}</td>
-                                            <td>{% if expense.category.name %}{{ expense.category.name }}{% else %}
-                                                &nbsp; &nbsp; &nbsp;  - {% endif %}</td>
                                             <td>{{ expense.amount }} PKR</td>
                                             {% if expense.payment_status == 'UNPAID' %}
                                                 <td>

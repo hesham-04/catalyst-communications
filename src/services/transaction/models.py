@@ -45,16 +45,24 @@ class Ledger(models.Model):
 
     # Source fields (Generic Relation)
     source_content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, related_name="source_ledgers"
+        ContentType,
+        on_delete=models.CASCADE,
+        related_name="source_ledgers",
+        null=True,
+        blank=True,
     )
-    source_object_id = models.PositiveIntegerField()
+    source_object_id = models.PositiveIntegerField(null=True, blank=True)
     source = GenericForeignKey("source_content_type", "source_object_id")
 
     # Destination fields (Generic Relation)
     destination_content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, related_name="destination_ledgers"
+        ContentType,
+        on_delete=models.CASCADE,
+        related_name="destination_ledgers",
+        null=True,
+        blank=True,
     )
-    destination_object_id = models.PositiveIntegerField()
+    destination_object_id = models.PositiveIntegerField(null=True, blank=True)
     destination = GenericForeignKey("destination_content_type", "destination_object_id")
 
     expense_category = models.ForeignKey(

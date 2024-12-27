@@ -73,6 +73,7 @@
                                         <th class="border-top-0">Amount</th>
                                         <th class="border-top-0">Source</th>
                                         <th class="border-top-0">Vendor</th>
+                                        <th class="border-top-0">Delete</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -96,6 +97,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>{{ expense.destination }}</td>
+                                            <td><i class="fa fa-trash text-danger"></i></td>
                                         </tr>
                                     {% empty %}
                                         <tr>
