@@ -1,5 +1,5 @@
 {% extends 'dashboard/base.html' %}
-{% block title %} {{ quotation.quotation_number }}{% endblock %}
+{% block title %}{{ invoice.invoice_number }}{% endblock %}
 {% load static %}
 {% load project_tags %}
 {% load custom_filters %}
@@ -16,10 +16,10 @@
                         <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                             <h4 class="page-title">
                                 <a class="btn btn-secondary btn-sm me-2"
-                                   href="{% url 'project:detail' quotation.project.pk %}"><i
+                                   href="{% url 'project:detail' invoice.project.pk %}"><i
                                         class="fa fa-arrow-left-long me-1"></i> Go Back</a>
 
-                                Quotation</h4>
+                                Invoice</h4>
 
                         </div><!--end page-title-box-->
                     </div><!--end col-->
@@ -34,22 +34,22 @@
                             <div class="card shadow-lg">
                                 <div class="card-header">
                                     <div class="row align-items-center">
-                                        <div class="col">{% if quotation.project.status == 'DRAFT' %}
-                                            <a href="{% url 'quotation:edit' quotation.pk %}"><h3
-                                                    class="card-title mb-1">{{ quotation.quotation_number }}</h3></a>
-                                        {% else %}
-                                            <h3 class="card-title mb-1">{{ quotation.quotation_number }}</h3>
-                                        {% endif %}
-                                            <p class="text-muted m-0 p-0"><b>Subject: </b>{{ quotation.subject }}</p>
-                                            <p class="text-muted m-0 p-0"><b>Description: </b>{{ quotation.notes }}</p>
-                                        </div><!--end col-->
-                                        <div class="col-auto">
-                                            {% if quotation.project.status == 'DRAFT' %}
-                                                <a class="mb-2 text-muted"
-                                                   href="{% url 'quotation:update' quotation.pk %}">
-                                                    <i class="fa fa-edit mb-4 me-1"></i>Edit
-                                                </a>
+                                        <div class="col">
+                                            {% if invoice.status == 'PENDING' %}
+                                            <a href="{% url 'invoice:invoice-edit' object.pk %}"><h4
+                                                    class="card-title mb-1">{{ invoice.invoice_number }}</h4></a>
                                             {% else %}
+                                            <h4 class="card-title mb-1">{{ invoice.invoice_number }}</h4>
+                                            {% endif %}
+                                            <p class="text-muted m-0 p-0"><b>Subject: </b>{{ invoice.subject }}</p>
+                                            <p class="text-muted m-0 p-0">Description: {{ invoice.notes }}</p>
+                                        </div><!--end col-->
+                                        <div class="col-auto text-muted">
+                                            {% if invoice.status == 'PENDING' %}
+                                            <a class="mb-2 text-muted"
+                                               href="{% url 'invoice:invoice-update' invoice.pk %}">
+                                                <i class="fa fa-edit mb-4 me-1"></i>Edit
+                                            </a>
                                             {% endif %}
                                         </div><!--end col-->
                                     </div>  <!--end row-->
@@ -62,29 +62,42 @@
                                                         class="las la-user me-2 text-secondary fs-22 align-middle"></i>
                                                     <b> Client Name </b> :<a
                                                             href="#">
-                                                        {{ quotation.client_name }}</a>
+                                                        {{ invoice.client_name }}</a>
                                                 </li>
                                                 <li class="mt-2"><i
                                                         class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
-                                                    <b> Project </b> : {{ quotation.project.project_name }}
+                                                    <b> Project </b> : {{ invoice.project.project_name }}
                                                 </li>
                                                 <li class="mt-2"><i
-                                                        class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
-                                                    <b> Amount </b> : {{ quotation.total_amount }} PKR
+                                                        class="las la-university me-2 text-secondary fs-22 align-middle"></i>
+                                                    <b> Payment Status </b>:
+                                                    {% if invoice.status == "PAID" %}
+                                                        <span class="badge bg-success-subtle text-success fs-11
+                                                    fw-medium px-2">
+                                                        {{ invoice.status }}
+                                                    </span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger-subtle text-danger fs-11
+                                                            fw-medium px-2">
+                                                            {{ invoice.status }}
+                                                        </span>
+                                                    {% endif %}
                                                 </li>
-
                                             </div>
                                             <div class="col-md-6">
                                                 <li class="mt-2"><i
                                                         class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-                                                    <b> Address </b> : {{ quotation.address }}
+                                                    <b> Address </b> : {{ invoice.address }}
                                                 </li>
                                                 <li class="mt-2"><i
                                                         class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
                                                     <b>
-                                                        Phone </b> : {{ quotation.phone }}
+                                                        Phone </b> : {{ invoice.phone }}
                                                 </li>
-
+                                                <li class="mt-2"><i
+                                                        class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
+                                                    <b> Amount </b> : {{ invoice.total_amount }} PKR
+                                                </li>
                                             </div>
                                         </div>
 
@@ -98,17 +111,17 @@
                             <div class="row">
                                 <div class="col-6">
                                     <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">
-                                        Client: {{ quotation.client_name }}</h5>
+                                        Client: {{ invoice.client_name }}</h5>
                                     <p class="text-dark text-uppercase mb-0 fw-normal fs-12">
-                                        Company: {{ quotation.company_name }}</p>
+                                        Company: {{ invoice.company_name }}</p>
                                 </div>
                                 <!--end col-->
                                 <div class="col-6 align-self-center text-end">
                                     <p class="text-dark text-uppercase mb-0 fw-normal fs-12"><i
                                             class="fas fa-money-check fs-12 me-1 text-dark"></i>Contact:
-                                        {{ quotation.phone }}</p>
+                                        {{ invoice.phone }}</p>
                                     <h5 class="mt-1 mb-0 fw-medium fs-14 text-dark">Address:
-                                        {{ quotation.address }}</h5>
+                                        {{ invoice.address }}</h5>
                                 </div><!--end col-->
                             </div><!--end row-->
                         </div>
@@ -116,12 +129,18 @@
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 {% if object.status == "PENDING" %}
-                                    <a href="{% url 'quotation:quotation-paid' object.pk %}">
+                                    <a href="{% url 'invoice:invoice-paid' object.pk %}">
                                         <div class="btn btn-danger">
                                             Mark as Paid
                                         </div>
                                     </a>
+                                    <a href="{% url 'invoice:invoice-delete' object.pk %}">
+                                        <div class="float-end btn btn-outline-danger">
+                                            Delete
+                                        </div>
+                                    </a>
                                 {% else %}
+                                    <p class="text-success text-center">Invoice Paid & funds Transferred</p>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
@@ -156,7 +175,7 @@
                                 <div class="card-body rounded-top">
                                     <div class="row">
                                         <div class="col-4 align-self-center">
-                                            {% if quotation.letterhead %}
+                                            {% if invoice.letterhead %}
                                                 <img class="mb-2" src="{% static 'img/logo.png' %}" alt="logo-small"
                                                      class="logo-sm me-1 ms-4"
                                                      height="100">
@@ -169,14 +188,15 @@
                                     </div><!--end row-->
                                     <div class="row">
                                         <div class="col-12 text-end align-self-center">
-                                            <h4 class="mb-1 fw-semibold text-dark"><span
-                                                    class="text-dark">Quotation:</span>
-                                                {{ quotation.quotation_number }}</h4>
-                                            <h6 class="mb-0 fw-semibold text-dark"><span
+                                            <h3 class="mb-1 fw-semibold text-dark"><span
+                                                    class="text-dark">Invoice:</span>
+                                                {{ invoice.invoice_number }}</h3>
+                                            <h5 class="mb-0 fw-semibold text-dark"><span
                                                     class="text-dark">Issue Date:</span>
-                                                {{ quotation.date|date:"d-m-Y" }}</h6>
+                                                {{ invoice.date|date:"d-m-Y" }}</h5>
                                         </div><!--end col-->
                                     </div>
+
                                 </div><!--end card-body-->
 
                                 <div class="row justify-content-between d-print-flex">
@@ -195,12 +215,14 @@
                                          style="display: flex !important; justify-content: flex-end !important;">
                                         <div class="d-print-flex align-self-center">
                                             <div class="text-end" style="text-align: right !important;">
+                                                <span class="badge rounded text-dark bg-light">Invoice</span><br>
                                                 <address class="fs-13 ms-1" style="display: block !important;">
                                                     <strong class="fs-14">Billed To :</strong><br>
-                                                    {{ quotation.company_name }} <br>
-                                                    {{ quotation.address }}<br>
-                                                    <strong title="Phone">Email:</strong> {{ quotation.email }}<br>
-                                                    <strong title="Phone">Phone:</strong> {{ quotation.phone }}
+                                                    {{ invoice.company_name }} <br>
+                                                    {{ invoice.address }}<br>
+                                                    <strong title="Phone">Email:</strong> {{ invoice.email }}<br>
+
+                                                    <strong title="Phone">Phone:</strong> {{ invoice.phone }}
                                                 </address>
                                             </div>
                                         </div><!--end col-->
@@ -208,16 +230,13 @@
 
                                 </div>
                                 <div class="card-body">
-                                    <div class="row d-flex justify-content-md-between mb-2">
-                                        <p class="m-0 p-0"><b>Subject:</b> {{ quotation.subject }}</p>
-                                        <p class="m-0 p-0 "><b>Description:</b> <span
-                                                class="text-muted">{{ quotation.notes|slice:100 }}</span></p>
+                                    <div class="row row-cols-3 d-flex justify-content-md-between ">
 
                                     </div><!--end row-->
 
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="table-responsive project-quotation">
+                                            <div class="table-responsive project-Invoice">
                                                 <table class="table table-bordered mb-0">
                                                     <thead class="table-light">
                                                     {% if quotation.tax %}
@@ -243,8 +262,8 @@
                                                     {% endif %}
                                                     </thead>
                                                     <tbody>
-                                                    {% for item in quotation.items.all %}
-                                                        {% if quotation.tax %}
+                                                    {% for item in invoice.items.all %}
+                                                        {% if invoice.tax %}
                                                             <tr>
                                                                 <td>
                                                                     <h5 class="mt-0 mb-1 fs-14">{{ item.item_name }}</h5>
@@ -279,7 +298,7 @@
                                                             Total:</b>
                                                         </td>
                                                         <td class="border-0 fs-14 text-dark">
-                                                            <b>{{ quotation.total_amount }}
+                                                            <b>{{ invoice.total_amount }}
                                                                 PKR</b>
                                                         </td>
                                                     </tr>
@@ -288,7 +307,7 @@
                                                         <th colspan="1" class="border-0"></th>
                                                         <th colspan="1" class="border-0"></th>
                                                         <td colspan="4" class="border-0 fs-14 text-dark"><b>
-                                                            {{ quotation.total_in_words }}</b>
+                                                            {{ invoice.total_in_words }}</b>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -321,7 +340,7 @@
                                                 <a href="javascript:void(0)" onclick="printSection()"
                                                    class="btn btn-info">Print</a>
 
-                                                <a href="{% url 'project:detail' pk=quotation.project.id %}"
+                                                <a href="{% url 'project:detail' pk=invoice.project.id %}"
                                                    class="btn btn-secondary"><i class="fa fa-arrow-left-long me-1"></i>
                                                     Go Back</a>
                                             </div>

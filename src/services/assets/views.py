@@ -13,12 +13,13 @@ from django.views.generic.edit import CreateView, DeleteView, FormView
 
 from .forms import CashInHandForm
 from .models import CashInHand, AccountBalance
-from ..project.bll import add_general_cash_in_hand
+from ..project.bll import add_general_cash_in_hand, add_account_balance
 from ..transaction.models import Ledger
+from ...core.mixins import AdminRequiredMixin
 from ...web.dashboard.utils import ledger_filter
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class IndexView(AdminRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "assets/assets_index.html"
 
     def get_context_data(self, **kwargs):
@@ -36,7 +37,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CashInHandDetailView(LoginRequiredMixin, View):
+class CashInHandDetailView(AdminRequiredMixin, LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         cashinhand = CashInHand.objects.first() or 0
 
@@ -61,7 +62,7 @@ class CashInHandDetailView(LoginRequiredMixin, View):
 
 
 # IDK IF IM SURE ABOUT ANY OF THIS.
-class AddCashInHandView(LoginRequiredMixin, FormView):
+class AddCashInHandView(AdminRequiredMixin, LoginRequiredMixin, FormView):
     form_class = CashInHandForm
     template_name = "assets/cashinhand_form.html"
 
@@ -104,36 +105,39 @@ class AddCashInHandView(LoginRequiredMixin, FormView):
         return reverse_lazy("assets:cash_list")
 
 
-class CashInHandDeleteView(LoginRequiredMixin, DeleteView):
+class CashInHandDeleteView(AdminRequiredMixin, LoginRequiredMixin, DeleteView):
     model = CashInHand
     template_name = "cashinhand_confirm_delete.html"
     success_url = reverse_lazy("cashinhand_list")
 
 
-class AccountBalanceCreateView(LoginRequiredMixin, CreateView):
+class AccountBalanceCreateView(AdminRequiredMixin, LoginRequiredMixin, CreateView):
     model = AccountBalance
     fields = ["account_name", "balance"]
     success_url = reverse_lazy("assets:accounts")
 
 
-class AccountBalanceList(LoginRequiredMixin, ListView):
+class AccountBalanceList(AdminRequiredMixin, LoginRequiredMixin, ListView):
     model = AccountBalance
     paginate_by = 20
 
 
-class AccountBalanceUpdateView(LoginRequiredMixin, UpdateView):
+class AccountBalanceUpdateView(AdminRequiredMixin, LoginRequiredMixin, UpdateView):
     model = AccountBalance
     fields = ["account_name", "balance"]
     success_url = reverse_lazy("assets:accounts")
 
 
-class AccountBalanceDeleteView(LoginRequiredMixin, DeleteView):
+class AccountBalanceDeleteView(AdminRequiredMixin, LoginRequiredMixin, DeleteView):
     model = AccountBalance
     template_name = "accountbalance_confirm_delete.html"
     success_url = reverse_lazy("assets:accounts")
 
 
-class AccountBalanceDetailView(LoginRequiredMixin, DetailView):
+from .forms import AddBalance
+
+
+class AccountBalanceDetailView(AdminRequiredMixin, LoginRequiredMixin, DetailView):
     model = AccountBalance
 
     def get_context_data(self, **kwargs):
@@ -147,4 +151,48 @@ class AccountBalanceDetailView(LoginRequiredMixin, DetailView):
 
         context["object_list"] = paginated_object_list
 
+        return context
+
+
+class AddAccountBalanceView(AdminRequiredMixin, LoginRequiredMixin, FormView):
+    form_class = AddBalance
+    template_name = "assets/add_balance.html"
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return AccountBalance.objects.get(pk=pk)
+
+    @transaction.atomic
+    def form_valid(self, form):
+        amount = form.cleaned_data["balance"]
+        source = form.cleaned_data["source"]
+        account = self.get_object()
+
+        if amount <= 0:
+            form.add_error("balance", "The amount must be greater than zero.")
+            return self.form_invalid(form)
+
+        add_account_balance(
+            amount=amount,
+            account_pk=account.pk,
+            reason=source,
+        )
+        # Show a success message and redirect to a success page
+        messages.success(
+            self.request,
+            f"Account balance updated successfully. Added: {amount}",
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Re-render the template with the form containing errors
+        return render(self.request, self.template_name, {"form": form})
+
+    def get_success_url(self):
+        # Redirect to a page of your choice after a successful form submission
+        return reverse_lazy("assets:accounts")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account"] = self.get_object()
         return context

@@ -1,6 +1,5 @@
 from django.db import transaction
-
-from src.services.transaction.models import Ledger
+from django.apps import apps
 from .exceptions import TransactionError
 
 
@@ -60,7 +59,7 @@ def create_loan(source, destination, amount, **kwargs):
 
 
 @transaction.atomic
-def return_loan(source, destination, amount, ledger=None, **kwargs):
+def return_loan(source, destination, amount, **kwargs):
     """
     Handles the RETURN_LOAN transaction type.
     - Increase the loan's remaining amount.
@@ -72,7 +71,9 @@ def return_loan(source, destination, amount, ledger=None, **kwargs):
     source.project_account_balance += amount
     source.save()
     destination.save()
-    Ledger.objects.get(pk=ledger).expense.delete()
+    expense = kwargs.get("expense")
+    print("Expense: ", expense)
+    expense.delete()
 
 
 @transaction.atomic
@@ -108,7 +109,7 @@ def misc_loan_return(source, destination, amount, **kwargs):
 
 
 @transaction.atomic
-def create_expense(source, amount, ledger=None, **kwargs):
+def create_expense(source, amount, **kwargs):
     """
     Handles the CREATE_EXPENSE transaction type.
     - Add the amount back to the project's account balance.
@@ -117,11 +118,12 @@ def create_expense(source, amount, ledger=None, **kwargs):
     # No need for Exceptions
     source.project_account_balance += amount
     source.save()
-    Ledger.objects.get(pk=ledger).expense.delete()
+    expense = kwargs.get("expense")
+    expense.delete()
 
 
 @transaction.atomic
-def misc_expense(source, amount, ledger=None, **kwargs):
+def misc_expense(source, amount, **kwargs):
     """
     Handles the MISC_EXPENSE transaction type.
     - Add the amount back to the source's balance.
@@ -130,7 +132,8 @@ def misc_expense(source, amount, ledger=None, **kwargs):
     # No need for Exceptions
     source.balance += amount
     source.save()
-    Ledger.objects.get(pk=ledger).misc_expense.delete()
+    expense = kwargs.get("misc_expense")
+    expense.delete()
 
 
 @transaction.atomic
@@ -151,14 +154,25 @@ def add_cash(source, destination, amount, **kwargs):
         destination.save()
 
 
-def invoice_payment(**kwargs):
+@transaction.atomic
+def invoice_payment(source, destination, amount, **kwargs):
     """
     Placeholder for INVOICE_PAYMENT transaction type.
     """
-    pass  # Implementation needed
+    if destination.balance < amount:
+        raise TransactionError(
+            f"Insufficient balance in {destination.account_name} account.",
+            details={"source": source, "amount": amount},
+        )
+    else:
+        source.status = "PENDING"
+        source.save()
+        destination.balance -= amount
+        destination.save()
 
 
-def add_acc_balance(**kwargs):
+@transaction.atomic
+def add_acc_balance(source, destination, **kwargs):
     """
     Placeholder for ADD_ACC_BALANCE transaction type.
     """
@@ -170,11 +184,11 @@ TRANSACTION_HANDLERS = {
     "BUDGET_ASSIGN": budget_assign,
     "TRANSFER": transfer,
     "CREATE_LOAN": create_loan,
-    "RETURN_LOAN": return_loan,
+    "RETURN_LOAN": return_loan,  # KWARGS
     "MISC_LOAN_CREATE": misc_loan_create,
     "MISC_LOAN_RETURN": misc_loan_return,
-    "CREATE_EXPENSE": create_expense,
-    "MISC_EXPENSE": misc_expense,
+    "CREATE_EXPENSE": create_expense,  # KWARGS
+    "MISC_EXPENSE": misc_expense,  # KWARGS
     "ADD_CASH": add_cash,
     "INVOICE_PAYMENT": invoice_payment,
     "ADD_ACC_BALANCE": add_acc_balance,

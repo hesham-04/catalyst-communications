@@ -8,6 +8,7 @@ from src.services.expense.models import Expense
 from src.services.invoice.models import Invoice
 from src.services.loan.models import Loan, Lender, MiscLoan
 from src.services.project.models import Project
+from src.services.quotation.models import QuotationGeneral
 from src.services.transaction.models import Ledger
 from src.services.vendor.models import Vendor
 
@@ -167,11 +168,16 @@ def pay_expense(project_id, amount, budget_source, reason=None, expense_id=None)
 
 # VALIDATION ✔
 @transaction.atomic
-def process_invoice_payment(invoice_id, amount, account_id):
+def process_invoice_payment(invoice_id, amount, account_id, q=False):
     try:
-        invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
-        invoice.status = "PAID"
-        invoice.save(update_fields=["status"])
+        if q:
+            invoice = QuotationGeneral.objects.select_for_update().get(pk=invoice_id)
+            invoice.status = "PAID"
+            invoice.save(update_fields=["status"])
+        else:
+            invoice = Invoice.objects.select_for_update().get(pk=invoice_id)
+            invoice.status = "PAID"
+            invoice.save(update_fields=["status"])
 
         account = AccountBalance.objects.select_for_update().get(pk=account_id)
         account.balance += amount
@@ -179,7 +185,7 @@ def process_invoice_payment(invoice_id, amount, account_id):
 
         Ledger.objects.create(
             transaction_type="INVOICE_PAYMENT",
-            project=invoice.project,
+            project=invoice.project if not q else None,
             amount=amount,
             source_content_type=ContentType.objects.get_for_model(invoice),
             source_object_id=invoice.pk,
@@ -347,6 +353,24 @@ def add_general_cash_in_hand(amount, source, reason):
             source_object_id=source.pk,
             destination_content_type=ContentType.objects.get_for_model(cashinhand),
             destination_object_id=cashinhand.pk,
+            reason=reason,
+        )
+        return True, "Transaction successful"
+    except Exception as e:
+        return False, f"A Fatal error occurred while processing the payment: {str(e)}"
+
+
+def add_account_balance(amount, account_pk, reason):
+    try:
+        account = AccountBalance.objects.select_for_update().get(pk=account_pk)
+        account.balance += amount
+        account.save()
+
+        Ledger.objects.create(
+            transaction_type="ADD_ACC_BALANCE",
+            amount=amount,
+            destination_content_type=ContentType.objects.get_for_model(account),
+            destination_object_id=account.pk,
             reason=reason,
         )
         return True, "Transaction successful"

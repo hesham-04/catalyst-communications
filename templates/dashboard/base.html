@@ -27,6 +27,17 @@
     <link href="{% static 'website/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'website/css/icons.min.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'website/css/app.min.css' %}" rel="stylesheet" type="text/css"/>
+    <script>
+        // Check the saved theme in localStorage and apply it immediately
+        (function () {
+            var savedTheme = localStorage.getItem("theme");
+            if (savedTheme) {
+                document.documentElement.setAttribute("data-bs-theme", savedTheme);
+            } else {
+                document.documentElement.setAttribute("data-bs-theme", "light");
+            }
+        })();
+    </script>
 
 </head>
 <style>
@@ -34,22 +45,23 @@
         zoom: 0.9;
     }
 </style>
+
 <body>
 
 {% if messages %}
-    <div id="popupAlerts" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-        {% for message in messages %}
-            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show shadow-sm border-theme-white-2 rounded-pill mb-3"
-                 role="alert">
-                <div class="d-inline-flex justify-content-center align-items-center thumb-xs {% if message.tags == 'success' %}bg-success{% elif message.tags == 'error' %}bg-danger{% endif %} rounded-circle mx-auto me-1">
-                    <i class="fas {% if message.tags == 'success' %}fa-check{% elif message.tags == 'error' %}fa-exclamation-triangle{% endif %} align-self-center mb-0 text-white"></i>
-                </div>
-                <strong>{% if message.tags == 'success' %}Well done!{% elif message.tags == 'error' %}Oh
-                    no!{% endif %}</strong> {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
+<div id="popupAlerts" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show shadow-sm border-theme-white-2 rounded-pill mb-3"
+         role="alert">
+        <div class="d-inline-flex justify-content-center align-items-center thumb-xs {% if message.tags == 'success' %}bg-success{% elif message.tags == 'error' %}bg-danger{% endif %} rounded-circle mx-auto me-1">
+            <i class="fas {% if message.tags == 'success' %}fa-check{% elif message.tags == 'error' %}fa-exclamation-triangle{% endif %} align-self-center mb-0 text-white"></i>
+        </div>
+        <strong>{% if message.tags == 'success' %}Well done!{% elif message.tags == 'error' %}Oh
+            no!{% endif %}</strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    {% endfor %}
+</div>
 {% endif %}
 
 
@@ -83,9 +95,9 @@
                        role="button"
                        aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
                         {% if request.user.image %}
-                            <img src="{{ request.user.image.url }}" alt="" class="thumb-md rounded-circle">
+                        <img src="{{ request.user.image.url }}" alt="" class="thumb-md rounded-circle">
                         {% else %}
-                            <img src="https://avatar.iran.liara.run/public" alt="" class="thumb-md rounded-circle">
+                        <img src="https://avatar.iran.liara.run/public" alt="" class="thumb-md rounded-circle">
                         {% endif %}
                     </a>
                     <div class="dropdown-menu dropdown-menu-end py-0 "
@@ -94,23 +106,21 @@
                         <div class="d-flex align-items-center dropdown-item py-2 bg-secondary-subtle">
                             <div class="flex-shrink-0">
                                 {% if request.user.image %}
-                                    <img src="{{ request.user.image.url }}" alt="" class="thumb-md rounded-circle">
+                                <img src="{{ request.user.image.url }}" alt="" class="thumb-md rounded-circle">
                                 {% else %}
-                                    <img src="https://avatar.iran.liara.run/public" alt=""
-                                         class="thumb-md rounded-circle">
+                                <img src="https://avatar.iran.liara.run/public" alt=""
+                                     class="thumb-md rounded-circle">
                                 {% endif %}
                             </div>
                             <div class="flex-grow-1 ms-2 text-truncate align-self-center">
-                                <h6 class="my-0 fw-medium text-dark fs-13">{{ request.user.first_name }} {{ request.user.last_name }}</h6>
+                                <h6 class="my-0 fw-medium text-dark fs-13">{{ request.user.first_name }} {{
+                                    request.user.last_name }}</h6>
                                 <small class="text-muted mb-0">{{ request.user.role }}</small>
                             </div><!--end media-body-->
                         </div>
                         <div class="dropdown-divider mt-0"></div>
 
-                        {#                        <a class="dropdown-item" href="#"><i#}
-                        {#                                class="las la-cog fs-18 me-1 align-text-bottom"></i>Account Settings</a>#}
-                        {#                        <a class="dropdown-item" href="#"><i#}
-                        {#                                class="las la-lock fs-18 me-1 align-text-bottom"></i> Security</a>#}
+
                         <a class="dropdown-item" href="#"><i
                                 class="las la-question-circle fs-18 me-1 align-text-bottom"></i> Help Center</a>
                         <div class="dropdown-divider mb-0"></div>
@@ -182,6 +192,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'quotation:open-market' %}">
+                            <i class="iconoir-paste-clipboard menu-icon"></i>
+                            <span>Open Market</span>
+                        </a>
+                    </li>
+
 
                     <li class="menu-label mt-2">
                         <small class="label-border">
@@ -206,6 +223,9 @@
                         </a>
                     </li>
 
+
+                    {% if request.user.is_admin %}
+
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'transaction:list' %}">
                             <i class="iconoir-fingerprint-lock-circle menu-icon"></i>
@@ -213,37 +233,35 @@
                         </a>
                     </li>
 
-
-                    {% if request.user.is_admin %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'charts:list' %}">
-                                <i class="iconoir-cube-hole menu-icon"></i>
-                                <span>Charts Of Accounts</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'charts:list' %}">
+                            <i class="iconoir-cube-hole menu-icon"></i>
+                            <span>Charts Of Accounts</span>
+                        </a>
+                    </li>
 
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'assets:index' %}">
-                                <i class="iconoir-candlestick-chart menu-icon"></i>
-                                <span>Wallet</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'assets:index' %}">
+                            <i class="iconoir-candlestick-chart menu-icon"></i>
+                            <span>Wallet</span>
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:list' %}">
-                                <i class="iconoir-group menu-icon"></i>
-                                <span class="text-danger">User Management</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:list' %}">
+                            <i class="iconoir-group menu-icon"></i>
+                            <span class="text-danger">User Management</span>
+                        </a>
+                    </li>
                     {% endif %}
 
 
                 </ul><!--end navbar-nav--->
             </div>
-        </div><!--end startbar-collapse-->
-    </div><!--end startbar-menu-->
-</div><!--end startbar-->
+        </div><!--end starter-collapse-->
+    </div><!--end starter-menu-->
+</div><!--end starter-->
 <div class="startbar-overlay d-print-none"></div>
 <!-- end leftbar-tab-menu-->
 
@@ -252,44 +270,7 @@
 {% endblock %}
 <!-- end page-wrapper -->
 
-<!-- Javascript  -->
-{#<script>#}
-{#    $(document).ready(function () {#}
-{#        // Attach an event listener to the form submit event#}
-{#        $('form').on('submit', function (e) {#}
-{#            let isValid = true;#}
-{##}
-{#            // Validate phone and mobile fields#}
-{#            const phone = $('#id_phone').val();#}
-{#            if (!phone.match(/^([0+])[0-9]*$/)) {#}
-{#                alert('Phone number must start with 0 or +.');#}
-{#                isValid = false;#}
-{#            }#}
-{##}
-{#            // Validate name fields (first name, last name, company name) to only allow alphanumerics#}
-{#            const nameFields = ['#id_first_name', '#id_last_name', '#id_company_name'];#}
-{#            nameFields.forEach(function (selector) {#}
-{#                const value = $(selector).val();#}
-{#                if (!value.match(/^[a-zA-Z0-9 ]*$/)) {#}
-{#                    alert('Only alphanumeric characters are allowed in name fields.');#}
-{#                    isValid = false;#}
-{#                }#}
-{#            });#}
-{##}
-{#            // Validate description field (other details) to only allow alphanumerics#}
-{#            const otherDetails = $('#id_other_details').val();#}
-{#            if (!otherDetails.match(/^[a-zA-Z0-9 ]*$/)) {#}
-{#                alert('Only alphanumeric characters are allowed in the Other Details field.');#}
-{#                isValid = false;#}
-{#            }#}
-{##}
-{#            // If any validation fails, prevent form submission#}
-{#            if (!isValid) {#}
-{#                e.preventDefault();#}
-{#            }#}
-{#        });#}
-{#    });#}
-{#</script>#}
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         {% if messages %}
@@ -317,7 +298,9 @@
 <script src="{% static 'website/libs/simplebar/simplebar.min.js' %}"></script>
 
 <script src="{% static 'website/libs/apexcharts/apexcharts.min.js' %}"></script>
-{#<script src="{% static '../../../apexcharts.com/samples/website/stock-prices.js' %}"></script>#}
+{#
+<script src="{% static '../../../apexcharts.com/samples/website/stock-prices.js' %}"></script>
+#}
 <script src="{% static 'website/js/pages/index.init.js' %}"></script>
 <script src="{% static 'website/js/DynamicSelect.js' %}"></script>
 <script src="{% static 'website/js/app.js' %}"></script>

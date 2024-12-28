@@ -21,7 +21,9 @@ def get_monthly_income_expense(project_id=None):
     )
 
     monthly_expense = (
-        transactions.filter(transaction_type__in=["CREATE_EXPENSE", "RETURN_LOAN"])
+        transactions.filter(
+            transaction_type__in=["CREATE_EXPENSE", "MISC_EXPENSE", "RETURN_LOAN"]
+        )
         .annotate(month=ExtractMonth("created_at"))
         .values("month")
         .annotate(total=Sum("amount"))

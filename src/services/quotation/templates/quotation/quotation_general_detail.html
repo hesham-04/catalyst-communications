@@ -16,10 +16,10 @@
                         <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                             <h4 class="page-title">
                                 <a class="btn btn-secondary btn-sm me-2"
-                                   href="{% url 'project:detail' quotation.project.pk %}"><i
+                                   href="#"><i
                                         class="fa fa-arrow-left-long me-1"></i> Go Back</a>
 
-                                Quotation</h4>
+                                {{ quotation.quotation_number }}</h4>
 
                         </div><!--end page-title-box-->
                     </div><!--end col-->
@@ -34,19 +34,21 @@
                             <div class="card shadow-lg">
                                 <div class="card-header">
                                     <div class="row align-items-center">
-                                        <div class="col">{% if quotation.project.status == 'DRAFT' %}
-                                            <a href="{% url 'quotation:edit' quotation.pk %}"><h3
-                                                    class="card-title mb-1">{{ quotation.quotation_number }}</h3></a>
-                                        {% else %}
-                                            <h3 class="card-title mb-1">{{ quotation.quotation_number }}</h3>
-                                        {% endif %}
+                                        <div class="col">
+                                            {% if quotation.status == 'QUOTE' or quotation.status == 'INVOICED' %}
+                                                <a href="{% url 'quotation:general_edit' quotation.pk %}"><h3
+                                                        class="card-title mb-1">{{ quotation.quotation_number }}</h3>
+                                                </a>
+                                            {% else %}
+                                                <h3 class="card-title mb-1">{{ quotation.quotation_number }}</h3>
+                                            {% endif %}
                                             <p class="text-muted m-0 p-0"><b>Subject: </b>{{ quotation.subject }}</p>
                                             <p class="text-muted m-0 p-0"><b>Description: </b>{{ quotation.notes }}</p>
                                         </div><!--end col-->
                                         <div class="col-auto">
-                                            {% if quotation.project.status == 'DRAFT' %}
+                                            {% if quotation.status == 'QUOTE' or quotation.status == 'INVOICED' %}
                                                 <a class="mb-2 text-muted"
-                                                   href="{% url 'quotation:update' quotation.pk %}">
+                                                   href="{% url 'quotation:general_update' quotation.pk %}">
                                                     <i class="fa fa-edit mb-4 me-1"></i>Edit
                                                 </a>
                                             {% else %}
@@ -115,21 +117,29 @@
 
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                {% if object.status == "PENDING" %}
-                                    <a href="{% url 'quotation:quotation-paid' object.pk %}">
+                                {% if quotation.status == "QUOTE" %}
+                                    <a href="{% url 'quotation:invoice_gen_quote' object.pk %}">
                                         <div class="btn btn-danger">
-                                            Mark as Paid
+                                            Invoice
                                         </div>
                                     </a>
-                                {% else %}
                                 {% endif %}
+                                {% if quotation.status == "INVOICED" %}
+                                    <a href="{% url 'quotation:quotation_paid' object.pk %}">
+                                        <div class="btn btn-success">
+                                            Mark As Paid
+                                        </div>
+                                    </a>
+                                {% endif %}
+                                {% if quotation.status == "PAID" %}
+                                    <p class="text-success text-center">Invoice Paid & funds Transferred</p>
+                                {% endif %}
+
                             </div>
                             <div class="col-md-6">
 
                             </div>
                         </div>
-
-
                     </div>
 
                     <div class="col-md-6" id="printable-section">
@@ -170,7 +180,13 @@
                                     <div class="row">
                                         <div class="col-12 text-end align-self-center">
                                             <h4 class="mb-1 fw-semibold text-dark"><span
-                                                    class="text-dark">Quotation:</span>
+                                                    class="text-dark">
+                                            {% if quotation.status == "QUOTE" %}
+                                                Quotation:
+                                            {% else %}
+                                                Invoice:
+                                            {% endif %}
+                                        </span>
                                                 {{ quotation.quotation_number }}</h4>
                                             <h6 class="mb-0 fw-semibold text-dark"><span
                                                     class="text-dark">Issue Date:</span>
@@ -212,7 +228,6 @@
                                         <p class="m-0 p-0"><b>Subject:</b> {{ quotation.subject }}</p>
                                         <p class="m-0 p-0 "><b>Description:</b> <span
                                                 class="text-muted">{{ quotation.notes|slice:100 }}</span></p>
-
                                     </div><!--end row-->
 
                                     <div class="row">
@@ -321,7 +336,7 @@
                                                 <a href="javascript:void(0)" onclick="printSection()"
                                                    class="btn btn-info">Print</a>
 
-                                                <a href="{% url 'project:detail' pk=quotation.project.id %}"
+                                                <a href="#"
                                                    class="btn btn-secondary"><i class="fa fa-arrow-left-long me-1"></i>
                                                     Go Back</a>
                                             </div>

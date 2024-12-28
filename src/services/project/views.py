@@ -14,6 +14,7 @@ from django.views.generic import (
     CreateView,
     FormView,
     UpdateView,
+    DeleteView,
 )
 
 from src.services.assets.models import CashInHand, AccountBalance
@@ -193,6 +194,7 @@ class StartProjectView(LoginRequiredMixin, View):
             client_name=quotation.client_name,
             company_name=quotation.company_name,
             phone=quotation.phone,
+            email=quotation.email,
             address=quotation.address,
             subject=quotation.subject,
             notes=quotation.notes,
@@ -201,6 +203,7 @@ class StartProjectView(LoginRequiredMixin, View):
             due_date=quotation.due_date,
             project=quotation.project,
             letterhead=quotation.letterhead,
+            tax=quotation.tax,
             status="PENDING",
         )
 
@@ -357,3 +360,10 @@ class ProjectInvoiceView(LoginRequiredMixin, TemplateView):
         context["object_list"] = paginated_object_list
         context["project"] = _project
         return context
+
+
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+    model = Project
+    template_name = "project/project_confirm_delete.html"
+    success_url = reverse_lazy("project:index")
+    context_object_name = "project"

@@ -23,9 +23,9 @@
                         <div class="row">
                             <div class="col-12 d-flex justify-content-between">
                                 <p class="text-white text-uppercase mb-0 fw-semibold fs-14 mt-2">{{ object.account_name }}</p>
-{#                                <a href="{% url 'assets:add-cash-in-hand' %}">#}
-{#                                    <div class="btn btn-primary float-end"> Add Cash in Hand</div>#}
-{#                                </a>#}
+                                <a href="{% url 'assets:add-balance' object.pk %}">
+                                    <div class="btn btn-primary float-end"> Add Balance</div>
+                                </a>
                             </div>
                             <!--end col-->
                         </div><!--end row-->

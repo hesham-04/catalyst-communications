@@ -12,6 +12,7 @@ from .views import (
     ProjectExpensesView,
     ProjectInvoiceView,
     ModalCustomerCreateView,
+    ProjectDeleteView,
 )
 
 app_name = "project"
@@ -26,6 +27,7 @@ urlpatterns = [
     path("<str:pk>/expenses/", ProjectExpensesView.as_view(), name="expenses"),
     path("<str:pk>/invoices/", ProjectInvoiceView.as_view(), name="invoices"),
     path("<str:pk>/finances/", ProjectFinances.as_view(), name="finances"),
+    path("<str:pk>/delete/", ProjectDeleteView.as_view(), name="delete"),
 ]
 
 urlpatterns += [

@@ -22,56 +22,6 @@
                                     <div class="col">
                                         <h4 class="card-title">Transactions Summary</h4>
                                     </div><!--end col-->
-                                    {#                                    <div class="col-auto">#}
-                                    {#                                        <form class="row g-2">#}
-                                    {#                                            <div class="col-auto">#}
-                                    {#                                                <a class="btn bg-primary-subtle text-primary dropdown-toggle d-flex align-items-center arrow-none"#}
-                                    {#                                                   data-bs-toggle="dropdown" href="#" role="button"#}
-                                    {#                                                   aria-haspopup="false" aria-expanded="false"#}
-                                    {#                                                   data-bs-auto-close="outside">#}
-                                    {#                                                    <i class="iconoir-filter-alt me-1"></i> Filter#}
-                                    {#                                                </a>#}
-                                    {#                                                <div class="dropdown-menu dropdown-menu-start">#}
-                                    {#                                                    <div class="p-2">#}
-                                    {#                                                        <div class="form-check mb-2">#}
-                                    {#                                                            <input type="checkbox" class="form-check-input" checked=""#}
-                                    {#                                                                   id="filter-all">#}
-                                    {#                                                            <label class="form-check-label" for="filter-all">#}
-                                    {#                                                                All#}
-                                    {#                                                            </label>#}
-                                    {#                                                        </div>#}
-                                    {#                                                        <div class="form-check mb-2">#}
-                                    {#                                                            <input type="checkbox" class="form-check-input" checked=""#}
-                                    {#                                                                   id="filter-one">#}
-                                    {#                                                            <label class="form-check-label" for="filter-one">#}
-                                    {#                                                                New#}
-                                    {#                                                            </label>#}
-                                    {#                                                        </div>#}
-                                    {#                                                        <div class="form-check mb-2">#}
-                                    {#                                                            <input type="checkbox" class="form-check-input" checked=""#}
-                                    {#                                                                   id="filter-two">#}
-                                    {#                                                            <label class="form-check-label" for="filter-two">#}
-                                    {#                                                                Active#}
-                                    {#                                                            </label>#}
-                                    {#                                                        </div>#}
-                                    {#                                                        <div class="form-check">#}
-                                    {#                                                            <input type="checkbox" class="form-check-input" checked=""#}
-                                    {#                                                                   id="filter-three">#}
-                                    {#                                                            <label class="form-check-label" for="filter-three">#}
-                                    {#                                                                Inactive#}
-                                    {#                                                            </label>#}
-                                    {#                                                        </div>#}
-                                    {#                                                    </div>#}
-                                    {#                                                </div>#}
-                                    {#                                            </div><!--end col-->#}
-                                    {##}
-                                    {#                                            <div class="col-auto">#}
-                                    {#                                                <a href="#" class="btn btn-primary" ><i class="fa-solid fa-plus me-1"></i>#}
-                                    {#                                                    Add Transaction#}
-                                    {#                                                </a>#}
-                                    {#                                            </div><!--end col-->#}
-                                    {#                                        </form>#}
-                                    {#                                    </div><!--end col-->#}
                                 </div><!--end row-->
                             </div><!--end card-header-->
                             <div class="card-body pt-0">
@@ -86,12 +36,13 @@
                                             <th class="border-top-0">Source</th>
                                             <th class="border-top-0 text-center">Destination</th>
                                             <th class="border-top-0 ">Reason</th>
+                                            <th class="border-top-0 ">Delete</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for object in object_list %}
                                             <tr>
-                                                <td>{{ object.created_at }}</td>
+                                                <td>{{ object.created_at|date:"d-m-Y H:i:s" }}</td>
                                                 <td><a href="#"><span
                                                         class="badge bg-danger-subtle text-danger fs-11 fw-medium px-2">{{ object.transaction_type }}</span></a>
                                                 </td>
@@ -102,6 +53,9 @@
                                                 </td>
                                                 <td class="text-center">{{ object.destination }}</td>
                                                 <td class="">{{ object.reason|slice:'100' }}</td>
+                                                <td class="text-center"><a class="text-danger"
+                                                                           href="{% url 'transaction:delete' object.pk %}"><i
+                                                        class="fa fa-trash"></i></a></td>
                                             </tr>
                                         {% endfor %}
 

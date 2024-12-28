@@ -1,0 +1,122 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create Customer{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Open Market</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="card-title">All List</h4>
+                                </div><!--end col-->
+                                <div class="col-auto">
+                                    <form class="row g-2">
+                                        <div class="col-auto">
+                                            <a href="{% url 'quotation:create_general_quotation' %}"
+                                               class="btn btn-primary"><i
+                                                    class="fa-solid fa-plus me-1"></i>
+                                                Create New
+                                            </a>
+                                        </div><!--end col-->
+                                    </form>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end card-header-->
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="border-top-0">Name</th>
+                                        <th class="border-top-0">Client Name</th>
+                                        <th class="border-top-0">Email</th>
+                                        <th class="border-top-0">Status</th>
+                                        <th class="border-top-0 text-center">Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for object in object_list %}
+                                    <tr>
+                                        <td><a href="{% url 'quotation:general_detail' object.pk %}">
+                                            {{ object.quotation_number }}</a>
+                                        </td>
+                                        <td>{{ object.company_name }}</td>
+                                        <td>{{ object.email }}</td>
+                                        <td><span
+                                                class="badge {% if object.status == 'PAID' %}bg-success-subtle text-success {% else %}text-danger bg-danger-subtle{% endif %} fs-11 fw-medium px-2">{{ object.status }}</span>
+                                        </td>
+
+                                        <td class="text-center">{{ object.total_amount }} PKR</td>
+                                    </tr>
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+                                <!--end table-->
+
+
+                            </div><!--end /div-->
+                            <div>
+                                <ul class="pagination mt-1">
+                                    {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Previous</a>
+                                    </li>
+                                    {% endif %}
+
+                                    {% for num in page_obj.paginator.page_range %}
+                                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                    {% endfor %}
+
+                                    {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Set today's date as the default for the ending date
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('endDate').value = today;
+    });
+</script>
+{% endblock %}

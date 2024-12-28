@@ -10,6 +10,7 @@ from openpyxl.cell import MergedCell
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
+from src.core.mixins import AdminRequiredMixin
 from src.services.assets.models import AccountBalance
 from src.services.expense.models import JournalExpense
 from src.services.invoice.models import Invoice
@@ -18,7 +19,7 @@ from src.services.transaction.models import Ledger
 from src.web.dashboard.utils import ledger_filter
 
 
-class ChartsIndex(View):
+class ChartsIndex(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
         return render(request, "charts/charts_index.html", {"projects": projects})
@@ -676,7 +677,7 @@ def generate_bank_statements_view(request):
 
     for account in accounts:
         # Adjust column widths dynamically for this account's section
-        for col_offset in range(6):
+        for col_offset in range(7):  # Updated range for extra column
             col_letter = openpyxl.utils.get_column_letter(start_col + col_offset)
             sheet.column_dimensions[col_letter].width = (
                 20  # Consistent width for all columns
@@ -684,14 +685,22 @@ def generate_bank_statements_view(request):
 
         # Add Account Header
         sheet.merge_cells(
-            start_row=1, start_column=start_col, end_row=1, end_column=start_col + 5
-        )
+            start_row=1, start_column=start_col, end_row=1, end_column=start_col + 6
+        )  # Updated to include new column
         sheet.cell(row=1, column=start_col).value = account.account_name
         sheet.cell(row=1, column=start_col).font = header_font
         sheet.cell(row=1, column=start_col).alignment = center_align
 
         # Add Table Headers
-        headers = ["Sr.No", "Date", "Description", "Debit", "Credit", "Amount"]
+        headers = [
+            "Sr.No",
+            "Date",
+            "Description",
+            "Transaction Type",  # New header
+            "Debit",
+            "Credit",
+            "Amount",
+        ]
         for col_offset, header in enumerate(headers):
             cell = sheet.cell(row=2, column=start_col + col_offset)
             cell.value = header
@@ -703,14 +712,16 @@ def generate_bank_statements_view(request):
         current_balance = account.starting_balance or 0
         sheet.cell(row=3, column=start_col + 1).value = "1-Jul-22"
         sheet.cell(row=3, column=start_col + 2).value = "Opening Balance"
-        sheet.cell(row=3, column=start_col + 5).value = float(current_balance)
+        sheet.cell(row=3, column=start_col + 6).value = float(
+            current_balance
+        )  # Adjusted for new column
 
         # Start rows for transactions
         row = 4
 
         # Fetch Transactions
         transactions = ledger_filter(source=account, destination=account).order_by(
-            "-created_at"
+            "created_at"
         )
 
         # Add Transactions
@@ -734,17 +745,22 @@ def generate_bank_statements_view(request):
                 "%Y-%m-%d %H:%M"
             )
             sheet.cell(row=row, column=start_col + 2).value = tx.reason
-            sheet.cell(row=row, column=start_col + 3).value = float(debit)
-            sheet.cell(row=row, column=start_col + 4).value = float(credit)
-            sheet.cell(row=row, column=start_col + 5).value = float(current_balance)
+            sheet.cell(row=row, column=start_col + 3).value = (
+                tx.get_transaction_type_display()
+            )  # New column
+            sheet.cell(row=row, column=start_col + 4).value = float(debit)
+            sheet.cell(row=row, column=start_col + 5).value = float(credit)
+            sheet.cell(row=row, column=start_col + 6).value = float(current_balance)
             row += 1
 
         # Add Total Row
-        sheet.cell(row=row, column=start_col + 4).value = "Total"
-        sheet.cell(row=row, column=start_col + 5).value = float(current_balance)
+        sheet.cell(row=row, column=start_col + 5).value = "Total"
+        sheet.cell(row=row, column=start_col + 6).value = float(
+            current_balance
+        )  # Adjusted for new column
 
-        # Move to the next account's column group (next 7 columns for tighter spacing)
-        start_col += 7
+        # Move to the next account's column group (next 8 columns for tighter spacing)
+        start_col += 8  # Adjusted spacing for new column
 
     # Save the workbook to a response object
     response = HttpResponse(
