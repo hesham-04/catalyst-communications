@@ -112,15 +112,14 @@ if ENVIRONMENT == "server":
     print("server")
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "myproject",
-            "USER": "myprojectuser",
-            "PASSWORD": "password",
-            "HOST": "localhost",
-            "PORT": "",
+            "ENGINE": env("DB_ENGINE"),
+            "NAME": env("DB_NAME"),
+            "USER": env("DB_USER"),
+            "PASSWORD": env("DB_PASS"),
+            "HOST": env("DB_HOST"),
+            "PORT": env("DB_PORT"),
         }
     }
-
 else:
     print("local")
     DATABASES = {
