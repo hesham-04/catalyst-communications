@@ -58,6 +58,7 @@ coverage/
 /migrations
 **/migrations/
 *.pytest_cache/
+assets/
 
 *.pyc
 *.pyo

@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}Customer Detail{% endblock %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% load project_tags %}
 
@@ -44,6 +45,39 @@
                                                href="{% url 'charts:generate_bank_statements' %}"><i
                                                     class="fa fa-bank me-2"></i>Generate Bank Report</a>
                                         </li>
+                                        <li class="nav-item m-1">
+                                            <button type="button" class="btn btn-soft-warning" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenter">
+                                                <i class="fa fa-genderless me-1"></i>
+                                                Generate Expense Sheet
+                                            </button>
+                                        </li>
+
+                                        <div class="modal fade" id="exampleModalCenter" data-bs-backdrop="false"
+                                             tabindex="-1"
+                                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" role="dialog">
+                                            <div class="modal-dialog " role="document">
+                                                <div class="modal-content  shadow-lg">
+                                                    <div class="modal-header">
+                                                        <h6 class="modal-title m-0" id="exampleModalCenterTitle">
+                                                            Generate Expense
+                                                            Sheet</h6>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div><!--end modal-header-->
+                                                    <div class="modal-body">
+                                                        <form method="post" action="">
+                                                            {% csrf_token %}
+                                                            {{ form|crispy }}
+                                                            <button type="submit" class="btn btn-primary mt-2">Submit
+                                                            </button>
+                                                        </form>
+                                                    </div><!--end modal-body-->
+
+                                                </div><!--end modal-content-->
+                                            </div><!--end modal-dialog-->
+                                        </div>
+
                                     </ul>
                                 </div>
                             </div><!-- end container -->
@@ -85,7 +119,7 @@
                                                         Report </a>
                                                 </td>
                                             </tr>
-                                        {% empty %}
+                                            {% empty %}
                                             <tr>
                                                 <td colspan="6">No projects found.</td>
                                             </tr>
@@ -146,5 +180,12 @@
         </div>
         <!-- end page content -->
     </div>
+    <script>
+        // Set today's date as the default for the ending date
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('endDate').value = today;
+        });
+    </script>
 {% endblock %}
 

@@ -17,12 +17,28 @@ from src.services.invoice.models import Invoice
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
 from src.web.dashboard.utils import ledger_filter
+from src.services.expense.forms import DateRangeForm
 
 
 class ChartsIndex(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
-        return render(request, "charts/charts_index.html", {"projects": projects})
+        form = DateRangeForm()
+        return render(request, "charts/charts_index.html", {"projects": projects, 'form':form})
+
+    def post(self, request, *args, **kwargs):
+        form = DateRangeForm(request.POST)
+
+        if form.is_valid():
+            start_date = form.cleaned_data.get("start_date")
+            end_date = form.cleaned_data.get("end_date")
+
+            if start_date and end_date:
+                return generate_expense_report(request, start_date, end_date)
+            else:
+                print("Form is not valid")
+            return self.get(request, *args, **kwargs)
+
 
 
 def generate_project_report(request, pk):

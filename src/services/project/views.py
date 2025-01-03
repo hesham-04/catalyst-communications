@@ -119,7 +119,7 @@ class ProjectDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["income"] = income
         context["expense"] = expense
-        context["project"] = Project.objects.get(pk=kwargs["pk"])
+        context["project"] = get_object_or_404(Project, pk=kwargs["pk"])
         context["total_expenses"] = Expense.calculate_total_expenses(
             project_id=kwargs["pk"]
         )
