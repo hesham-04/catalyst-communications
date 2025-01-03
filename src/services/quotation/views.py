@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -52,7 +52,12 @@ class CreateQuotationView(LoginRequiredMixin, CreateView):
 
         if formset.is_valid():
             # Only Save if the form and formset are valid
-            quotation = form.save()
+            try:
+                quotation = form.save()
+            except IntegrityError  as e:
+                print(e)
+                messages.error(self.request, "Quotation already exists for this project")
+                return redirect("project:detail", pk=project.pk)
             project.save()
 
             for item_form in formset:
