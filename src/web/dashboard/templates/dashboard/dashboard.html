@@ -22,7 +22,7 @@
                     </div><!--end col-->
                 </div><!--end row-->
                 <div class="row ">
-                    <div class="col-md-6">
+                    <div class="col-sm-12 col-lg-6">
                         <div class="card bg-globe-img">
                             <div class="card-body">
                                 <div>
@@ -47,7 +47,11 @@
                                         <h4 class="my-2 fs-24 fw-semibold"> ***** <small
                                                 class="font-14"></small></h4>
                                     {% endif %}
-
+                                <div class="row" style="height:40px;">
+                                    <div class="col-md-6 text-success">
+{#                                        <i class="fa fa-genderless me-1"></i> <span class="text-success"> - </span>#}
+                                    </div>
+                                </div>
                                     <a href="{% url 'assets:index' %}">
                                         <button type="submit" class="btn btn-soft-primary">All Wallets</button>
                                     </a>
@@ -299,7 +303,7 @@
 
 
     <script>
-        // Sample data for 12 months (replace with actual data)
+        // Data for the next few months
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var expenses = {{ expense }};
         var profits = {{ income }};
