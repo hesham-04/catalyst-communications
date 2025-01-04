@@ -19,9 +19,6 @@ from src.services.transaction.models import Ledger
 from src.web.dashboard.utils import ledger_filter
 from src.services.expense.forms import DateRangeForm, YearForm
 
-from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
-from openpyxl import Workbook
-from django.http import HttpResponse
 
 class ChartsIndex(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -877,16 +874,16 @@ def generate_expense_report(request, start, end):
         row_data = [
             expense.reason,
             expense.amount,
-            expense.source,
-            expense.category,
-            expense.destination,
+            expense.source.get_name(),
+            expense.expense_category.name,
+            expense.destination.name,
         ]
         sheet.append(row_data)
 
         # Sum the expenses for each category
-        if expense.category not in category_totals:
-            category_totals[expense.category] = 0
-        category_totals[expense.category] += expense.amount
+        if expense.expense_category.name not in category_totals:
+            category_totals[expense.expense_category.name] = 0
+        category_totals[expense.expense_category.name] += expense.amount
 
         # Apply styles to the row
         for col in range(1, 6):

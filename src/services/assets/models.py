@@ -39,6 +39,9 @@ class CashInHand(models.Model):
     def __str__(self):
         return f"Cash in Hand - Balance: {self.balance}"
 
+    def get_name(self):
+        return self.account_name
+
 
 class AccountBalance(models.Model):
     account_name = models.CharField(max_length=255, unique=True)
@@ -100,3 +103,6 @@ class AccountBalance(models.Model):
             self.starting_balance = self.balance
             super().save(*args, **kwargs)
         super().save(*args, **kwargs)
+
+    def get_name(self):
+        return self.account_name

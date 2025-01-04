@@ -170,7 +170,7 @@ class ExpenseCategoryCreateView(LoginRequiredMixin, CreateView):
     model = ExpenseCategory
     form_class = ExpenseCategoryForm
     template_name = "expense/category_form.html"  # Define your HTML template
-    success_url = reverse_lazy("expense:index")  # Redirect after creation
+    success_url = reverse_lazy("expense:expense-category-list")  # Redirect after creation
 
 
 class ExpenseCategoryDeleteView(LoginRequiredMixin, DeleteView):
