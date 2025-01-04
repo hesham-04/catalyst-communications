@@ -993,6 +993,12 @@ def generate_expense_report(request, start, end):
 
     return response
 
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
+from openpyxl import Workbook
+from openpyxl.cell.cell import MergedCell
+from django.http import HttpResponse
+
 def yearly_report(request):
     # Get the selected year from the POST request
     year = request.POST.get('year') if request.method == 'POST' else None
@@ -1013,22 +1019,20 @@ def yearly_report(request):
         bottom=Side(style="thin"),
     )
 
-    # Add a title row with year information
+    # Add a title row with year information (row 1)
     sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=5)
     sheet["A1"] = f"Yearly Report for {year if year else 'All Years'}"
     sheet["A1"].font = Font(size=14, bold=True, color="FFFFFF")
     sheet["A1"].alignment = centered_alignment
     sheet["A1"].fill = header_fill
 
-    # Column Headers
+    # Column Headers for Projects (row 2)
     headers = ["Sr. No.", "Name", "Operating Expense", "Invoiced", "Received"]
-
-    # Set column widths (similar to your example)
     for col_num in range(1, 6):
-        col_letter = openpyxl.utils.get_column_letter(col_num)
+        col_letter = get_column_letter(col_num)
         sheet.column_dimensions[col_letter].width = 20
 
-    # Add table headers
+    # Add project data headers (row 2)
     for col_num, header in enumerate(headers, start=1):
         cell = sheet.cell(row=2, column=col_num)
         cell.value = header
@@ -1037,10 +1041,15 @@ def yearly_report(request):
         cell.border = thin_border
         cell.fill = header_fill
 
-    # Get Project Data
+    # Add header for Category Totals side by side (columns G and H)
+    sheet["G2"] = "Category"
+    sheet["H2"] = "Total Amount"
+    apply_cell_style(sheet["G2"], font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+    apply_cell_style(sheet["H2"], font=header_font, alignment=centered_alignment, fill=header_fill, border=thin_border)
+
+    # Get Project Data and add it to the sheet (starting from row 3)
     row = 3
     for project in Project.objects.all():
-        # Calculate operating expense, invoiced, and received amounts
         operating_expense = Ledger.objects.filter(
             project=project,
             created_at__year=year,
@@ -1050,14 +1059,14 @@ def yearly_report(request):
         invoiced = project.invoices.filter(created_at__year=year).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
         received = project.invoices.filter(created_at__year=year, status='PAID').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
 
-        # Add data to the sheet
+        # Add data to project columns (A - E)
         sheet.cell(row=row, column=1).value = row - 2  # Sr. No.
         sheet.cell(row=row, column=2).value = project.project_name
         sheet.cell(row=row, column=3).value = float(operating_expense)
         sheet.cell(row=row, column=4).value = float(invoiced)
         sheet.cell(row=row, column=5).value = float(received)
 
-        # Apply styling to each cell
+        # Apply styling to project columns
         for col_num in range(1, 6):
             cell = sheet.cell(row=row, column=col_num)
             cell.alignment = centered_alignment
@@ -1065,11 +1074,51 @@ def yearly_report(request):
 
         row += 1
 
+    # Now, add category totals starting from row 3, columns G and H
+    category_totals_row = 3  # This ensures the category totals start below the headers
+
+    # Get the sum of amounts for each category
+    category_totals = {}
+    ledger_entries = Ledger.objects.filter(transaction_type__in=["CREATE_EXPENSE", "MISC_EXPENSE"], created_at__year=year)
+
+    for entry in ledger_entries:
+        category = entry.expense_category
+        if category:
+            if category not in category_totals:
+                category_totals[category] = 0
+            category_totals[category] += entry.amount
+
+    # Add category totals to the sheet (starting from row 3, columns G and H)
+    for category, total in category_totals.items():
+        sheet.cell(row=category_totals_row, column=7).value = category.name  # Category name in column G
+        sheet.cell(row=category_totals_row, column=8).value = total  # Total amount in column H
+
+        # Apply styling to category columns
+        apply_cell_style(sheet[f"G{category_totals_row}"], font=normal_font, alignment=left_alignment, border=thin_border)
+        apply_cell_style(sheet[f"H{category_totals_row}"], font=normal_font, alignment=centered_alignment, border=thin_border)
+
+        category_totals_row += 1
+
+    # Adjust column widths automatically based on content
+    for col in sheet.columns:
+        max_length = 0
+        col_letter = get_column_letter(col[0].column)  # Get column letter from the first cell
+        for cell in col:
+            if cell.value and not isinstance(cell, MergedCell):  # Skip merged cells
+                max_length = max(max_length, len(str(cell.value)))
+        sheet.column_dimensions[col_letter].width = max(max_length + 2, 15)
+
     # Save the workbook to a response object
-    response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response["Content-Disposition"] = 'attachment; filename="projects_section.xlsx"'
     workbook.save(response)
 
     return response
+
+# Helper function for styling
+def apply_cell_style(cell, font, alignment, border, fill=None,):
+    cell.font = font
+    cell.alignment = alignment
+    if fill:
+        cell.fill = fill
+    cell.border = border
