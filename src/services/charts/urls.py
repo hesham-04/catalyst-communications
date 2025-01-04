@@ -4,6 +4,7 @@ from .views import (
     generate_project_report,
     generate_bank_statements_view,
     project_expenses,
+    yearly_report
 )
 
 app_name = "charts"
@@ -21,4 +22,5 @@ urlpatterns = [
         generate_bank_statements_view,
         name="generate_bank_statements",
     ),
+    path('yearly-report/', yearly_report, name='yearly_report'),
 ]

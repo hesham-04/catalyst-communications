@@ -17,14 +17,15 @@ from src.services.invoice.models import Invoice
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
 from src.web.dashboard.utils import ledger_filter
-from src.services.expense.forms import DateRangeForm
+from src.services.expense.forms import DateRangeForm, YearForm
 
 
 class ChartsIndex(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
         form = DateRangeForm()
-        return render(request, "charts/charts_index.html", {"projects": projects, 'form':form})
+        year_form = YearForm()
+        return render(request, "charts/charts_index.html", {"projects": projects, 'form':form, 'years':year_form})
 
     def post(self, request, *args, **kwargs):
         form = DateRangeForm(request.POST)
@@ -38,8 +39,6 @@ class ChartsIndex(AdminRequiredMixin, View):
             else:
                 print("Form is not valid")
             return self.get(request, *args, **kwargs)
-
-
 
 def generate_project_report(request, pk):
     # Retrieve the project by primary key
@@ -581,7 +580,6 @@ def generate_project_report(request, pk):
 
     return response
 
-
 def project_expenses(request, pk):
     # Retrieve the project by primary key
     project = Project.objects.get(pk=pk)
@@ -670,7 +668,6 @@ def project_expenses(request, pk):
     workbook.save(response)
 
     return response
-
 
 def generate_bank_statements_view(request):
     # Create a new workbook and sheet
@@ -993,5 +990,76 @@ def generate_expense_report(request, start, end):
     )
     response["Content-Disposition"] = 'attachment; filename="expense_report.xlsx"'
     wb.save(response)
+
+    return response
+
+
+def yearly_report(request):
+    # Create a new workbook and sheet
+    year = request.POST.get('year') if request.method == 'POST' else None
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Projects"
+
+    # Define styles
+    header_font = Font(bold=True)
+    center_align = Alignment(horizontal="center", vertical="center")
+    border_style = Border(
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
+    )
+
+    # Column Headers
+    headers = ["Sr. No.", "Name", "Operating Expense", "Invoiced", "Received"]
+
+    # Set column widths (similar to your example)
+    for col_num in range(1, 6):
+        col_letter = openpyxl.utils.get_column_letter(col_num)
+        sheet.column_dimensions[col_letter].width = 20
+
+    # Add table headers
+    for col_num, header in enumerate(headers, start=1):
+        cell = sheet.cell(row=1, column=col_num)
+        cell.value = header
+        cell.font = header_font
+        cell.alignment = center_align
+        cell.border = border_style
+
+    # Get Project Data
+    row = 2
+    for project in Project.objects.all():
+        # Calculate operating expense, invoiced, and received amounts
+        operating_expense = Ledger.objects.filter(
+            project=project,
+            created_at__year=year,
+            transaction_type='CREATE_EXPENSE'
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+        invoiced = project.invoices.filter(created_at__year=year).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+        received = project.invoices.filter(created_at__year=year, status='PAID').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+
+        # Add data to the sheet
+        sheet.cell(row=row, column=1).value = row - 1  # Sr. No.
+        sheet.cell(row=row, column=2).value = project.project_name
+        sheet.cell(row=row, column=3).value = float(operating_expense)
+        sheet.cell(row=row, column=4).value = float(invoiced)
+        sheet.cell(row=row, column=5).value = float(received)
+
+        # Apply styling to each cell
+        for col_num in range(1, 6):
+            cell = sheet.cell(row=row, column=col_num)
+            cell.alignment = center_align
+            cell.border = border_style
+
+        row += 1
+
+    # Save the workbook to a response object
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="projects_section.xlsx"'
+    workbook.save(response)
 
     return response

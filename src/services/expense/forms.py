@@ -3,6 +3,7 @@ from django import forms
 from .models import Expense, ExpenseCategory, JournalExpense
 from ..assets.models import AccountBalance
 from ..project.models import Project
+from datetime import datetime
 
 
 class ExpenseForm(forms.ModelForm):
@@ -114,4 +115,17 @@ class DateRangeForm(forms.Form):
             }
         ),
         label="Ending Date",
+    )
+
+
+
+class YearForm(forms.Form):
+    current_year = datetime.now().year
+    year_choices = [(year, str(year)) for year in range(2019, current_year + 1)]
+
+    year = forms.ChoiceField(
+        choices=year_choices,
+        initial=current_year,
+        widget=forms.Select(attrs={"class": "form-control", "id": "year", "required": True}),
+        label="Select Year",
     )

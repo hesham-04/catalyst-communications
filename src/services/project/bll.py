@@ -85,6 +85,7 @@ def return_loan_to_lender(project_id, loan_id, amount, reason):
     project.save()
 
     # Create an Expense instance for the loan return.
+    # Is the Expense model even use anywhere for fin calcs.
     expense = Expense.objects.create(
         project=project,
         description="Loan Return",

@@ -52,7 +52,6 @@
                                                 Generate Expense Sheet
                                             </button>
                                         </li>
-
                                         <div class="modal fade" id="exampleModalCenter" data-bs-backdrop="false"
                                              tabindex="-1"
                                              aria-labelledby="exampleModalCenterTitle" aria-hidden="true" role="dialog">
@@ -77,6 +76,39 @@
                                                 </div><!--end modal-content-->
                                             </div><!--end modal-dialog-->
                                         </div>
+                                        <li class="nav-item m-1">
+                                            <button type="button" class="btn btn-soft-success" data-bs-toggle="modal"
+                                                    data-bs-target="#yearlyModal">
+                                                <i class="fa fa-genderless me-1"></i> Yearly Report
+                                            </button>
+                                        </li>
+                                        <div class="modal fade" id="yearlyModal" data-bs-backdrop="false" tabindex="-1"
+                                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content shadow-lg">
+                                                    <div class="modal-header">
+                                                        <h6 class="modal-title m-0" id="exampleModalCenterTitle">
+                                                            Generate Yearly Report</h6>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div><!--end modal-header-->
+                                                    <div class="modal-body">
+                                                        <form method="post" action="{% url 'charts:yearly_report' %}">
+                                                            {% csrf_token %}
+                                                            <div class="form-group">
+                                                                <label for="{{ form.year.id_for_label }}">Select
+                                                                    Year:</label>
+                                                                {{ years.year }}
+                                                                <!-- Django will render the choice field with the correct options -->
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary mt-2">Submit
+                                                            </button>
+                                                        </form>
+                                                    </div><!--end modal-body-->
+                                                </div><!--end modal-content-->
+                                            </div><!--end modal-dialog-->
+                                        </div>
+
 
                                     </ul>
                                 </div>
