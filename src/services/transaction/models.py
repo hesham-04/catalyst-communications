@@ -66,7 +66,7 @@ class Ledger(models.Model):
     destination = GenericForeignKey("destination_content_type", "destination_object_id")
 
     expense_category = models.ForeignKey(
-        "expense.ExpenseCategory", on_delete=models.SET_NULL, null=True, blank=True
+        "expense.ExpenseCategory", on_delete=models.SET_NULL, null=True, blank=True,
     )
     reason = models.TextField(blank=True, null=True)
 

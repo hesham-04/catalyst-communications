@@ -137,7 +137,7 @@ def create_expense_calculations(
         source_object_id=project.pk,
         destination_content_type=ContentType.objects.get_for_model(vendor),
         destination_object_id=vendor.pk,
-        expense_category=category,  # FIXED LATER. CHECK AGAIN ✔
+        expense_category=category,  # FIXED LATER. CHECKED AGAIN ✔
         reason=reason,
         expense=expense,
     )

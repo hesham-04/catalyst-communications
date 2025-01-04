@@ -19,6 +19,9 @@ from src.services.transaction.models import Ledger
 from src.web.dashboard.utils import ledger_filter
 from src.services.expense.forms import DateRangeForm, YearForm
 
+from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+from openpyxl import Workbook
+from django.http import HttpResponse
 
 class ChartsIndex(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -993,23 +996,32 @@ def generate_expense_report(request, start, end):
 
     return response
 
-
 def yearly_report(request):
-    # Create a new workbook and sheet
+    # Get the selected year from the POST request
     year = request.POST.get('year') if request.method == 'POST' else None
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = "Projects"
 
-    # Define styles
-    header_font = Font(bold=True)
-    center_align = Alignment(horizontal="center", vertical="center")
-    border_style = Border(
+    # Styles
+    header_font = Font(size=12, bold=True, color="FFFFFF")
+    normal_font = Font(size=11)
+    centered_alignment = Alignment(horizontal="center", vertical="center")
+    left_alignment = Alignment(horizontal="left", vertical="center")
+    header_fill = PatternFill("solid", fgColor="4F81BD")  # Blue background for headers
+    thin_border = Border(
         left=Side(style="thin"),
         right=Side(style="thin"),
         top=Side(style="thin"),
         bottom=Side(style="thin"),
     )
+
+    # Add a title row with year information
+    sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=5)
+    sheet["A1"] = f"Yearly Report for {year if year else 'All Years'}"
+    sheet["A1"].font = Font(size=14, bold=True, color="FFFFFF")
+    sheet["A1"].alignment = centered_alignment
+    sheet["A1"].fill = header_fill
 
     # Column Headers
     headers = ["Sr. No.", "Name", "Operating Expense", "Invoiced", "Received"]
@@ -1021,14 +1033,15 @@ def yearly_report(request):
 
     # Add table headers
     for col_num, header in enumerate(headers, start=1):
-        cell = sheet.cell(row=1, column=col_num)
+        cell = sheet.cell(row=2, column=col_num)
         cell.value = header
         cell.font = header_font
-        cell.alignment = center_align
-        cell.border = border_style
+        cell.alignment = centered_alignment
+        cell.border = thin_border
+        cell.fill = header_fill
 
     # Get Project Data
-    row = 2
+    row = 3
     for project in Project.objects.all():
         # Calculate operating expense, invoiced, and received amounts
         operating_expense = Ledger.objects.filter(
@@ -1041,7 +1054,7 @@ def yearly_report(request):
         received = project.invoices.filter(created_at__year=year, status='PAID').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
 
         # Add data to the sheet
-        sheet.cell(row=row, column=1).value = row - 1  # Sr. No.
+        sheet.cell(row=row, column=1).value = row - 2  # Sr. No.
         sheet.cell(row=row, column=2).value = project.project_name
         sheet.cell(row=row, column=3).value = float(operating_expense)
         sheet.cell(row=row, column=4).value = float(invoiced)
@@ -1050,8 +1063,8 @@ def yearly_report(request):
         # Apply styling to each cell
         for col_num in range(1, 6):
             cell = sheet.cell(row=row, column=col_num)
-            cell.alignment = center_align
-            cell.border = border_style
+            cell.alignment = centered_alignment
+            cell.border = thin_border
 
         row += 1
 
