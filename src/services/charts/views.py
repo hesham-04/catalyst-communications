@@ -1056,8 +1056,14 @@ def yearly_report(request):
             transaction_type='CREATE_EXPENSE'
         ).aggregate(Sum('amount'))['amount__sum'] or 0
 
-        invoiced = project.invoices.filter(created_at__year=year).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
-        received = project.invoices.filter(created_at__year=year, status='PAID').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+        # Query for invoiced amount
+        invoiced = project.invoices.filter(created_at__year=year).aggregate(Sum('total_amount'))['total_amount__sum']
+        invoiced = invoiced if invoiced is not None else 0
+
+        # Query for received (paid) amount
+        received = project.invoices.filter(created_at__year=year, status='PAID').aggregate(Sum('total_amount'))[
+            'total_amount__sum']
+        received = received if received is not None else 0
 
         # Add data to project columns (A - E)
         sheet.cell(row=row, column=1).value = row - 2  # Sr. No.
