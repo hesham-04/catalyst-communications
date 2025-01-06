@@ -10,6 +10,16 @@ class ExpenseForm(forms.ModelForm):
     class Meta:
         model = Expense
         fields = ["description", "amount", "budget_source", "category", "vendor"]
+        widgets = {
+            "description": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter description"}
+            ),
+            "amount": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "Enter amount", "required": True}
+            ),
+            "category": forms.Select(attrs={"class": "form-control", "required": True}),
+            "vendor": forms.Select(attrs={"class": "form-control", "required": True}),
+        }
 
 
 class ExpenseCategoryForm(forms.ModelForm):
