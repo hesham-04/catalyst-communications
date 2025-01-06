@@ -86,6 +86,32 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% if object %}
+        <script>
+            $(document).ready(function () {
+                // Select the last invoice-item card
+                let lastCard = $(".invoice-item").last();
+
+                // Find all input fields inside the last card (excluding checkboxes)
+                let inputFields = lastCard.find("input[type='text'], input[type='number']");
+
+                // Set required to false initially for all inputs in the last card
+                inputFields.each(function () {
+                    $(this).prop("required", false);
+                });
+
+                // Add event listeners to each input field in the last card
+                inputFields.on("input", function () {
+                    // Set required to true for all inputs in the last card when any input changes
+                    inputFields.prop("required", true);
+                });
+            });
+
+        </script>
+    {% endif %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             let itemFormIndex = 1; // Start from the next available index, since the first item already exists in the HTML

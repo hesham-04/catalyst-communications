@@ -321,7 +321,8 @@ class UpdateGeneralQuotationView(LoginRequiredMixin, UpdateView):
             return self.form_invalid(form)
 
     def get_success_url(self):
-        return reverse("quotation:open-market")
+        return reverse("quotation:general_detail", kwargs={"pk": self.object.pk})
+
 
 
 class GeneralQuotationUpdateView(LoginRequiredMixin, UpdateView):
