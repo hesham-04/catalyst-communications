@@ -98,7 +98,6 @@ class Ledger(models.Model):
         ]
 
     def delete(self, request, without_repercussions=False, *args, **kwargs):
-        # Perform any pre-delete actions here
         # If Source or Destination is Project then the subtraction or addition is possible from two fields:
         # [ (project_account_balance), (project_cash) ]
         if without_repercussions:
