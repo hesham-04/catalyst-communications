@@ -56,7 +56,7 @@
                                         <td>{{ object.remaining_amount }}</td>
                                         <td>{{ object.due_date }}</td>
                                         <td class="text-center {% if object.is_repaid %} text-success {% else %} text-danger {% endif %} "><span><i class="fa-solid {% if object.is_repaid %}fa-circle-check {% else %}fa-circle-xmark{% endif %}"></i></span></td>
-                                        <td class="text-center text-success"><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td class="text-center text-success"><a href="{% url 'loan:return_loan' object.pk %}"><i class="fa-solid fa-pen-to-square"></i></a></td>
                                     </tr>
                                     {% endfor %}
                                     </tbody>
