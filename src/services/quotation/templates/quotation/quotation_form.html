@@ -10,14 +10,18 @@
         <div class="container-fluid">
             <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                 <h4 class="page-title">
-                    {% if project %}
-                    <a class="btn btn-secondary btn-sm me-2" href="{% url 'project:detail' project.pk %}"><i
-                            class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                    {% else %}
-                    <a class="btn btn-secondary btn-sm me-2" href="{% url 'quotation:open-market' %}"><i
-                            class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                    Create Quotation</h4>
-                {% endif %}
+
+                    <a class="btn btn-secondary btn-sm me-2"
+                            {% if project %}
+                                href="{% url 'project:detail' project.pk %}"
+                            {% else %}
+                                href="{% url 'quotation:open-market' %}"
+                            {% endif %}">
+                        <i class="fa fa-arrow-left-long me-1"></i>
+                        Go Back
+                    </a>
+                    {% if object %}Update Quotation{% else %}Create Quotation{% endif %}
+                </h4>
             </div>
 
             <div class="row">
@@ -46,7 +50,7 @@
                                             <div class="col-md-3">
                                                 <button style="width:200px" type="submit"
                                                         class="btn btn-success mt-3">
-                                                    Create Quotation
+                                                    Submit
                                                 </button>
                                             </div>
                                             <div class="col-md-9">

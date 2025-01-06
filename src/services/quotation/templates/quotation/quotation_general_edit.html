@@ -16,7 +16,7 @@
                         <h4 class="page-title">
                             <a class="btn btn-secondary btn-sm" href="{% url 'quotation:general_detail' object.pk %}"><i
                                     class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-                            Update Quotation</h4>
+                            {% if object %}Update Quotation {%  else %} Create Quotation {% endif %}</h4>
 
                     </div>
 

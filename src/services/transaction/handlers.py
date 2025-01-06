@@ -83,7 +83,9 @@ def misc_loan_create(source, destination, amount, **kwargs):
     - Remove the amount from the account balance.
     - Delete the source (loan) instance.
     """
-    if source.balance < amount:
+
+    if destination.balance < amount:
+        # This is destination, we check if the destination i.e. acc has enough balance to be subtracted.
         raise TransactionError(
             f"Insufficient balance in {source.project_name} account.",
             details={"source": source, "amount": amount},

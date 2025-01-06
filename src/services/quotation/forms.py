@@ -313,7 +313,7 @@ class QuotationGeneralForm(forms.ModelForm):
                 }
             ),
             "letterhead": forms.CheckboxInput(
-                attrs={"class": "form-check-input", "required": True}
+                attrs={"class": "form-check-input", "required": False}
             ),
             "due_date": forms.DateInput(
                 attrs={"class": "form-control", "type": "date", "required": True}

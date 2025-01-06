@@ -33,18 +33,18 @@
                                         Destination: <span class="text-danger">{{ object.destination }}</span>
                                         <br><br>
                                         - Adding the
-                                        <strong style="color: red;">Transaction</strong>
+                                        <strong style="color: #e77575;">Transaction</strong>
                                         amount back to the source.
 
                                         <br>
                                         - Subtracting/Deleting the <strong
-                                            style="color: red;">Transaction/Instance</strong>
+                                            style="color: #e77575;">Transaction/Instance</strong>
                                         amount from the destination.
 
                                         <br><br>
                                         This ensures that your financial records remain accurate after the deletion.
                                     </p>
-                                    <p>Overriding will bypass this process</p>
+                                    <p style="color: red">Overriding will bypass this process.</p>
                                 </div>
                                 <form method="post">
                                     {% csrf_token %}
@@ -52,9 +52,9 @@
                                         <i class="fa fa-arrow-left me-1"></i>Go Back
                                     </a>
                                     <input class="btn btn-danger float-end" type="submit" value="Delete">
-                                    <input id="override-delete-btn" class="btn btn-warning float-end me-2" type="submit"
+                                    <input id="override-delete-btn" class="btn btn-outline-danger float-end me-2" type="submit"
                                            name="override_delete"
-                                           value="Override Delete" disabled>
+                                           value="Override Delete ( Not Recommended )" disabled>
                                 </form>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
         $(document).ready(function () {
             setTimeout(function () {
                 $('#override-delete-btn').prop('disabled', false);
-            }, 10000); // 10 seconds
+            }, 20000); // 10 seconds
         });
     </script>
 

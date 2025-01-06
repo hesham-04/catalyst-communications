@@ -3,6 +3,11 @@ from django.db.models import Sum
 from phonenumber_field.modelfields import PhoneNumberField
 
 from src.services.expense.models import Expense
+from src.services.transaction.models import Ledger
+from src.web.dashboard.utils import ledger_filter
+from django.db import models
+from django.db.models import Sum, Q
+
 
 
 class Vendor(models.Model):
@@ -30,17 +35,21 @@ class Vendor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     def __str__(self):
         return self.name
 
+    from django.db.models import Sum
+
     @property
     def total_expense(self):
-        return (
-            self.expenses.filter(payment_status=Expense.PaymentStatus.PAID).aggregate(
-                total=Sum("amount")
-            )["total"]
-            or 0
-        )
+        """
+        Computes the total paid expenses for the vendor based on related ledger transactions.
+        Returns:
+            Decimal: Total sum of paid expenses. Returns 0 if no transactions exist.
+        """
+        total = ledger_filter(destination=self).aggregate(total=Sum("amount"))["total"]
+        return total if total is not None else 0
 
     def get_unpaid_expenses(self):
         """
@@ -55,3 +64,4 @@ class Vendor(models.Model):
         unpaid_expenses = self.get_unpaid_expenses()
         total = unpaid_expenses.aggregate(total=Sum("amount"))["total"] or 0
         return round(total, 2)
+
