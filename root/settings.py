@@ -1,6 +1,7 @@
 import datetime
 from pathlib import Path
 import environ
+# import random
 
 """ APPLICATION CONFIGURATIONS """
 
