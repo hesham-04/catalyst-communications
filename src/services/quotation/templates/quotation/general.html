@@ -43,7 +43,9 @@
                                         <th class="border-top-0">Client Name</th>
                                         <th class="border-top-0">Email</th>
                                         <th class="border-top-0">Status</th>
-                                        <th class="border-top-0 text-center">Amount</th>
+                                        <th class="border-top-0">Amount</th>
+                                        <th class="border-top-0 text-center">Delete</th>
+
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -59,6 +61,8 @@
                                         </td>
 
                                         <td class="text-center">{{ object.total_amount }} PKR</td>
+                                        <td class="text-center"><a href="{% url 'quotation:general-delete' object.pk %}"><i class="text-danger fa fa-trash"></i></a></td>
+
                                     </tr>
                                     {% endfor %}
 

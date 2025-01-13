@@ -59,7 +59,8 @@
                                         <td>{{ object.updated_at }}</td>
                                         <td> {{ object.starting_balance }} PKR</td>
                                         <td> <a href="{% url 'assets:account_balance_delete' object.pk %}"><i class="text-danger fa fa-trash"></i></a> </td>
-                                    </tr><!--end tr-->
+                                    </tr>
+                                    <!--end tr-->
                                 {% empty %}
                                     <p class="text-danger"> No Accounts Added</p>
                                 {% endfor %}

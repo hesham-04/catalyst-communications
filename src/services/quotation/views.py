@@ -3,9 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction, IntegrityError
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
-from django.views.generic import CreateView, DetailView, UpdateView, ListView
-from django.views.generic import TemplateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DetailView, UpdateView, ListView, TemplateView
+from django.views.generic.edit import DeleteView
 
 from .forms import (
     QuotationForm,
@@ -168,7 +168,7 @@ class CreateGeneralQuotationView(LoginRequiredMixin, CreateView):
             return redirect("quotation:open-market")
 
     def get_success_url(self):
-        return reverse("quotation:open-market")
+        return reverse("quotation:general_detail", kwargs={"pk": self.object.pk})
 
 
 class GeneralQuotationDetailView(LoginRequiredMixin, DetailView):
@@ -332,3 +332,11 @@ class GeneralQuotationUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("quotation:general_detail", kwargs={"pk": self.object.pk})
+
+
+class GeneralQuotationDeleteView(LoginRequiredMixin, DeleteView):
+    model = QuotationGeneral
+    template_name = "quotation/general_quotation_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse("quotation:open-market")

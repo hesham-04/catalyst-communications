@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html' %}
+{% block title %} Delete {% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-6">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Note:</strong> All the objects related to {{ object }} will become Null Or Cascade.
+                        </div>
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <h5 class="ms-2">Are you sure you want to delete "{{ object }}"?</h5>
+                                <p class="ms-2 text-danger">This action can not be undone</p>
+
+                                <form method="post">{% csrf_token %}
+                                    {{ form }}
+                                    <a href="{% url 'quotation:open-market' %}">
+                                        <div class="btn btn-secondary me-2"><i class="fa fa-arrow-left me-1"></i>Go
+                                            Back
+                                        </div>
+                                    </a>
+                                    <input class="btn btn-danger float-end" type="submit" value="Confirm">
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

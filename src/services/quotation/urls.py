@@ -10,6 +10,7 @@ from .views import (
     UpdateQuotationView,
     UpdateGeneralQuotationView,
     GeneralQuotationUpdateView,
+    GeneralQuotationDeleteView
 )
 from ..invoice.views import InvoicePaidView
 
@@ -60,4 +61,5 @@ urlpatterns += [
         GeneralQuotationUpdateView.as_view(),
         name="general_edit",
     ),  # only the model
+    path('<str:pk>/delete/', GeneralQuotationDeleteView.as_view(), name='general-delete'),
 ]
