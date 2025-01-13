@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, FormView
+from django.views.generic import CreateView, ListView, DetailView, FormView, DeleteView
 
 from src.services.project.bll import (
     add_loan_to_project,
@@ -253,3 +253,9 @@ class MiscLoanReturnView(LoginRequiredMixin, FormView):
             destination=loan, transaction_type="MISC_LOAN_RETURN"
         )
         return context
+
+
+class LenderDeleteView(LoginRequiredMixin, DeleteView):
+    model = Lender
+    success_url = reverse_lazy("loan:lenders")
+    template_name = 'loan/lender_confirm_delete.html'

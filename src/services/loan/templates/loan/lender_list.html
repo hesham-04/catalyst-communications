@@ -38,6 +38,7 @@
                                     <th class="border-top-0">Account Number</th>
                                     <th class="border-top-0">Iban</th>
                                     <th class="border-top-0">Due Amount</th>
+                                    <th class="border-top-0">Delete</th>
                                 </tr><!--end tr-->
                                 </thead>
                                 <tbody>
@@ -61,6 +62,10 @@
                                         <td>{{ object.iban }}</td>
                                         <td><span
                                                 class="badge bg-success-subtle text-danger fs-11 fw-medium px-2">{{ object.get_total_due }} PKR</span>
+                                        </td>
+                                        <td>
+                                            <i></i>
+                                            <a href="{% url 'loan:lender-delete' object.pk %}"> <i class="fa fa-trash text-danger"></i></a>
                                         </td>
                                     </tr><!--end tr-->
                                 {% empty %}
