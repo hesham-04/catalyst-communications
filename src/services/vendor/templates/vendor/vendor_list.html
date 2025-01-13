@@ -62,6 +62,7 @@
                                             <th class="border-top-0">Email</th>
                                             <th class="border-top-0">Paid</th>
                                             <th class="border-top-0 text-center">Contact</th>
+                                            <th class="border-top-0 text-center">Delete</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -75,6 +76,7 @@
                                                 </td>
 
                                                 <td class="text-center">{{ object.phone }}</td>
+                                                <td class="text-center"><a href="{% url 'vendor:delete' object.pk %}"><i class="text-danger fa fa-trash"></i></a></td>
                                             </tr>
                                         {% endfor %}
 

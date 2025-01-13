@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from django.views.generic import DetailView, ListView
+from django.views.generic.edit import DeleteView
+from django.views.generic import DetailView, ListView, CreateView
 
 from .forms import VendorForm
 from .models import Vendor
@@ -64,3 +64,9 @@ class VendorDetailView(LoginRequiredMixin, DetailView):
         context["statuses"] = Expense.PaymentStatus.choices
 
         return context
+
+
+class VendorDeleteView(LoginRequiredMixin, DeleteView):
+    model = Vendor
+    success_url = reverse_lazy("vendor:vendors")
+    template_name = "vendor/vendor_confirm_delete.html"
