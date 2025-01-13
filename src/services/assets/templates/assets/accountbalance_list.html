@@ -38,7 +38,7 @@
                                     <th class="border-top-0">Balance</th>
                                     <th class="border-top-0">Updated at</th>
                                     <th class="border-top-0">Starting Balance</th>
-                                    <th class="border-top-0">Transactions</th>
+                                    <th class="border-top-0">Delete</th>
                                 </tr><!--end tr-->
                                 </thead>
                                 <tbody>
@@ -58,7 +58,7 @@
                                         <td><a href="#" class="fs-12 text-primary">{{ object.balance }} PKR</a></td>
                                         <td>{{ object.updated_at }}</td>
                                         <td> {{ object.starting_balance }} PKR</td>
-                                        <td> -</td>
+                                        <td> <a href="{% url 'assets:account_balance_delete' object.pk %}"><i class="text-danger fa fa-trash"></i></a> </td>
                                     </tr><!--end tr-->
                                 {% empty %}
                                     <p class="text-danger"> No Accounts Added</p>

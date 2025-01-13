@@ -17,7 +17,7 @@ from ..project.bll import add_general_cash_in_hand, add_account_balance
 from ..transaction.models import Ledger
 from ...core.mixins import AdminRequiredMixin
 from ...web.dashboard.utils import ledger_filter
-
+from .forms import AddBalance
 
 class IndexView(AdminRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "assets/assets_index.html"
@@ -130,11 +130,8 @@ class AccountBalanceUpdateView(AdminRequiredMixin, LoginRequiredMixin, UpdateVie
 
 class AccountBalanceDeleteView(AdminRequiredMixin, LoginRequiredMixin, DeleteView):
     model = AccountBalance
-    template_name = "accountbalance_confirm_delete.html"
+    template_name = "assets/accountbalance_confirm_delete.html"
     success_url = reverse_lazy("assets:accounts")
-
-
-from .forms import AddBalance
 
 
 class AccountBalanceDetailView(AdminRequiredMixin, LoginRequiredMixin, DetailView):
