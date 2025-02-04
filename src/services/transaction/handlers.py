@@ -181,6 +181,7 @@ def add_acc_balance(destination, amount,  **kwargs):
     destination.balance -= amount
     destination.save()
 
+@transaction.atomic
 def bank_transfer(source, destination, amount, **kwargs):
     """
     Handles the BTB_TRANSFER transaction type.

@@ -1,22 +1,23 @@
 from django import forms
+from django.utils.timezone import now
 
 from .models import Expense, ExpenseCategory, JournalExpense
 from ..assets.models import AccountBalance
-from ..project.models import Project
 from datetime import datetime
 
 
 class ExpenseForm(forms.ModelForm):
+    created_at = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"})
+    )
+
     class Meta:
         model = Expense
-        fields = ["description", "amount", "budget_source", "category", "vendor"]
+        fields = ["description", "amount", "budget_source", "category", "vendor", "created_at"]
         widgets = {
-            "description": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Enter description"}
-            ),
-            "amount": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Enter amount", "required": True}
-            ),
+            "description": forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter description"}),
+            "amount": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Enter amount", "required": True}),
             "category": forms.Select(attrs={"class": "form-control", "required": True}),
             "vendor": forms.Select(attrs={"class": "form-control", "required": True}),
         }
@@ -64,6 +65,11 @@ class JournalExpenseForm(forms.ModelForm):
         required=False,
         label="Select Account (if applicable)",
     )
+    created_at = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
+        initial=now,
+    )
 
     class Meta:
         model = JournalExpense
@@ -74,14 +80,11 @@ class JournalExpenseForm(forms.ModelForm):
             "account",
             "category",
             "vendor",
+            "created_at",
         ]
         widgets = {
-            "description": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Enter description"}
-            ),
-            "amount": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Enter amount"}
-            ),
+            "description": forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter description"}),
+            "amount": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Enter amount"}),
             "category": forms.Select(attrs={"class": "form-control", "required": True}),
             "vendor": forms.Select(attrs={"class": "form-control", "required": True}),
         }
@@ -126,7 +129,6 @@ class DateRangeForm(forms.Form):
         ),
         label="Ending Date",
     )
-
 
 
 class YearForm(forms.Form):

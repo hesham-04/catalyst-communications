@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django.utils import timezone
 
 
 class ExpenseCategory(models.Model):
@@ -36,7 +37,7 @@ class Expense(models.Model):
     vendor = models.ForeignKey(
         "vendor.Vendor", on_delete=models.SET_NULL, null=True, related_name="expenses"
     )  # Link to Vendor model
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     payment_status = models.CharField(
         max_length=6, choices=PaymentStatus.choices, default=PaymentStatus.PAID
     )
@@ -84,7 +85,7 @@ class JournalExpense(models.Model):
         blank=True,
         related_name="journal_expenses",
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.description} - {self.amount}"
