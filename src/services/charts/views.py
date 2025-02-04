@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import openpyxl
-from django.db.models import Sum, Q
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
@@ -12,7 +12,6 @@ from openpyxl.utils import get_column_letter
 
 from src.core.mixins import AdminRequiredMixin
 from src.services.assets.models import AccountBalance
-from src.services.expense.models import JournalExpense
 from src.services.invoice.models import Invoice
 from src.services.project.models import Project
 from src.services.transaction.models import Ledger
@@ -743,7 +742,7 @@ def generate_bank_statements_view(request):
                 "INVOICE_PAYMENT",
                 "ADD_ACC_BALANCE",
                 "MISC_LOAN_CREATE",
-            ]:
+            ] or tx.transaction_type == "BTB_TRANSFER" and tx.destination == account: # TO OO: Validate
                 credit = tx.amount
                 debit = 0
                 current_balance += credit
@@ -783,7 +782,6 @@ def generate_bank_statements_view(request):
     workbook.save(response)
 
     return response
-
 
 def generate_expense_report(request, start, end):
     # Filter expenses within the date range
@@ -992,12 +990,6 @@ def generate_expense_report(request, start, end):
     wb.save(response)
 
     return response
-
-from openpyxl.utils import get_column_letter
-from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
-from openpyxl import Workbook
-from openpyxl.cell.cell import MergedCell
-from django.http import HttpResponse
 
 def yearly_report(request):
     # Get the selected year from the POST request

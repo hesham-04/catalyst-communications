@@ -174,12 +174,28 @@ def invoice_payment(source, destination, amount, **kwargs):
 
 
 @transaction.atomic
-def add_acc_balance(source, destination, **kwargs):
+def add_acc_balance(destination, amount,  **kwargs):
     """
     Placeholder for ADD_ACC_BALANCE transaction type.
     """
-    pass  # Implementation needed
+    destination.balance -= amount
+    destination.save()
 
+def bank_transfer(source, destination, amount, **kwargs):
+    """
+    Handles the BTB_TRANSFER transaction type.
+    - Transfer cash from the destination to the source.
+    """
+    if destination.balance < amount:
+        raise TransactionError(
+            f"Insufficient balance in {destination.account_name} account.",
+            details={"source": source, "amount": amount},
+        )
+    else:
+        source.balance += amount
+        source.save()
+        destination.balance -= amount
+        destination.save()
 
 # Map transaction types to their handlers
 TRANSACTION_HANDLERS = {
@@ -194,4 +210,5 @@ TRANSACTION_HANDLERS = {
     "ADD_CASH": add_cash,
     "INVOICE_PAYMENT": invoice_payment,
     "ADD_ACC_BALANCE": add_acc_balance,
+    'BTB_TRANSFER': add_cash
 }
