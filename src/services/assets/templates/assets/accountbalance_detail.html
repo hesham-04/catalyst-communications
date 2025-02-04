@@ -1,5 +1,7 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
+{% block title %} {{ object.account_name }} {% endblock %}
+
 
 {% block content %}
     <div class="page-wrapper">
@@ -23,9 +25,14 @@
                         <div class="row">
                             <div class="col-12 d-flex justify-content-between">
                                 <p class="text-white text-uppercase mb-0 fw-semibold fs-14 mt-2">{{ object.account_name }}</p>
-                                <a href="{% url 'assets:add-balance' object.pk %}">
-                                    <div class="btn btn-primary float-end"> Add Balance</div>
-                                </a>
+                                <div class="float-end">
+                                    <a href="{% url 'assets:transfer' object.pk %}">
+                                        <div class="btn btn-outline-primary"> Transfer </div>
+                                    </a>
+                                    <a href="{% url 'assets:add-balance' object.pk %}">
+                                        <div class="btn btn-primary"> Add Balance</div>
+                                    </a>
+                                </div>
                             </div>
                             <!--end col-->
                         </div><!--end row-->
@@ -85,19 +92,41 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for object in object_list %}
+                                        {% for obj in object_list %}
                                             <tr>
-                                                <td>{{ object.created_at|date:"d M Y" }}
-                                                    <span>{{ object.created_at|time:"h:ia" }}</span></td>
+                                                <td>{{ obj.created_at|date:"d M Y" }}
+                                                    <span>{{ obj.created_at|time:"h:ia" }}</span></td>
                                                 <td>
-                                                    <span
-                                                            class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH'  or object.transaction_type == 'MISC_LOAN_RETURN' %} badge bg-danger-subtle text-danger{% else %}text-success badge bg-success-subtle{% endif %} fs-11 fw-medium px-2">{{ object.transaction_type }}
+                                                    <span class="
+                                                             {% if obj.transaction_type == "MISC_EXPENSE" or obj.transaction_type == "BUDGET_ASSIGN" or obj.transaction_type == "RETURN_LOAN" or obj.transaction_type == 'ADD_CASH'  or obj.transaction_type == 'MISC_LOAN_RETURN' %}
+                                                                badge bg-danger-subtle text-danger
+                                                             {% elif obj.transaction_type == 'BTB_TRANSFER' %}
+                                                                {% if object.pk == obj.source_object_id %}
+                                                                    badge bg-danger-subtle text-danger
+                                                                {% else %}
+                                                                    badge bg-success-subtle text-success
+                                                                {% endif %}
+                                                             {% else %}
+                                                                text-success badge bg-success-subtle
+                                                             {% endif %} fs-11 fw-medium px-2"> {{ obj.transaction_type }}
                                                     </span>
                                                 </td>
-                                                <td>{{ object.reason|slice:20 }}</td>
-                                                <td class="{% if object.transaction_type == "MISC_EXPENSE" or object.transaction_type == "BUDGET_ASSIGN" or object.transaction_type == "RETURN_LOAN" or object.transaction_type == 'ADD_CASH' or object.transaction_type == 'MISC_LOAN_RETURN' %} text-danger{% else %}text-success{% endif %}">{{ object.amount }}</td>
-                                                <td>{{ object.source }}</td>
-                                                <td>{{ object.destination }}</td>
+
+                                                <td>{{ obj.reason|slice:20 }}</td>
+
+                                                <td class="{% if obj.transaction_type == "MISC_EXPENSE" or obj.transaction_type == "BUDGET_ASSIGN" or obj.transaction_type == "RETURN_LOAN" or obj.transaction_type == 'ADD_CASH'  or obj.transaction_type == 'MISC_LOAN_RETURN' %}
+                                                                 text-danger
+                                                             {% elif obj.transaction_type == 'BTB_TRANSFER' %}
+                                                                {% if object.pk == obj.source_object_id %}
+                                                                     text-danger
+                                                                {% else %}
+                                                                     text-success
+                                                                {% endif %}
+                                                             {% else %}
+                                                                text-success
+                                                             {% endif %}">{{ obj.amount }}</td>
+                                                <td>{{ obj.source }}</td>
+                                                <td>{{ obj.destination }}</td>
 
                                             </tr>
                                         {% empty %}

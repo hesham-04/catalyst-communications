@@ -377,3 +377,25 @@ def add_account_balance(amount, account_pk, reason):
         return True, "Transaction successful"
     except Exception as e:
         return False, f"A Fatal error occurred while processing the payment: {str(e)}"
+
+
+def transfer_balance(source, destination, amount, reason):
+    try:
+        source.balance -= amount
+        destination.balance += amount
+        source.save()
+        destination.save()
+
+        Ledger.objects.create(
+            transaction_type="BTB_TRANSFER",
+            amount=amount,
+            source_content_type=ContentType.objects.get_for_model(source),
+            source_object_id=source.pk,
+            destination_content_type=ContentType.objects.get_for_model(destination),
+            destination_object_id=destination.pk,
+            reason=reason,
+        )
+        return True, "Transaction successful"
+
+    except Exception as e:
+        return False, f"A Fatal error occurred while processing the payment: {str(e)}"

@@ -9,7 +9,7 @@ from .views import (
     AddCashInHandView,
     AccountBalanceDetailView,
     AddAccountBalanceView,
-    AccountBalanceDeleteView
+    AccountBalanceDeleteView, AccountBalanceTransferView
 )
 
 app_name = "assets"
@@ -38,4 +38,5 @@ urlpatterns = [
     path("cash-in-hand/", CashInHandDetailView.as_view(), name="cash_list"),
 
     path('delete/<str:pk>/', AccountBalanceDeleteView.as_view(), name='account_balance_delete'),
+    path('transfer/<str:pk>/', AccountBalanceTransferView.as_view(), name='transfer'),
 ]

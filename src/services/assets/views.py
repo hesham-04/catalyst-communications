@@ -1,20 +1,20 @@
-from ctypes.wintypes import LGRPID
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.db.models import Sum, Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView
 
-from .forms import CashInHandForm
+from .forms import CashInHandForm, TransferForm
 from .models import CashInHand, AccountBalance
-from ..project.bll import add_general_cash_in_hand, add_account_balance
-from ..transaction.models import Ledger
+from ..project.bll import add_general_cash_in_hand, add_account_balance, transfer_balance
 from ...core.mixins import AdminRequiredMixin
 from ...web.dashboard.utils import ledger_filter
 from .forms import AddBalance
@@ -150,7 +150,6 @@ class AccountBalanceDetailView(AdminRequiredMixin, LoginRequiredMixin, DetailVie
 
         return context
 
-
 class AddAccountBalanceView(AdminRequiredMixin, LoginRequiredMixin, FormView):
     form_class = AddBalance
     template_name = "assets/add_balance.html"
@@ -192,4 +191,50 @@ class AddAccountBalanceView(AdminRequiredMixin, LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["account"] = self.get_object()
+        return context
+
+
+
+class AccountBalanceTransferView(LoginRequiredMixin, AdminRequiredMixin, FormView):
+    template_name = "assets/transfer_balance.html"
+    form_class = TransferForm
+
+    def get_account(self):
+        """Retrieve the account or return 404 if not found."""
+        return get_object_or_404(AccountBalance, pk=self.kwargs.get("pk"))
+
+    def get_form_kwargs(self):
+        """Pass the current account to the form."""
+        kwargs = super().get_form_kwargs()
+        kwargs["current_account"] = self.get_account()
+        return kwargs
+
+    def form_valid(self, form):
+        """Handle successful form submission."""
+        account = self.get_account()
+        destination = form.cleaned_data["destination"]
+        amount = form.cleaned_data["amount"]
+        reason = form.cleaned_data["reason"]
+
+        if amount <= 0:
+            form.add_error("amount", "The amount must be greater than zero.")
+            return self.form_invalid(form)
+
+        if amount > account.balance:
+            form.add_error("amount", "The amount you entered is greater than your balance.")
+            return self.form_invalid(form)
+
+        # Perform the transfer
+        transfer_balance(amount=amount, source=account, destination=destination, reason=reason)
+
+        messages.success(self.request, f"Transferred {amount} to {destination.account_name} successfully.")
+        return redirect(reverse("assets:account-detail", kwargs={"pk": account.pk}))
+
+    def form_invalid(self, form):
+        """Handle invalid form submissions."""
+        return self.render_to_response(self.get_context_data(form=form, account=self.get_account()))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account"] = self.get_account()
         return context

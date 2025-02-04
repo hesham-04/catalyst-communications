@@ -1,5 +1,5 @@
 {% extends 'dashboard/base.html' %}
-{% block title %}Create Customer{% endblock %}
+{% block title %}Create Expense {% endblock %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
@@ -12,11 +12,11 @@
 
                 <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
                     <h4 class="page-title">
-                        <a class="btn btn-secondary btn-sm" href="{% url 'expense:index' %}"><i
-                                class="fa fa-arrow-left-long me-1"></i> Go Back</a>
-
-                        Add General Expense</h4>
-
+                        <a class="btn btn-secondary btn-sm" href="{% url 'expense:index' %}">
+                            <i class="fa fa-arrow-left-long me-1"></i> Go Back
+                        </a>
+                        Add General Expense
+                    </h4>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -24,7 +24,6 @@
                             <div class="card-body">
                                 <form method="post">
                                     {% csrf_token %}
-
 
                                     <div class="row">
                                         <div class=" col-md-6 mb-3">
@@ -66,7 +65,6 @@
 
                                     <!-- Category -->
 
-
                                     <button type="submit" class="btn btn-primary">Submit Expense</button>
                                 </form>
 
@@ -85,8 +83,9 @@
                                         <tr class="">
                                             <td class="px-0">
                                                 <div class="d-flex align-items-center">
-                                <span
-                                        class="thumb-md justify-content-center d-flex align-items-center bg-success-subtle text-success rounded-circle me-2">CIH</span>
+                                                    <span class="thumb-md justify-content-center d-flex align-items-center bg-success-subtle text-success rounded-circle me-2">
+                                                        CIH
+                                                    </span>
                                                     <div class="flex-grow-1 text-truncate">
                                                         <h6 class="m-0 text-truncate">Cash in hand</h6>
                                                     </div>
@@ -102,8 +101,9 @@
                                         <tr class="">
                                             <td class="px-0">
                                                 <div class="d-flex align-items-center">
-                                <span
-                                        class="thumb-md justify-content-center d-flex align-items-center bg-warning-subtle text-warning rounded-circle me-2">ACC</span>
+                                                    <span class="thumb-md justify-content-center d-flex align-items-center bg-warning-subtle text-warning rounded-circle me-2">
+                                                        ACC
+                                                    </span>
                                                     <div class="flex-grow-1 text-truncate">
                                                         <h6 class="m-0 text-truncate">Account Balance</h6>
                                                     </div>

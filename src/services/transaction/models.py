@@ -35,6 +35,11 @@ class Ledger(models.Model):
             "ADD_ACC_BALANCE",
             "Balance Added",  # Update General Account Balance [ NOT IMPLEMENTED ] TODO: IMPLEMENT THIS
         ),
+        (
+            'BTB_TRANSFER',
+            'Bank Transfer', # Transfer from Bank to Bank
+        )
+
     ]
 
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
