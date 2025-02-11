@@ -5,8 +5,6 @@ workflows, enhance collaboration, and automate tasks. Built using **Django** and
 responsive user experience for businesses aiming to optimize their communication and operational efficiency.
 
 ## Features
-
-- **Real-Time Collaboration**: Facilitate instant communication and task updates with WebSockets.
 - **Task Management**: Organize and track tasks with an intuitive interface.
 - **Automation**: Automate repetitive operations using Celery and Redis.
 - **RESTful APIs**: Extend and integrate with other platforms seamlessly.
