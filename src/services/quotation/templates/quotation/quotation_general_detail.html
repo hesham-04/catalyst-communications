@@ -134,11 +134,16 @@
                                 {% if quotation.status == "PAID" %}
                                     <p class="text-success text-center">Invoice Paid & funds Transferred</p>
                                 {% endif %}
+                                 <a href="{% url 'invoice:generate_challan' object.pk %}">
+                                    <div class="btn btn-purple">
+                                        View Challan
+
+                                    </div>
+                                 </a>
+
 
                             </div>
-                            <div class="col-md-6">
 
-                            </div>
                         </div>
                     </div>
 

@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, IntegrityError
 from django.db.models import Sum
@@ -130,9 +132,11 @@ class InvoiceItem(models.Model):
 
 class DeliveryChallan(models.Model):
     challan_id = models.AutoField(primary_key=True)
-    invoice = models.OneToOneField(
-        Invoice, on_delete=models.CASCADE, related_name="delivery_challan"
-    )
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    invoice = GenericForeignKey("content_type", "object_id")
+
     date = models.DateField(default=timezone.now)  # Replicate from Invoice.date
     client_name = models.CharField(max_length=255)  # Replicate from Invoice.client_name
     company_name = models.CharField(max_length=255)  # Replicate from Invoice.company_name
@@ -148,7 +152,10 @@ class DeliveryChallan(models.Model):
     remarks = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Challan {self.challan_id} for Invoice {self.invoice.invoice_number}"
+        """Safely get invoice number if available."""
+        if hasattr(self.invoice, "invoice_number"):
+            return f"Delivery Challan - {self.invoice.invoice_number}"
+        return f"Delivery Challan for {self.invoice.__class__.__name__} #{self.object_id}"
 
     class Meta:
         ordering = ["-date"]
@@ -163,27 +170,19 @@ class DeliveryChallan(models.Model):
 
 
 class DeliveryChallanItem(models.Model):
-    challan = models.ForeignKey(
-        DeliveryChallan, on_delete=models.CASCADE, related_name="items"
-    )
-    invoice_item = models.OneToOneField(
-        InvoiceItem, on_delete=models.CASCADE, related_name="challan_item",
-        null=True, blank=True
-    )
-    item_name = models.CharField(max_length=255)  # Replicate from InvoiceItem.item_name
-    description = models.TextField(blank=True, null=True)  # Replicate from InvoiceItem.description
-    quantity = models.IntegerField(default=1)  # Replicate from InvoiceItem.quantity
-    rate = models.DecimalField(max_digits=15, decimal_places=2)  # Replicate from InvoiceItem.rate
-    amount = models.DecimalField(max_digits=15, decimal_places=2)  # Replicate from InvoiceItem.amount
-    tax = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        default=0.0,
-        validators=[MinValueValidator(0.00), MaxValueValidator(50.00)],
-        null=True,
-        blank=True,
-    )  # Replicate from InvoiceItem.tax
-    remarks = models.TextField(blank=True, null=True)
+    challan = models.ForeignKey(DeliveryChallan, on_delete=models.CASCADE, related_name="items")
+
+    # Generic Foreign Key for invoice/quotation items
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    invoice_item = GenericForeignKey("content_type", "object_id")
+
+    item_name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    quantity = models.PositiveIntegerField()
+    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
 
     def __str__(self):
-        return f"{self.item_name} - Challan {self.challan.challan_id}"
+        return f"{self.item_name} (x{self.quantity})"

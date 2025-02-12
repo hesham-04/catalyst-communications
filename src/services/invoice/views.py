@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
@@ -233,22 +234,38 @@ class UpdateInvoiceView(LoginRequiredMixin, UpdateView):
         return reverse("invoice:detail", kwargs={"pk": self.object.pk})
 
 
-
-
 class DeliveryChallanView(LoginRequiredMixin, DetailView):
     model = DeliveryChallan
     template_name = "invoice/delivery_challan.html"
     context_object_name = "challan"
 
     def get_object(self):
-        # Fetch the invoice based on the provided invoice_id
         invoice_id = self.kwargs["invoice_id"]
-        invoice = get_object_or_404(Invoice, pk=invoice_id)
 
-        # Check if a delivery challan already exists for this invoice
+        # Convert invoice_id safely
+        try:
+            invoice_id_int = int(invoice_id)
+        except ValueError:
+            raise ValueError("Invalid invoice ID format")  # Handle bad input
+
+        # Try fetching the invoice from both models
+        invoice = None
+        content_type = None
+        if Invoice.objects.filter(pk=invoice_id).exists():
+            invoice = get_object_or_404(Invoice, pk=invoice_id)
+            content_type = ContentType.objects.get_for_model(Invoice)
+        elif QuotationGeneral.objects.filter(pk=invoice_id).exists():
+            invoice = get_object_or_404(QuotationGeneral, pk=invoice_id)
+            content_type = ContentType.objects.get_for_model(QuotationGeneral)
+        else:
+            raise ValueError("Invoice ID not found in either Invoice or QuotationGeneral models.")
+
+        # Fetch or create the delivery challan with the same PK as the invoice
         challan, created = DeliveryChallan.objects.get_or_create(
-            invoice=invoice,
+            pk=invoice.pk,  # Set the PK of the challan to match the invoice's PK
             defaults={
+                "content_type": content_type,
+                "object_id": invoice.pk,
                 "date": invoice.date,
                 "client_name": invoice.client_name,
                 "company_name": invoice.company_name,
@@ -260,7 +277,7 @@ class DeliveryChallanView(LoginRequiredMixin, DetailView):
                 "total_amount": invoice.total_amount,
                 "total_in_words": invoice.total_in_words,
                 "delivered_by": "Warehouse",  # Default value
-                "received_by": "Client",      # Default value
+                "received_by": "Client",  # Default value
             }
         )
 
@@ -273,12 +290,15 @@ class DeliveryChallanView(LoginRequiredMixin, DetailView):
     def populate_challan_items(self, challan, invoice):
         """
         Helper method to populate DeliveryChallanItem objects
-        based on the associated InvoiceItem objects.
+        based on the associated InvoiceItem or ItemGeneral objects.
         """
-        for item in invoice.items.all():
-            DeliveryChallanItem.objects.create(
+        invoice_items = invoice.items.all()  # Fetch items once
+        item_content_type = ContentType.objects.get_for_model(invoice_items.first())  # Detect item model
+        DeliveryChallanItem.objects.bulk_create([
+            DeliveryChallanItem(
                 challan=challan,
-                invoice_item=item,
+                content_type=item_content_type,  # Store the correct item type
+                object_id=item.id,  # Store the correct item ID
                 item_name=item.item_name,
                 description=item.description,
                 quantity=item.quantity,
@@ -286,3 +306,23 @@ class DeliveryChallanView(LoginRequiredMixin, DetailView):
                 amount=item.amount,
                 tax=item.tax,
             )
+            for item in invoice_items
+        ])
+
+class DeleteDeliveryChallanView(View):
+    """
+    Deletes a DeliveryChallan and redirects to a specified URL.
+    """
+
+    def post(self, request, challan_id):
+        try:
+            challan = get_object_or_404(DeliveryChallan, pk=challan_id)
+
+            challan.delete()
+
+            messages.success(request, "Delivery Challan regenerated successfully.")
+
+        except Exception as e:
+            messages.error(request, f"An error occurred while deleting the Delivery Challan: {str(e)}")
+
+        return redirect(reverse("invoice:generate_challan", args=[challan_id]))  # ✅ Correct

@@ -96,6 +96,13 @@
                             Go Back
                         </button>
 
+                        <form action="{% url 'invoice:delete_challan' object.pk %}" method="post">
+                            {% csrf_token %}
+                            <button id="del-btn" type="submit" class="btn btn-danger mt-2">
+                                <i class="fa fa-lg fa-refresh"></i> Regenerate (ONLY WHEN NEEDED)
+                            </button>
+                        </form>
+
                         <!-- Print Button -->
                         <button class="btn btn-primary" onclick="printSection();">
                             Print
