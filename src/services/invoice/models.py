@@ -125,3 +125,65 @@ class InvoiceItem(models.Model):
 
     def get_total_without_tax(self):
         return self.quantity * self.rate
+
+
+
+class DeliveryChallan(models.Model):
+    challan_id = models.AutoField(primary_key=True)
+    invoice = models.OneToOneField(
+        Invoice, on_delete=models.CASCADE, related_name="delivery_challan"
+    )
+    date = models.DateField(default=timezone.now)  # Replicate from Invoice.date
+    client_name = models.CharField(max_length=255)  # Replicate from Invoice.client_name
+    company_name = models.CharField(max_length=255)  # Replicate from Invoice.company_name
+    phone = models.CharField(max_length=15)
+    address = models.CharField(max_length=255)  # Replicate from Invoice.address
+    email = models.EmailField(max_length=50)  # Replicate from Invoice.email
+    subject = models.CharField(max_length=255)  # Replicate from Invoice.subject
+    notes = models.TextField(blank=True, null=True)  # Replicate from Invoice.notes
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Replicate from Invoice.total_amount
+    total_in_words = models.CharField(max_length=255)  # Replicate from Invoice.total_in_words
+    delivered_by = models.CharField(max_length=255, blank=True, null=True)
+    received_by = models.CharField(max_length=255, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Challan {self.challan_id} for Invoice {self.invoice.invoice_number}"
+
+    class Meta:
+        ordering = ["-date"]
+
+    def get_item_count(self):
+        n=0
+        for i in self.items.all():
+            n+=i.quantity
+        return n
+
+
+
+
+class DeliveryChallanItem(models.Model):
+    challan = models.ForeignKey(
+        DeliveryChallan, on_delete=models.CASCADE, related_name="items"
+    )
+    invoice_item = models.OneToOneField(
+        InvoiceItem, on_delete=models.CASCADE, related_name="challan_item",
+        null=True, blank=True
+    )
+    item_name = models.CharField(max_length=255)  # Replicate from InvoiceItem.item_name
+    description = models.TextField(blank=True, null=True)  # Replicate from InvoiceItem.description
+    quantity = models.IntegerField(default=1)  # Replicate from InvoiceItem.quantity
+    rate = models.DecimalField(max_digits=15, decimal_places=2)  # Replicate from InvoiceItem.rate
+    amount = models.DecimalField(max_digits=15, decimal_places=2)  # Replicate from InvoiceItem.amount
+    tax = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        default=0.0,
+        validators=[MinValueValidator(0.00), MaxValueValidator(50.00)],
+        null=True,
+        blank=True,
+    )  # Replicate from InvoiceItem.tax
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.item_name} - Challan {self.challan.challan_id}"

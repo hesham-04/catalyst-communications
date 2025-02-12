@@ -139,6 +139,11 @@
                                             Delete
                                         </div>
                                     </a>
+                                    <a href="{% url 'invoice:generate_challan' object.pk %}">
+                                        <div class="float-end btn btn-outline-purple me-2">
+                                            Challan
+                                        </div>
+                                    </a>
                                 {% else %}
                                     <p class="text-success text-center">Invoice Paid & funds Transferred</p>
                                 {% endif %}

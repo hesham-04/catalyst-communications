@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Invoice, InvoiceItem
+from .models import Invoice, InvoiceItem, DeliveryChallanItem, DeliveryChallan
+
+admin.site.register(
+    [DeliveryChallanItem, DeliveryChallan]
+)
 
 
 class InvoiceItemInline(admin.TabularInline):

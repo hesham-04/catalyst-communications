@@ -5,7 +5,7 @@ from .views import (
     InvoicePaidView,
     InvoiceDeleteView,
     InvoiceUpdateView,
-    UpdateInvoiceView,
+    UpdateInvoiceView, DeliveryChallanView,
 )
 
 app_name = "invoice"
@@ -19,4 +19,6 @@ urlpatterns = [
     path("delete/<str:pk>/", InvoiceDeleteView.as_view(), name="invoice-delete"),
     path("edit/<str:pk>/", InvoiceUpdateView.as_view(), name="invoice-edit"),
     path("update/<str:pk>/", UpdateInvoiceView.as_view(), name="invoice-update"),
+    path("challan/<int:invoice_id>/", DeliveryChallanView.as_view(), name="generate_challan"),
+
 ]

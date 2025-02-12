@@ -1,0 +1,124 @@
+{% extends 'dashboard/base.html' %}
+{% block title %} CN ({{ object.challan_id }}){% endblock %}
+{% load static %}
+{% load project_tags %}
+{% load custom_filters %}
+{% block content %}
+    <div class="page-wrapper">
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="container-fluid">
+                <div id="printable-section" class="container mt-4" style="max-width: 800px; margin: auto;">
+                    <div class="row justify-content-end mb-4">
+                        <div class="col-auto text-end">
+                            <h2>Delivery Challan</h2>
+                            <p class="mb-0">Dated: {{ object.date|safe }}</p>
+                            <p>Catalyst Communications</p>
+                        </div>
+                    </div>
+                    <div class="address mb-3">
+                        <p class="mb-0">
+                            {{ object.address.format|safe }},<br>
+                            {{ object.company_name|safe }}
+                        </p>
+                        <p class="mb-0">Atten: {{ object.client_name|safe }} ({{ object.phone|safe }})</p>
+                    </div>
+                    <!-- Table with Explicit Borders -->
+                    <table class="table table-bordered" style="border: 1px solid #000;">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="5%" style="border: 1px solid #000;">S.No.</th>
+                                <th scope="col" width="60%" style="border: 1px solid #000;">Description</th>
+                                <th scope="col" width="10%" style="border: 1px solid #000;">Quantity</th>
+                                <th scope="col" width="25%" style="border: 1px solid #000;">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for obj in object.items.all %}
+                            <!-- Inverter Section -->
+                            <tr>
+                                <td colspan="4" class="fw-bold bg-light" style="border: 1px solid #000;">
+                                    {{ obj.item_name|safe }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #000;">1</td>
+                                <td style="border: 1px solid #000; max-width: 300px; word-wrap: break-word;">
+                                    {{ obj.description|safe }}
+                                </td>
+                                <td style="border: 1px solid #000;">{{ obj.quantity|safe }}</td>
+                                <td style="border: 1px solid #000;"></td>
+                            </tr>
+                        {% endfor %}
+                            <!-- Total Row -->
+                            <tr class="fw-bold" style="border: 1px solid #000;">
+                                <td colspan="2" style="border: 1px solid #000;">Total Items</td>
+                                <td style="border: 1px solid #000;">{{ object.get_item_count|safe }}</td>
+                                <td style="border: 1px solid #000;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Signature Section -->
+                    <div class="signature-section mt-4">
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">Received By:</label><br>
+                            <hr class="w-75" style="border-top: 1px solid #000;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">Name:</label><br>
+                            <hr class="w-75" style="border-top: 1px solid #000;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">Designation:</label><br>
+                            <hr class="w-75" style="border-top: 1px solid #000;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">CNIC #:</label><br>
+                            <hr class="w-75" style="border-top: 1px solid #000;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">Signature:</label><br>
+                            <hr class="w-75" style="border-top: 1px solid #000;">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center text-muted">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Catalyst Communications
+                        <br>
+                        2500 Opposite Amin Childern Academy, Chisti Azam Road Pawaky University Town, Peshawar
+                    </div>
+
+
+                </div>
+                                    <!-- Buttons Section -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <!-- Go Back Button -->
+                        <button class="btn btn-secondary" onclick="window.history.back();">
+                            Go Back
+                        </button>
+
+                        <!-- Print Button -->
+                        <button class="btn btn-primary" onclick="printSection();">
+                            Print
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Script -->
+    <script>
+        function printSection() {
+            var printContents = document.getElementById("printable-section").innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            // Replace the body content with only the printable section's content
+            document.body.innerHTML = printContents;
+
+            // Trigger the print dialog
+            window.print();
+
+            // Restore the original page content after printing
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}

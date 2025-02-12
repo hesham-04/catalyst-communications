@@ -14,7 +14,7 @@ from django.views.generic import (
 )
 
 from .forms import InvoiceForm, InvoiceItemForm, TransferFundsForm, InvoiceUpdateForm
-from .models import Invoice, InvoiceItem
+from .models import Invoice, InvoiceItem, DeliveryChallan, DeliveryChallanItem
 from ..project.bll import process_invoice_payment
 from ..project.models import Project
 from ..quotation.models import QuotationGeneral
@@ -231,3 +231,58 @@ class UpdateInvoiceView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("invoice:detail", kwargs={"pk": self.object.pk})
+
+
+
+
+class DeliveryChallanView(LoginRequiredMixin, DetailView):
+    model = DeliveryChallan
+    template_name = "invoice/delivery_challan.html"
+    context_object_name = "challan"
+
+    def get_object(self):
+        # Fetch the invoice based on the provided invoice_id
+        invoice_id = self.kwargs["invoice_id"]
+        invoice = get_object_or_404(Invoice, pk=invoice_id)
+
+        # Check if a delivery challan already exists for this invoice
+        challan, created = DeliveryChallan.objects.get_or_create(
+            invoice=invoice,
+            defaults={
+                "date": invoice.date,
+                "client_name": invoice.client_name,
+                "company_name": invoice.company_name,
+                "phone": invoice.phone,
+                "address": invoice.address,
+                "email": invoice.email,
+                "subject": invoice.subject,
+                "notes": invoice.notes,
+                "total_amount": invoice.total_amount,
+                "total_in_words": invoice.total_in_words,
+                "delivered_by": "Warehouse",  # Default value
+                "received_by": "Client",      # Default value
+            }
+        )
+
+        # If the challan was just created, populate its items
+        if created:
+            self.populate_challan_items(challan, invoice)
+
+        return challan
+
+    def populate_challan_items(self, challan, invoice):
+        """
+        Helper method to populate DeliveryChallanItem objects
+        based on the associated InvoiceItem objects.
+        """
+        for item in invoice.items.all():
+            DeliveryChallanItem.objects.create(
+                challan=challan,
+                invoice_item=item,
+                item_name=item.item_name,
+                description=item.description,
+                quantity=item.quantity,
+                rate=item.rate,
+                amount=item.amount,
+                tax=item.tax,
+            )
