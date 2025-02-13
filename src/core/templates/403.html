@@ -1,5 +1,51 @@
-{% extends 'dashboard/base.html' %}
-{% block content %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-startbar="dark" data-bs-theme="light">
+{% load static %}
+
+
+<head>
+
+
+    <meta charset="utf-8"/>
+    <title>CATALYST | {% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="CRM FOR CATALYST COMS" name="CATALYST COMMUNICATIONS"/>
+    <meta content="" name="author"/>
+    {% block head %}
+
+    {% endblock %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'img/logo.png' %}">
+
+
+    <!-- App css -->
+    <link href="{% static 'website/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'website/css/icons.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'website/css/app.min.css' %}" rel="stylesheet" type="text/css"/>
+    <script>
+        // Check the saved theme in localStorage and apply it immediately
+        (function () {
+            var savedTheme = localStorage.getItem("theme");
+            if (savedTheme) {
+                document.documentElement.setAttribute("data-bs-theme", savedTheme);
+            } else {
+                document.documentElement.setAttribute("data-bs-theme", "light");
+            }
+        })();
+    </script>
+
+</head>
+<style>
+    body {
+        zoom: 0.9;
+    }
+</style>
+
     <body>
     <div class="d-flex align-items-center justify-content-center vh-100">
         <div class="text-center row">
@@ -15,4 +61,5 @@
         </div>
     </div>
 </body>
-{% endblock %}
+
+
