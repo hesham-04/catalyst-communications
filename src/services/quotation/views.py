@@ -110,7 +110,7 @@ class QuotationUpdateView(LoginRequiredMixin, UpdateView):
         return reverse("quotation:detail", kwargs={"pk": self.object.pk})
 
 
-class GeneralView(ListView, LoginRequiredMixin):
+class GeneralView(LoginRequiredMixin, ListView):
     template_name = "quotation/general.html"
     model = QuotationGeneral
 
