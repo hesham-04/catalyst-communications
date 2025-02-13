@@ -89,3 +89,15 @@ This project is licensed under the [MIT License](LICENSE).
 For questions or feedback, please contact us
 at [support@catalystcommunications.com](mailto:support@catalystcommunications.com).
 
+## Imports Order
+Recommended Import Order
+Based on the dependencies, the correct order for importing the data is:
+
+Customer
+Lender
+Project
+Invoice
+Expense
+Loan
+Loan Return
+Sheet8 (Transactions)
