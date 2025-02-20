@@ -47,7 +47,7 @@ class Invoice(models.Model):
         total = self.items.aggregate(total=Sum("amount"))["total"] or 0
         self.total_amount = total
         self.total_in_words = capitalize_and_replace_currency(
-            num2words(total, to="currency", lang="en_IN")
+            num2words(total, to="currency", lang="en")
         )
         self.save(update_fields=["total_amount", "total_in_words"])
 
