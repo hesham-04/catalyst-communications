@@ -304,7 +304,7 @@ class DeliveryChallanView(LoginRequiredMixin, DetailView):
                 quantity=item.quantity,
                 rate=item.rate,
                 amount=item.amount,
-                tax=item.tax,
+                tax=item.tax if item.tax else 0,
             )
             for item in invoice_items
         ])

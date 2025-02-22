@@ -167,8 +167,6 @@ class DeliveryChallan(models.Model):
         return n
 
 
-
-
 class DeliveryChallanItem(models.Model):
     challan = models.ForeignKey(DeliveryChallan, on_delete=models.CASCADE, related_name="items")
 
