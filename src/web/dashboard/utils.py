@@ -129,5 +129,9 @@ def capitalize_and_replace_currency(value):
     elif "and rupees" in value:
         value = value.replace("and rupees", "and zero rupees")
 
+    # Fix the trailing 's' issue
+    if value.endswith(" s"):
+        value = value[:-2]
+
     # Return the modified string
     return value
