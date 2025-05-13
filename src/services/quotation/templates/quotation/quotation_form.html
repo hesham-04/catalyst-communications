@@ -106,13 +106,33 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
+
+$(document).ready(function () {
     // Constants
     const quotationItemsContainer = $('#quotation-items');
     const addItemButton = $('#add-item');
     const totalFormsInput = $('#id_form-TOTAL_FORMS');
     const taxToggle = $('#customSwitchDark');
-    let itemFormIndex = parseInt(totalFormsInput.val()) || 1;
+
+    // Get the actual number of forms currently in the DOM
+    function getHighestFormIndex() {
+        let maxIndex = -1;
+        $('.quotation-item').each(function() {
+            // Extract the index from any named element in the form
+            const nameAttr = $(this).find('[name]').first().attr('name');
+            if (nameAttr) {
+                const match = nameAttr.match(/form-(\d+)/);
+                if (match && match[1]) {
+                    const index = parseInt(match[1]);
+                    maxIndex = Math.max(maxIndex, index);
+                }
+            }
+        });
+        return maxIndex + 1; // Return the next available index
+    }
+
+    // Initialize with the correct form index
+    let itemFormIndex = Math.max(parseInt(totalFormsInput.val()), getHighestFormIndex());
 
     // Check if in edit mode (based on presence of existing forms with IDs)
     const isEditMode = $('input[name$="-id"]').length > 0;
@@ -146,11 +166,16 @@
                 form.find('[name$="-DELETE"]').closest('.form-group').remove();
             }
 
-            // Set required validation for non-empty forms
+            // Set required validation for non-empty forms (except tax if toggle is off)
             if (!isEmpty) {
                 inputs.prop('required', true);
+
+                // Handle tax field required status based on toggle
+                const taxField = form.find('input[name$="-tax"]');
+                taxField.prop('required', taxToggle.prop('checked'));
             } else {
                 inputs.prop('required', false);
+                form.find('input[name$="-tax"]').prop('required', false);
             }
 
             // Preserve tax values
@@ -158,6 +183,7 @@
             if (taxValue > 0) {
                 taxToggle.prop('checked', true);
                 taxInput.closest('.form-group').show();
+                taxInput.prop('required', true);
             }
 
             // Add input event listener for validation
@@ -175,6 +201,7 @@
         if (hasTaxValues) {
             taxToggle.prop('checked', true);
             $('.quotation-item').find('input[name$="-tax"]').closest('.form-group').show();
+            $('.quotation-item').find('input[name$="-tax"]').prop('required', true);
         }
     }
 
@@ -186,7 +213,13 @@
         const lastItemForm = $('.quotation-item:last');
         if (lastItemForm.is(':hidden')) {
             lastItemForm.show();
-            lastItemForm.find('input[type="text"], input[type="number"]').prop('required', true);
+            // Only set required for non-tax fields if the form is shown
+            lastItemForm.find('input[type="text"], input[type="number"]').not('[name$="-tax"]').prop('required', true);
+
+            // Set tax field required status based on toggle
+            const taxField = lastItemForm.find('input[name$="-tax"]');
+            taxField.prop('required', taxToggle.prop('checked'));
+
             // Ensure Delete checkbox is removed when showing hidden form
             lastItemForm.find('[name$="-DELETE"]').closest('.form-group').remove();
             return;
@@ -194,10 +227,18 @@
 
         // Clone and prepare new form
         const newItemForm = lastItemForm.clone().show();
+
+        // Update form index before manipulating the clone
+        const newFormIndex = itemFormIndex;
+
+        // Update name and id attributes of all elements in the new form
         newItemForm.find('[name], [id]').each(function() {
             if (this.name && this.id) {
-                this.name = this.name.replace(/\d+/, itemFormIndex);
-                this.id = this.id.replace(/\d+/, itemFormIndex);
+                // Use regex with global flag to replace all occurrences
+                this.name = this.name.replace(/form-\d+/g, 'form-' + newFormIndex);
+                this.id = this.id.replace(/form-\d+/g, 'form-' + newFormIndex);
+
+                // Clear values except for specific fields
                 if (this.type !== 'hidden' && !this.name.endsWith('-DELETE')) {
                     this.value = this.name.endsWith('-quantity') ? '1' : '';
                 }
@@ -207,13 +248,25 @@
         // Remove the Delete checkbox for new forms
         newItemForm.find('[name$="-DELETE"]').closest('.form-group').remove();
 
-        // Update tax field visibility
+        // Update tax field visibility and required status
         const taxField = newItemForm.find('input[name*="-tax"]');
-        taxField.closest('.form-group').css('display', taxToggle.prop('checked') ? '' : 'none');
+        const taxFormGroup = taxField.closest('.form-group');
 
+        // Set visibility based on tax toggle
+        taxFormGroup.css('display', taxToggle.prop('checked') ? '' : 'none');
+
+        // Set tax field as required only if tax toggle is on
+        taxField.prop('required', taxToggle.prop('checked'));
+
+        // If tax toggle is off, set tax value to zero
+        if (!taxToggle.prop('checked')) {
+            taxField.val('0.0');
+        }
+
+        // Append the new form and update indices
         quotationItemsContainer.append(newItemForm);
-        totalFormsInput.val(itemFormIndex + 1);
         itemFormIndex++;
+        totalFormsInput.val(itemFormIndex);
     }
 
     // Toggle tax fields
@@ -221,10 +274,16 @@
         $('.quotation-item').each(function() {
             const taxField = $(this).find('input[name*="-tax"]');
             const formGroup = taxField.closest('.form-group');
+
             if (taxToggle.prop('checked')) {
                 formGroup.show();
+                // Only set required if visible
+                taxField.prop('required', true);
             } else {
                 formGroup.hide();
+                // Remove required attribute when hidden
+                taxField.prop('required', false);
+
                 // Only set to 0 if no existing value or not in edit mode
                 if (!isEditMode || !parseFloat(taxField.val())) {
                     taxField.val('0.0');
