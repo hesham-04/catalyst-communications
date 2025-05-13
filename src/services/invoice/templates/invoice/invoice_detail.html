@@ -341,7 +341,7 @@
                                                    class="btn btn-secondary"><i class="fa fa-arrow-left-long me-1"></i>
                                                     Go Back</a>
                                             </div>
-                                        </div><!--end col-->
+                                        </div>
                                     </div><!--end row-->
                                 </div>
                             </div>
@@ -354,10 +354,33 @@
     </div>
 
     <script>
-function printSection() {
+        function printSection() {
     // Create a new window for printing
     const printWindow = window.open('', '_blank');
     const printableContent = document.getElementById("printable-section").cloneNode(true);
+
+    // Find all actual item rows (excluding summary/total rows)
+    const tableRows = Array.from(printableContent.querySelectorAll("tbody tr")).filter(row =>
+        !row.querySelector("td[colspan]") // Filter out total/summary rows
+    );
+
+    const totalItems = tableRows.length;
+
+    // Only add page breaks if there are more than 12 items
+    if (totalItems > 12) {
+        // Calculate how many complete pages of 12 items we'll have
+        const completePages = Math.floor(totalItems / 12);
+
+        // Add page breaks after every 12 items, but only if there are more items to come
+        for (let i = 0; i < completePages; i++) {
+            // Only add page break if this isn't the last group
+            if ((i + 1) * 12 < totalItems) {
+                const rowIndex = (i + 1) * 12 - 1; // The 12th, 24th, etc. row
+                tableRows[rowIndex].style.pageBreakAfter = "always";
+                tableRows[rowIndex].style.breakAfter = "page";
+            }
+        }
+    }
 
     // Get all stylesheets from the current document
     const styleSheets = Array.from(document.styleSheets);
@@ -380,7 +403,7 @@ function printSection() {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Print Invoice</title>
+            <title>Print Quotation</title>
             <style>
                 ${styles}
                 @media print {
@@ -394,7 +417,7 @@ function printSection() {
                         width: 100% !important;
                         padding: 0 !important;
                         margin: 0 !important;
-                        font-size: 10pt !important; /* Reduced from 12pt */
+                        font-size: 10pt !important;
                     }
 
                     /* Scale down the card */
@@ -406,16 +429,48 @@ function printSection() {
                         width: 100% !important;
                     }
 
-                    /* Table adjustments */
+                    /* Table adjustments - PREVENT ROW SPLITTING */
                     table {
                         width: 100% !important;
                         border-collapse: collapse;
-                        font-size: 9pt !important; /* Smaller font for table content */
+                        font-size: 9pt !important;
+                        page-break-inside: auto !important;
+                    }
+
+                    /* Critical fix: Prevent table rows from breaking across pages */
+                    tr {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                    }
+
+                    /* Force page breaks after specific rows (added by script) */
+                    tr[style*="page-break-after: always"] {
+                        page-break-after: always !important;
+                        break-after: page !important;
+                    }
+
+                    thead {
+                        display: table-header-group !important;
+                    }
+
+                    tfoot {
+                        display: table-footer-group !important;
                     }
 
                     th, td {
-                        padding: 4px !important; /* Reduced padding */
+                        padding: 4px !important;
                         border: 1px solid #ddd;
+                    }
+
+                    /* Adjust item descriptions to take less vertical space */
+                    .mb-0.text-muted {
+                        margin-bottom: 0 !important;
+                        line-height: 1.2 !important;
+                    }
+
+                    /* Shrink less important text */
+                    p.mb-0.text-muted {
+                        font-size: 8pt !important;
                     }
 
                     /* Adjust spacing */
@@ -452,7 +507,7 @@ function printSection() {
                         background-image: url('{% static "logo.png" %}');
                         background-repeat: no-repeat;
                         background-position: center;
-                        background-size: 40%; /* Reduced from 50% */
+                        background-size: 40%;
                         opacity: 0.07;
                         pointer-events: none;
                         z-index: 1;
@@ -476,6 +531,11 @@ function printSection() {
                         color: white !important;
                     }
 
+                    /* Make sure table headers repeat on each page */
+                    thead {
+                        display: table-header-group;
+                    }
+
                     /* Reduce image size */
                     img {
                         max-height: 80px !important;
@@ -489,6 +549,12 @@ function printSection() {
 
                     .text-muted {
                         font-size: 9pt !important;
+                    }
+
+                    /* Ensure the total rows stay together */
+                    tr:has(td[colspan]) {
+                        page-break-before: avoid !important;
+                        break-before: avoid !important;
                     }
                 }
             </style>
@@ -509,6 +575,7 @@ function printSection() {
             printWindow.close();
         };
     };
-}    </script>
+}
+    </script>
 
 {% endblock %}

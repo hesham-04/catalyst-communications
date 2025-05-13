@@ -89,126 +89,138 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+$(document).ready(function () {
     // Constants
     const invoiceItemsContainer = $('#invoice-items');
     const addItemButton = $('#add-item');
     const totalFormsInput = $('#id_form-TOTAL_FORMS');
     const taxToggle = $('#customSwitchDark');
-    let itemFormIndex = parseInt(totalFormsInput.val()) || 1;
 
-    // Check if in edit mode (based on presence of existing forms with IDs)
+    // Get the actual number of forms currently in the DOM
+    function getHighestFormIndex() {
+        let maxIndex = -1;
+        $('.invoice-item').each(function () {
+            const nameAttr = $(this).find('[name]').first().attr('name');
+            if (nameAttr) {
+                const match = nameAttr.match(/form-(\d+)/);
+                if (match && match[1]) {
+                    const index = parseInt(match[1]);
+                    maxIndex = Math.max(maxIndex, index);
+                }
+            }
+        });
+        return maxIndex + 1;
+    }
+
+    let itemFormIndex = Math.max(parseInt(totalFormsInput.val()) || 0, getHighestFormIndex());
     const isEditMode = $('input[name$="-id"]').length > 0;
 
-    // Initialize form visibility and tax toggle
     function initializeFormVisibility() {
         if (!isEditMode) return;
 
-        // Check each invoice item
-        $('.invoice-item').each(function(index) {
+        $('.invoice-item').each(function () {
             const form = $(this);
             const inputs = form.find('input[type="text"], input[type="number"]').not('[name$="-tax"], [name$="-id"], [name$="-DELETE"]');
             const taxInput = form.find('input[name$="-tax"]');
             const idInput = form.find('input[name$="-id"]');
             let isEmpty = true;
 
-            // Check if form has meaningful values (excluding default quantity=1)
-            inputs.each(function() {
+            inputs.each(function () {
                 const value = $(this).val();
-                // Consider quantity=1 as default/empty for new forms
                 if (value && !(this.name.endsWith('-quantity') && value === '1')) {
                     isEmpty = false;
                     return false;
                 }
             });
 
-            // Hide forms that are empty and have no backend ID
             if (isEmpty && !idInput.val()) {
                 form.hide();
-                // Remove Delete checkbox from hidden forms to prevent it appearing when shown
                 form.find('[name$="-DELETE"]').closest('.form-group').remove();
             }
 
-            // Set required validation for non-empty forms
             if (!isEmpty) {
                 inputs.prop('required', true);
+                taxInput.prop('required', taxToggle.prop('checked'));
             } else {
                 inputs.prop('required', false);
+                taxInput.prop('required', false);
             }
 
-            // Preserve tax values
             const taxValue = parseFloat(taxInput.val());
             if (taxValue > 0) {
                 taxToggle.prop('checked', true);
                 taxInput.closest('.form-group').show();
+                taxInput.prop('required', true);
             }
 
-            // Add input event listener for validation
-            inputs.on('input', function() {
+            inputs.on('input', function () {
                 inputs.prop('required', true);
-                form.show(); // Show the form if user starts typing
+                form.show();
             });
         });
 
-        // Ensure tax fields are visible if any tax value exists
-        const hasTaxValues = $('.invoice-item').find('input[name$="-tax"]').filter(function() {
+        const hasTaxValues = $('.invoice-item').find('input[name$="-tax"]').filter(function () {
             return parseFloat($(this).val()) > 0;
         }).length > 0;
 
         if (hasTaxValues) {
             taxToggle.prop('checked', true);
             $('.invoice-item').find('input[name$="-tax"]').closest('.form-group').show();
+            $('.invoice-item').find('input[name$="-tax"]').prop('required', true);
         }
     }
 
-    // Add new item form
     function addNewItemForm(e) {
         e.preventDefault();
 
-        // Show last hidden form if it exists
         const lastItemForm = $('.invoice-item:last');
         if (lastItemForm.is(':hidden')) {
             lastItemForm.show();
-            lastItemForm.find('input[type="text"], input[type="number"]').prop('required', true);
-            // Ensure Delete checkbox is removed when showing hidden form
+            lastItemForm.find('input[type="text"], input[type="number"]').not('[name$="-tax"]').prop('required', true);
+            lastItemForm.find('input[name$="-tax"]').prop('required', taxToggle.prop('checked'));
             lastItemForm.find('[name$="-DELETE"]').closest('.form-group').remove();
             return;
         }
 
-        // Clone and prepare new form
         const newItemForm = lastItemForm.clone().show();
-        newItemForm.find('[name], [id]').each(function() {
+        const newFormIndex = itemFormIndex;
+
+        newItemForm.find('[name], [id]').each(function () {
             if (this.name && this.id) {
-                this.name = this.name.replace(/\d+/, itemFormIndex);
-                this.id = this.id.replace(/\d+/, itemFormIndex);
+                this.name = this.name.replace(/form-\d+/g, 'form-' + newFormIndex);
+                this.id = this.id.replace(/form-\d+/g, 'form-' + newFormIndex);
                 if (this.type !== 'hidden' && !this.name.endsWith('-DELETE')) {
                     this.value = this.name.endsWith('-quantity') ? '1' : '';
                 }
             }
         });
 
-        // Remove the Delete checkbox for new forms
         newItemForm.find('[name$="-DELETE"]').closest('.form-group').remove();
 
-        // Update tax field visibility
         const taxField = newItemForm.find('input[name*="-tax"]');
-        taxField.closest('.form-group').css('display', taxToggle.prop('checked') ? '' : 'none');
+        const taxFormGroup = taxField.closest('.form-group');
+        taxFormGroup.css('display', taxToggle.prop('checked') ? '' : 'none');
+        taxField.prop('required', taxToggle.prop('checked'));
+        if (!taxToggle.prop('checked')) {
+            taxField.val('0.0');
+        }
 
         invoiceItemsContainer.append(newItemForm);
-        totalFormsInput.val(itemFormIndex + 1);
         itemFormIndex++;
+        totalFormsInput.val(itemFormIndex);
     }
 
-    // Toggle tax fields
     function toggleTaxFields() {
-        $('.invoice-item').each(function() {
+        $('.invoice-item').each(function () {
             const taxField = $(this).find('input[name*="-tax"]');
             const formGroup = taxField.closest('.form-group');
+
             if (taxToggle.prop('checked')) {
                 formGroup.show();
+                taxField.prop('required', true);
             } else {
                 formGroup.hide();
-                // Only set to 0 if no existing value or not in edit mode
+                taxField.prop('required', false);
                 if (!isEditMode || !parseFloat(taxField.val())) {
                     taxField.val('0.0');
                 }
@@ -216,12 +228,10 @@
         });
     }
 
-    // Input validation for tax fields
     function setupTaxFieldValidation() {
-        $(document).on('keypress', 'input[id^="id_form-"][id$="-tax"]', function(e) {
+        $(document).on('keypress', 'input[id^="id_form-"][id$="-tax"]', function (e) {
             const charCode = e.which;
             const value = $(this).val();
-
             if (charCode !== 46 && (charCode < 48 || charCode > 57)) {
                 e.preventDefault();
             }
@@ -230,7 +240,7 @@
             }
         });
 
-        $(document).on('input', 'input[id^="id_form-"][id$="-tax"]', function() {
+        $(document).on('input', 'input[id^="id_form-"][id$="-tax"]', function () {
             const maxLength = 4;
             const value = $(this).val();
             if (value.length > maxLength) {
@@ -239,12 +249,12 @@
         });
     }
 
-    // Initialize
+    // Init
     initializeFormVisibility();
     toggleTaxFields();
     setupTaxFieldValidation();
 
-    // Event listeners
+    // Events
     addItemButton.on('click', addNewItemForm);
     taxToggle.on('change', toggleTaxFields);
 });
