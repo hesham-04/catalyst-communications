@@ -40,14 +40,12 @@ class QuotationForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Phone Number",
-                    "required": True,
                 }
             ),
             "email": forms.EmailInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "Email",
-                    "required": True,
                 }
             ),
             "address": forms.TextInput(
@@ -196,7 +194,6 @@ class QuotationUpdateForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Phone Number",
-                    "required": True,
                 }
             ),
             "date": forms.DateInput(
@@ -214,7 +211,6 @@ class QuotationUpdateForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Email",
-                    "required": True,
                 }
             ),
             "address": forms.TextInput(
@@ -281,14 +277,12 @@ class QuotationGeneralForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Phone Number",
-                    "required": True,
                 }
             ),
             "email": forms.EmailInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "Email",
-                    "required": True,
                 }
             ),
             "address": forms.TextInput(

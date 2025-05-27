@@ -41,7 +41,6 @@ class InvoiceForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Phone Number",
-                    "required": True,
                 }
             ),
             "address": forms.TextInput(
@@ -55,7 +54,6 @@ class InvoiceForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Email",
-                    "required": True,
                 }
             ),
             "due_date": forms.DateInput(
@@ -206,7 +204,6 @@ class InvoiceUpdateForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Phone Number",
-                    "required": True,
                 }
             ),
             "invoice_number": forms.TextInput(
@@ -231,7 +228,6 @@ class InvoiceUpdateForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Email",
-                    "required": True,
                 }
             ),
             "due_date": forms.DateInput(
