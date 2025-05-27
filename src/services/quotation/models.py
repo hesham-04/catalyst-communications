@@ -40,9 +40,7 @@ class Quotation(models.Model):
     def calculate_total_amount(self):
         total = self.items.aggregate(total=Sum("amount"))["total"] or 0
         self.total_amount = total
-        self.total_in_words = capitalize_and_replace_currency(
-            num2words(total, to="currency", lang="en_IN")
-        )
+        self.total_in_words = num2words(total).strip().capitalize() + ' rupees'
         self.save(update_fields=["total_amount", "total_in_words"])
 
     def save(self, *args, **kwargs):
@@ -99,13 +97,22 @@ class QuotationItem(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        # Calculate the total amount including tax
-        base_amount = self.quantity * self.rate
-        tax_amount = base_amount * (self.tax / 100) if self.tax else 0
-        self.amount = base_amount + tax_amount
+        from decimal import Decimal, InvalidOperation
+        try:
+            quantity = Decimal(self.quantity)
+            rate = Decimal(self.rate)
+            base_amount = quantity * rate
 
-        super().save(*args, **kwargs)
-        self.quotation.calculate_total_amount()
+            tax = Decimal(self.tax or 0)
+            tax_amount = (base_amount * tax / Decimal("100")).quantize(Decimal("0.01"))
+            self.amount = (base_amount + tax_amount).quantize(Decimal("0.01"))
+
+            super().save(*args, **kwargs)
+            self.quotation.calculate_total_amount()
+
+        except (InvalidOperation, TypeError, ValueError) as e:
+            raise ValueError(f"Invalid decimal operation in InvoiceItem.save(): {e}")
+
 
     @property
     def display_name(self):
@@ -168,9 +175,7 @@ class QuotationGeneral(models.Model):
     def calculate_total_amount(self):
         total = self.items.aggregate(total=Sum("amount"))["total"] or 0
         self.total_amount = total
-        self.total_in_words = capitalize_and_replace_currency(
-            num2words(total, to="currency", lang="en_IN")
-        )
+        self.total_in_words = num2words(total).strip().capitalize() + ' rupees'
         self.save(update_fields=["total_amount", "total_in_words"])
 
 
@@ -195,13 +200,22 @@ class ItemGeneral(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        # Calculate the total amount including tax
-        base_amount = self.quantity * self.rate
-        tax_amount = base_amount * (self.tax / 100) if self.tax else 0
-        self.amount = base_amount + tax_amount
+        from decimal import Decimal, InvalidOperation
+        try:
+            quantity = Decimal(self.quantity)
+            rate = Decimal(self.rate)
+            base_amount = quantity * rate
 
-        super().save(*args, **kwargs)
-        self.quotation.calculate_total_amount()
+            tax = Decimal(self.tax or 0)
+            tax_amount = (base_amount * tax / Decimal("100")).quantize(Decimal("0.01"))
+            self.amount = (base_amount + tax_amount).quantize(Decimal("0.01"))
+
+            super().save(*args, **kwargs)
+            self.quotation.calculate_total_amount()
+
+        except (InvalidOperation, TypeError, ValueError) as e:
+            raise ValueError(f"Invalid decimal operation in InvoiceItem.save(): {e}")
+
 
     @property
     def display_name(self):
