@@ -182,7 +182,13 @@
                                         <div class="col-md-6">
                                             <div class="text-end">
                                                 <h3 class="mb-1 fw-semibold">
-                                                    <span style="color: #be3a48">Quotation:</span>
+                                                    <span style="color: #be3a48">
+                                                        {% if quotation.status == "INVOICED" %}
+                                                            Invoice:
+                                                        {% else %}
+                                                            Quotation:
+                                                        {% endif %}
+                                                    </span>
                                                     <br>
                                                     <span class="text-dark">{{ quotation.quotation_number }}</span>
                                                 </h3>
@@ -394,7 +400,7 @@ function printSection() {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Print Quotation</title>
+            <title>Print</title>
             <style>
                 ${styles}
                 @media print {
