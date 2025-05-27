@@ -16,8 +16,8 @@ class Quotation(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = PhoneNumberField(max_length=15, region="PK")
-    email = models.EmailField(max_length=50)
+    phone = PhoneNumberField(max_length=15, region="PK", blank=True)
+    email = models.EmailField(max_length=50, blank=True)
     address = models.CharField(max_length=255)
 
     quotation_number = models.CharField(max_length=100, unique=True, null=True)
@@ -136,8 +136,8 @@ class QuotationGeneral(models.Model):
 
     client_name = models.CharField(max_length=255)
     company_name = models.CharField(max_length=255)
-    phone = PhoneNumberField(max_length=15, region="PK")
-    email = models.EmailField(max_length=50)
+    phone = PhoneNumberField(max_length=15, region="PK", blank=True)
+    email = models.EmailField(max_length=50, blank=True)
     address = models.CharField(max_length=255)
 
     quotation_number = models.CharField(max_length=100, unique=True, null=True)
