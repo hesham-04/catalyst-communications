@@ -33,7 +33,7 @@ responsive user experience for businesses aiming to optimize their communication
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/catalyst-communications.git
+    git clone https://github.com/hesham-04/catalyst-communications.git
     cd catalyst-communications
     ```
 2. Set up a virtual environment:
